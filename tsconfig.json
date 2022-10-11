@@ -13,8 +13,11 @@
       "moduleResolution": "node",
       "jsx": "react",
       "allowSyntheticDefaultImports": true,
-      
+      "skipLibCheck": true
     },
     "include": ["src/lib"],
-    "exclude": ["src/lib/**/tests"],
+    "exclude": ["node_modules",
+    "build",
+    "src/lib/**/tests",
+    "src/**/*.stories.@(js|jsx|ts|tsx)"],
 }
