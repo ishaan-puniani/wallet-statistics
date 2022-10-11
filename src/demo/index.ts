@@ -1,8 +1,8 @@
-import MyLibrary from "../lib";
-const myLibraryInstance = new MyLibrary();
+import WalletStatistics from "../lib";
+const walletStatisticsInstance = new WalletStatistics();
 
 document.querySelector("body").innerHTML = `<h1>Hello World!</h1>`;
 
-console.log("myLibraryInstance", myLibraryInstance);
-myLibraryInstance.initSimulator(document.body);
-myLibraryInstance.myMethod();
+console.log("walletStatisticsInstance", walletStatisticsInstance);
+walletStatisticsInstance.initSimulator(document.body);
+walletStatisticsInstance.myMethod();

@@ -1,7 +1,7 @@
 import "./index.css";
-import { init } from "./simulator";
+import { render } from "./simulator";
 
-class MyLibrary {
+class WalletStatistics {
   constructor() {
     console.log("Library constructor loaded");
   }
@@ -11,8 +11,8 @@ class MyLibrary {
     return true;
   };
   initSimulator = (container: any) => {
-    init(container);
+    render(container);
   };
 }
 
-export default MyLibrary;
+export default WalletStatistics;
