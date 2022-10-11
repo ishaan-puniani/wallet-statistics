@@ -1,9 +1,13 @@
 import React from "react";
 
-const Simulator = () => {
+export interface ISimulatorProps {
+  text?: string;
+}
+
+const Simulator = (props: ISimulatorProps) => {
   return (
     <>
-      <h1>Test</h1>
+      <h1>{props.text}</h1>
     </>
   );
 };
