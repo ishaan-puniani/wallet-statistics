@@ -2,7 +2,8 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import PartnerHeirarchyTree from "./PartnerHeirarchyTree";
 import { withKnobs, object } from "@storybook/addon-knobs";
-import { credentials } from "../../credentials";
+import { getMachineUserCredentials } from "../../utilities/storage";
+
 export default {
   title: "Example/PartnerHeirarchyTree",
   component: PartnerHeirarchyTree,
@@ -19,5 +20,5 @@ const Template: ComponentStory<typeof PartnerHeirarchyTree> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  credentials: credentials || {},
+  credentials: getMachineUserCredentials() || {},
 };
