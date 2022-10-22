@@ -21,4 +21,5 @@ const Template: ComponentStory<typeof PartnerHeirarchyTree> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
+  hierarchyType: "CHILDREN"
 };
