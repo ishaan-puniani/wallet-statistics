@@ -17,7 +17,9 @@ const PartnerHeirarchyTree = ({
 }: IPartnerHeirarchyTreeProps) => {
   return (
     <>
-      <h2>PartnerHeirarchyTree : {partnerId}</h2>
+      <h2>
+        PartnerHeirarchyTree : {partnerId} [{hierarchyType}]
+      </h2>
 
       <PartnerTreeNode
         partnerId={partnerId}
