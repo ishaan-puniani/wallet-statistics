@@ -12,6 +12,13 @@ const PartnerTreeNodeDetails = ({
   treeNodeDepth,
   record,
   hierarchyType,
+  uptoPartner,
+  forLevel,
+  limit,
+  skip,
+  orderByRank,
+  orderByCount,
+  relativeTo,
 }: any) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -50,6 +57,13 @@ const PartnerTreeNodeDetails = ({
             partnerId={partnerId}
             treeNodeDepth={treeNodeDepth + 1}
             hierarchyType={hierarchyType}
+            uptoPartner={uptoPartner}
+            forLevel={forLevel}
+            limit={limit}
+            skip={skip}
+            orderByRank={orderByRank}
+            orderByCount={orderByCount}
+            relativeTo={relativeTo}
           />
         )}
       </div>

@@ -7,6 +7,13 @@ const PartnerTreeNode = ({
   partnerId,
   treeNodeDepth = 1,
   hierarchyType,
+  uptoPartner,
+  forLevel,
+  limit,
+  skip,
+  orderByRank,
+  orderByCount,
+  relativeTo,
 }: any) => {
   const [loading, setLoading] = useState(false);
   const [heirarchy, setHeirary] = useState([]);
@@ -17,7 +24,16 @@ const PartnerTreeNode = ({
         `https://wallet-and-bonus-47kby.ondigitalocean.app/api/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
         {
           ...credentials,
-          data: { hierarchyType },
+          data: {
+            hierarchyType,
+            uptoPartner,
+            forLevel,
+            limit,
+            skip,
+            orderByRank,
+            orderByCount,
+            relativeTo,
+          },
         }
       );
       if (heirarchyResponse.data) {
@@ -26,7 +42,17 @@ const PartnerTreeNode = ({
       setLoading(false);
     };
     fetchData();
-  }, [partnerId, hierarchyType]);
+  }, [
+    partnerId,
+    hierarchyType,
+    uptoPartner,
+    forLevel,
+    limit,
+    skip,
+    orderByRank,
+    orderByCount,
+    relativeTo,
+  ]);
   return (
     <>
       <div className="treeNode">
@@ -37,12 +63,19 @@ const PartnerTreeNode = ({
               key={record.partnerId}
               partnerId={record.partnerId}
               credentials={credentials}
-              title={`[${treeNodeDepth}]: ${record.partnerName} (${record.childrenCount})`}
+              title={`[${record.relativeLevelName}]: ${record.partnerName} (${record.childrenCount})`}
               loading={loading}
               hasChildren={record.childrenCount > 0}
               treeNodeDepth={treeNodeDepth}
               record={record}
               hierarchyType={hierarchyType}
+              uptoPartner={uptoPartner}
+              forLevel={forLevel}
+              limit={limit}
+              skip={skip}
+              orderByRank={orderByRank}
+              orderByCount={orderByCount}
+              relativeTo={relativeTo}
             />
           ))}
       </div>
