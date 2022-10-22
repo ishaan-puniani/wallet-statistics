@@ -41,7 +41,9 @@ const PartnerTreeNodeDetails = ({
           )}
           <span>{title}</span>
         </h1>
+        <sup>{record.levelName}</sup>
         <sub>{JSON.stringify(record?.additionalData)}</sub>
+
         {expanded && (
           <PartnerTreeNode
             credentials={credentials}
