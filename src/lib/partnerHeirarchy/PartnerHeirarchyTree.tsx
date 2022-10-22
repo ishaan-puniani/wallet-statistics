@@ -7,20 +7,26 @@ import "./partner_heirarchy_tree.css";
 export interface IPartnerHeirarchyTreeProps {
   credentials?: any;
   partnerId?: string;
+  hierarchyType?: "CHILDREN" | "PARENT";
 }
 
-const PartnerHeirarchyTree = (props: IPartnerHeirarchyTreeProps) => {
+const PartnerHeirarchyTree = ({
+  partnerId,
+  credentials,
+  hierarchyType,
+}: IPartnerHeirarchyTreeProps) => {
   return (
     <>
-      <h2>PartnerHeirarchyTree : {props.partnerId}</h2>
+      <h2>PartnerHeirarchyTree : {partnerId}</h2>
 
       <PartnerTreeNode
-        partnerId={props.partnerId}
-        credentials={props.credentials}
+        partnerId={partnerId}
+        credentials={credentials}
         treeNodeDepth={1}
+        hierarchyType={hierarchyType}
       ></PartnerTreeNode>
 
-      <p>{JSON.stringify(props.credentials)}</p>
+      <p>{JSON.stringify(credentials)}</p>
     </>
   );
 };

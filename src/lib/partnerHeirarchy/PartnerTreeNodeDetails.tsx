@@ -11,6 +11,7 @@ const PartnerTreeNodeDetails = ({
   hasChildren = true,
   treeNodeDepth,
   record,
+  hierarchyType,
 }: any) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -46,6 +47,7 @@ const PartnerTreeNodeDetails = ({
             credentials={credentials}
             partnerId={partnerId}
             treeNodeDepth={treeNodeDepth + 1}
+            hierarchyType={hierarchyType}
           />
         )}
       </div>

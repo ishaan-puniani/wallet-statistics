@@ -6,16 +6,18 @@ const PartnerTreeNode = ({
   credentials,
   partnerId,
   treeNodeDepth = 1,
+  hierarchyType,
 }: any) => {
   const [loading, setLoading] = useState(false);
   const [heirarchy, setHeirary] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const heirarchyResponse = await axios.get(
+      const heirarchyResponse = await axios.post(
         `https://wallet-and-bonus-47kby.ondigitalocean.app/api/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
         {
           ...credentials,
+          data: { hierarchyType },
         }
       );
       if (heirarchyResponse.data) {
@@ -24,7 +26,7 @@ const PartnerTreeNode = ({
       setLoading(false);
     };
     fetchData();
-  }, [partnerId]);
+  }, [partnerId, hierarchyType]);
   return (
     <>
       <div className="treeNode">
@@ -40,6 +42,7 @@ const PartnerTreeNode = ({
               hasChildren={record.childrenCount > 0}
               treeNodeDepth={treeNodeDepth}
               record={record}
+              hierarchyType={hierarchyType}
             />
           ))}
       </div>
