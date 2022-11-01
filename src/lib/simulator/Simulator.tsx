@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // import the core library.
 import ReactEChartsCore from "echarts-for-react/lib/core";
 // Import the echarts core module, which provides the necessary interfaces for using echarts.
@@ -10,13 +10,13 @@ import {
   GridComponent,
   TooltipComponent,
   TitleComponent,
-  DatasetComponent,
 } from "echarts/components";
 // Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
 import {
   CanvasRenderer,
   // SVGRenderer,
 } from "echarts/renderers";
+import axios from "axios";
 
 // Register the required components
 echarts.use([
@@ -28,19 +28,24 @@ echarts.use([
 ]);
 
 const options = {
-  grid: { top: 8, right: 8, bottom: 24, left: 36 },
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "3%",
+    containLabel: true,
+  },
   xAxis: {
     type: "category",
-    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    data: [] as any,
   },
   yAxis: {
     type: "value",
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [] as any,
       type: "bar",
-      smooth: true,
+      smooth: false,
     },
   ],
   tooltip: {
@@ -49,22 +54,55 @@ const options = {
 };
 
 export interface ISimulatorProps {
-  text?: string;
+  credentials?: any;
+  userId?: string;
+  currency?: "COINS" | "USD";
 }
 
 const Simulator = (props: ISimulatorProps) => {
   console.log("REACHED");
+  const [loading, setLoading] = useState(false);
+  const [balance, setBalance] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const fetchBalance = await axios.post(
+        `https://wallet-and-bonus-47kby.ondigitalocean.app/api/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`
+      );
+      if (fetchBalance.data) {
+        const values = fetchBalance.data;
+        const chartLabels: any = [];
+        const chartValues: any = [];
+        values?.forEach((v: any) => {
+          chartLabels.push([v.transactionType]);
+          chartValues.push([v.transactionType, v.amount]);
+        });
+        options.xAxis.data = chartLabels;
+        options.series[0].data = chartValues;
+        // optionsConfig.series[1].data = calculateMA(
+        //   chartValues,
+        //   5,
+        // );
+
+        setBalance(options);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [props.userId, props.currency]);
+
   return (
     <>
-      <h1>{props.text}</h1>
       <h2>Done</h2>
-      <ReactEChartsCore
-        echarts={echarts}
-        option={options}
-        notMerge={true}
-        lazyUpdate={true}
-        theme={"theme_name"}
-      />
+      {!loading && (
+        <ReactEChartsCore
+          echarts={echarts}
+          option={balance}
+          notMerge={true}
+          lazyUpdate={true}
+          theme={"theme_name"}
+        />
+      )}
     </>
   );
 };
