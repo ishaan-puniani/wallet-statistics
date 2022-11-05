@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import PartnerTreeNodeDetails from "./PartnerTreeNodeDetails";
+import { API_HOST } from "../../constants";
 
 const PartnerTreeNode = ({
   credentials,
@@ -21,7 +22,7 @@ const PartnerTreeNode = ({
     const fetchData = async () => {
       setLoading(true);
       const heirarchyResponse = await axios.post(
-        `https://wallet-and-bonus-47kby.ondigitalocean.app/api/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
+        `${API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
         {
           ...credentials,
           data: {

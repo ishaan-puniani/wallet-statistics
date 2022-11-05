@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { API_HOST } from "../../constants";
 import "./partner_balances.css";
 export interface IPartnerBalancesProps {
   credentials?: any;
@@ -14,7 +15,10 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `https://wallet-and-bonus-47kby.ondigitalocean.app/api/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`
+        `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
+        {
+          ...props.credentials,
+        }
       );
       if (fetchBalance.data) {
         setBalance(fetchBalance.data);
@@ -32,8 +36,13 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
         {!loading &&
           balance.map((record) => (
             <div className="card">
-              <p><strong>Transaction Type</strong> :  {record.transactionType.slice(0,17)}</p>
-              <p ><strong>Amount</strong> : {parseFloat(record.amount).toFixed(2)}</p>
+              <p>
+                <strong>Transaction Type</strong> :{" "}
+                {record.transactionType.slice(0, 17)}
+              </p>
+              <p>
+                <strong>Amount</strong> : {parseFloat(record.amount).toFixed(2)}
+              </p>
             </div>
           ))}
       </div>

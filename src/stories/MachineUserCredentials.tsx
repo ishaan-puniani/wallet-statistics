@@ -19,7 +19,14 @@ const MachineUserCredentials = (props: any) => {
       <div>
         Client Secret: <input {...register("client_secret")} />
       </div>
-
+      <div>
+        version:
+        <select {...register("version")}>
+          <option value=""></option>
+          <option value="storybook_">storybook_</option>
+          <option value="v1_">v1_</option>
+        </select>
+      </div>
       <input type="submit" />
     </form>
   );
