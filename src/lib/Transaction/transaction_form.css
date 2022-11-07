@@ -1,0 +1,14 @@
+.row {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: nowrap;
+}
+.field {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px;
+}
+.btn{
+    display: block;
+    margin: 0 auto;
+}
