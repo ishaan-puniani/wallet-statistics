@@ -1,4 +1,5 @@
 import "./index.css";
+import { renderPartnerHeirarchyTreeView } from "./partnerHeirarchy";
 import { render } from "./simulator";
 
 class WalletStatistics {
@@ -12,6 +13,9 @@ class WalletStatistics {
   };
   initSimulator = (container: any) => {
     render(container);
+  };
+  renderPartnerHeirarchyTree = (container: any, props: any) => {
+    renderPartnerHeirarchyTreeView(container, props);
   };
 }
 
