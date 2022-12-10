@@ -12,6 +12,13 @@ const PartnerTreeNodeDetails = ({
   treeNodeDepth,
   record,
   hierarchyType,
+  uptoPartner,
+  forLevel,
+  limit,
+  skip,
+  orderByRank,
+  orderByCount,
+  relativeTo,
 }: any) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -41,8 +48,34 @@ const PartnerTreeNodeDetails = ({
           )}
           <span>{title}</span>
         </h1>
-        <sup>{record.levelName}</sup>
-        <sub>{JSON.stringify(record?.additionalData)}</sub>
+
+        <table>
+          <tr>
+            <th>Level</th>
+            <th>Email</th>
+            <th>Full Name</th>
+            <th>Phone Number</th>
+            <th>Children Count </th>
+          </tr>
+          <tr>
+            <td>
+              <p>{record?.levelName}</p>
+            </td>
+            <td>
+              <p>{record?.additionalData?.email}</p>
+            </td>
+            <td>
+              <p>{record?.additionalData?.fullName}</p>
+            </td>
+            <td>
+              <p>{record?.additionalData?.phoneNumber}</p>
+            </td>
+            <td>
+              <p>{record?.childrenCount}</p>
+            </td>
+          </tr>
+        </table>
+        {/* <sub>{JSON.stringify(record?.additionalData)}</sub> */}
 
         {expanded && (
           <PartnerTreeNode
@@ -50,6 +83,13 @@ const PartnerTreeNodeDetails = ({
             partnerId={partnerId}
             treeNodeDepth={treeNodeDepth + 1}
             hierarchyType={hierarchyType}
+            uptoPartner={uptoPartner}
+            forLevel={forLevel}
+            limit={limit}
+            skip={skip}
+            orderByRank={orderByRank}
+            orderByCount={orderByCount}
+            relativeTo={relativeTo}
           />
         )}
       </div>
