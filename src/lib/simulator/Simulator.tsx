@@ -3,6 +3,26 @@ import { useForm } from "react-hook-form";
 
 export interface ISimulatorProps {
   text?: string;
+  transactionType: string;
+  amount: string;
+  currency: "USD" | "COINS" | "CUSDT";
+  virtualValue: string;
+  isCredi: true;
+  reference: string;
+  paymentMethod: string;
+  remark: string;
+  description: string;
+  productId: string;
+  productName: string;
+  sku: string;
+  payerId: string;
+  payerName: string;
+  payeeId: string;
+  payeeNam: string;
+  onBehalfOfId: string;
+  onBehalfOfName: string;
+  additionalData: string;
+  baseTransaction: string;
 }
 
 const Simulator = (props: ISimulatorProps) => {
