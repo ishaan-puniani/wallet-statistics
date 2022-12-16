@@ -1,51 +1,5 @@
 import React from "react";
-// import the core library.
-import ReactEChartsCore from "echarts-for-react/lib/core";
-// Import the echarts core module, which provides the necessary interfaces for using echarts.
-import * as echarts from "echarts/core";
-// Import charts, all with Chart suffix
-import { BarChart } from "echarts/charts";
-// import components, all suffixed with Component
-import {
-  GridComponent,
-  TooltipComponent,
-  TitleComponent,
-} from "echarts/components";
-// Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
-import {
-  CanvasRenderer,
-  // SVGRenderer,
-} from "echarts/renderers";
-
-// Register the required components
-echarts.use([
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  BarChart,
-  CanvasRenderer,
-]);
-
-const options = {
-  grid: { top: 8, right: 8, bottom: 24, left: 36 },
-  xAxis: {
-    type: "category",
-    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-  },
-  yAxis: {
-    type: "value",
-  },
-  series: [
-    {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-      type: "bar",
-      smooth: true,
-    },
-  ],
-  tooltip: {
-    trigger: "axis",
-  },
-};
+import { useForm } from "react-hook-form";
 
 export interface ISimulatorProps {
   text?: string;
@@ -53,17 +7,98 @@ export interface ISimulatorProps {
 
 const Simulator = (props: ISimulatorProps) => {
   console.log("REACHED");
+
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
+
   return (
     <>
       <h1>{props.text}</h1>
-      <h2>Done</h2>
-      <ReactEChartsCore
-        echarts={echarts}
-        option={options}
-        notMerge={true}
-        lazyUpdate={true}
-        theme={"theme_name"}
-      />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <label>Transaction Type:</label>{" "}
+          <input {...register("transactionType")} />
+        </div>
+        <div>
+          <label>Amount : </label>
+          <input {...register("amount")} />
+        </div>
+        <div>
+          <label>Currency :</label>
+          <input {...register("currency")} />
+        </div>
+        <div>
+          <label>Virtual Value :</label>
+          <input {...register("virtual_Value")} />
+        </div>
+        <div>
+          <label>Is Credit :</label>
+          <input {...register("isCredit")} />
+        </div>{" "}
+        <div>
+          <label>Reference :</label>
+          <input {...register("reference")} />
+        </div>
+        <div>
+          <label>Payment Method :</label>
+          <input {...register("paymentMethod")} />
+        </div>{" "}
+        <div>
+          <label>Remark:</label>
+          <input {...register("remark")} />
+        </div>{" "}
+        <div>
+          <label>Description :</label>
+          <input {...register("description")} />
+        </div>{" "}
+        <div>
+          <label>Product Id :</label>
+          <input {...register("productId")} />
+        </div>{" "}
+        <div>
+          <label>Product Name :</label>
+          <input {...register("productName")} />
+        </div>{" "}
+        <div>
+          <label>SKU :</label>
+          <input {...register("sku")} />
+        </div>{" "}
+        <div>
+          <label>Payer Id :</label>
+          <input {...register("payerId")} />
+        </div>{" "}
+        <div>
+          <label>Payer Name :</label>
+          <input {...register("payerName")} />
+        </div>{" "}
+        <div>
+          <label>Payee Id :</label>
+          <input {...register("payeeId")} />
+        </div>{" "}
+        <div>
+          <label>payeeName :</label>
+          <input {...register("payeeName")} />
+        </div>{" "}
+        <div>
+          <label>On Behalf Of Id :</label>
+          <input {...register("onBehalfOfId")} />
+        </div>{" "}
+        <div>
+          <label>onBehalfOfName :</label>
+          <input {...register("onBehalfOfName")} />
+        </div>{" "}
+        <div>
+          <label>Additional Data :</label>
+          <input {...register("additionalData")} />
+        </div>{" "}
+        <div>
+          <label>Base Transaction :</label>
+          <input {...register("baseTransaction")} />
+        </div>
+        <input type="submit" />
+      </form>
     </>
   );
 };
