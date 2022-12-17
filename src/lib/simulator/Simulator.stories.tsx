@@ -2,6 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import Simulator from "./Simulator";
+import { getMachineUserCredentials } from "../../utilities/storage";
 
 export default {
   title: "Example/Simulator",
@@ -17,4 +18,4 @@ const Template: ComponentStory<typeof Simulator> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = { credentials: getMachineUserCredentials() || {}};
