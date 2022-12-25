@@ -25,15 +25,29 @@ export interface ISimulatorProps {
   onBehalfOfName?: string;
   additionalData?: string;
   baseTransaction?: string;
+
+
+
+
+  service?: string;
+  provider?: string;
+  vendor?: string;
+  executeCommissionFor?: string;
+  executeCommissionAmount?: string;
+  metadata?: string;
+  fromWallet?: string;
+ 
+
 }
 
 const Simulator = (props: ISimulatorProps) => {
-  const [data, setData] = useState<any>();
+  
   console.log("REACHED");
 
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
+    debugger;
     const fetchBalance = await axios.post(
       `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
       {
@@ -151,14 +165,77 @@ const Simulator = (props: ISimulatorProps) => {
                 {...register("baseTransaction")}
               />
             </li>
+
+
+
+
+
+
+
+
+
+           
+
+            <li>
+              <label>service :</label>
+              <input
+                value={props.service}
+                {...register("service")}
+              />
+            </li>
+
+
+            <li>
+              <label>provider :</label>
+              <input
+                value={props.provider}
+                {...register("provider")}
+              />
+            </li>
+            <li>
+              <label>vendor :</label>
+              <input
+                value={props.vendor}
+                {...register("vendor")}
+              />
+            </li>
+            <li>
+              <label>executeCommissionFor :</label>
+              <input
+                value={props.executeCommissionFor}
+                {...register("executeCommissionFor")}
+              />
+            </li>
+            <li>
+              <label>executeCommissionAmount :</label>
+              <input
+                value={props.executeCommissionAmount}
+                {...register("executeCommissionAmount")}
+              />
+            </li>
+            <li>
+              <label>metadata :</label>
+              <input
+                value={props.metadata}
+                {...register("metadata")}
+              />
+            </li>
+
+            <li>
+              <label>fromWallet :</label>
+              <input
+                value={props.fromWallet}
+                {...register("fromWallet")}
+              />
+            </li>
+
+
           </div>
         </ul>
         <div className="formStyle">
           <input type="submit" />
         </div>
       </form>
-
-      {data}
     </>
   );
 };
