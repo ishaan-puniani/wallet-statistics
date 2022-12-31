@@ -48,8 +48,31 @@ const PartnerTreeNodeDetails = ({
           )}
           <span>{title}</span>
         </h1>
-        <sup>{record.levelName}</sup>
-        <sub>{JSON.stringify(record?.additionalData)}</sub>
+
+        <table>
+          <tr>
+            <th>Level</th>
+            <th>User</th>
+            <th>Children Count </th>
+          </tr>
+          <tr>
+            <td>
+              <p>{record?.levelName}</p>
+            </td>
+            <td>
+              <p>
+                <b>E-mail : </b>{record?.additionalData?.email}, <b>Name : </b>
+                {record?.additionalData?.fullName}, <b>Phone Number : </b>
+                {record?.additionalData?.phoneNumber}
+              </p>
+            </td>
+
+            <td>
+              <p>{record?.childrenCount}</p>
+            </td>
+          </tr>
+        </table>
+        {/* <sub>{JSON.stringify(record?.additionalData)}</sub> */}
 
         {expanded && (
           <PartnerTreeNode

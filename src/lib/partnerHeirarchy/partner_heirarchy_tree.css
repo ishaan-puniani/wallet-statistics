@@ -4,17 +4,30 @@
   margin-left: 10px;
 }
 
-
 .rightArrow {
-  background:transparent url("./assets/arrow-right.png") no-repeat top;
+  background: transparent url("./assets/arrow-right.png") no-repeat top;
   width: 20px;
   height: 20px;
   border: none;
 }
 
 .downArrow {
-  background:transparent url("./assets/arrow-down.png") no-repeat top;
+  background: transparent url("./assets/arrow-down.png") no-repeat top;
   width: 20px;
   height: 20px;
-  border:none;
+  border: none;
+}
+
+table,
+td,
+th {
+  border: 1px solid black;
+}
+
+table {
+  width: 70%;
+}
+
+td {
+  text-align: center;
 }

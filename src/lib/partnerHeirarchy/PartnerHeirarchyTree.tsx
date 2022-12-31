@@ -49,7 +49,7 @@ const PartnerHeirarchyTree = ({
         relativeTo={relativeTo}
       ></PartnerTreeNode>
 
-      <p>{JSON.stringify(credentials)}</p>
+      {/* <p>{JSON.stringify(credentials)}</p> */}
     </>
   );
 };
