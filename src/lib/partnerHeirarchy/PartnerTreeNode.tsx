@@ -32,7 +32,7 @@ const PartnerTreeNode = ({
       <div className="treeNode">
         <h1>{loading && <>Loading</>}</h1>
         {!loading &&
-          heirarchy.map((record) => (
+          heirarchy.slice(1).map((record) => (
             <PartnerTreeNodeDetails
               key={record.partnerId}
               partnerId={record.partnerId}

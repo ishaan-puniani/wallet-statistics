@@ -52,9 +52,7 @@ const PartnerTreeNodeDetails = ({
         <table>
           <tr>
             <th>Level</th>
-            <th>Email</th>
-            <th>Full Name</th>
-            <th>Phone Number</th>
+            <th>User</th>
             <th>Children Count </th>
           </tr>
           <tr>
@@ -62,14 +60,13 @@ const PartnerTreeNodeDetails = ({
               <p>{record?.levelName}</p>
             </td>
             <td>
-              <p>{record?.additionalData?.email}</p>
+              <p>
+                <b>E-mail : </b>{record?.additionalData?.email}, <b>Name : </b>
+                {record?.additionalData?.fullName}, <b>Phone Number : </b>
+                {record?.additionalData?.phoneNumber}
+              </p>
             </td>
-            <td>
-              <p>{record?.additionalData?.fullName}</p>
-            </td>
-            <td>
-              <p>{record?.additionalData?.phoneNumber}</p>
-            </td>
+
             <td>
               <p>{record?.childrenCount}</p>
             </td>

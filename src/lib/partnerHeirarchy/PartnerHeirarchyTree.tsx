@@ -28,7 +28,7 @@ const PartnerHeirarchyTree = ({
         hierarchyType={hierarchyType}
       ></PartnerTreeNode>
 
-      <p>{JSON.stringify(credentials)}</p>
+      {/* <p>{JSON.stringify(credentials)}</p> */}
     </>
   );
 };
