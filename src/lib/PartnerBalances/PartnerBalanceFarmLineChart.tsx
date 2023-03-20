@@ -74,9 +74,9 @@ const PartnerBalanceFarmLineChart = (props: IPartnerBalancesProps) => {
     fetchData();
   }, [props.userId, props.currency]);
 
-  let transactionTypesAmount = {};
-  transactionTypesAmount = balance?.transactionTypesAmount;
-  console.log(transactionTypesAmount);
+  // let transactionTypesAmount = {};
+  // transactionTypesAmount = balance?.transactionTypesAmount;
+  // console.log(transactionTypesAmount , balance);
   return (
     <>
       <h2>Partner Balances : {props.userId}</h2>
