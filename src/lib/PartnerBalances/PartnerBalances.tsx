@@ -6,6 +6,7 @@ export interface IPartnerBalancesProps {
   credentials?: any;
   userId?: string;
   currency?: "COINS" | "USD";
+  // amountTypes?: "Amount" | "";
 }
 
 const PartnerBalances = (props: IPartnerBalancesProps) => {
