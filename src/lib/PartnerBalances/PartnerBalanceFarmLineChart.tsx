@@ -33,30 +33,24 @@ echarts.use([
   CanvasRenderer,
 ]);
 
-const option = {
-  xAxis: {
-    type: "category",
-    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-  },
-  yAxis: {
-    type: "value",
-  },
-  series: [
-    {
-      data: [150, 230, 224, 218, 135, 147, 260],
-      type: "line",
-    },
-  ],
-};
-
 const PartnerBalanceFarmLineChart = (props: IPartnerBalancesProps) => {
   const [loading, setLoading] = useState(false);
-  const [balance, setBalance] = useState([]);
 
-  //  post(
-  //     `/tenant/:tenantId/get-balance-by-identifier-for-currency/:identifier/:currency?dateRange[]='10-03-2023'`,
-  //   );
-  //   /tenant/:tenantId/get-balance-by-identifier-for-currency/:identifier/:currency
+  const [data, setData] = useState({
+    xAxis: {
+      type: "category",
+      data: [],
+    },
+    yAxis: {
+      type: "value",
+    },
+    series: [
+      {
+        data: [],
+        type: "line",
+      },
+    ],
+  });
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -67,16 +61,29 @@ const PartnerBalanceFarmLineChart = (props: IPartnerBalancesProps) => {
         }
       );
       if (fetchBalance.data) {
-        setBalance(fetchBalance.data);
+        console.log(fetchBalance.data)
+        const chartData = fetchBalance.data.transactionTypesAmount;
+
+        setData({
+          xAxis: {
+            type: "category",
+            data: Object.keys(chartData),
+          },
+          yAxis: {
+            type: "value",
+          },
+          series: [
+            {
+              data: Object.values(chartData),
+              type: "line",
+            },
+          ],
+        });
       }
       setLoading(false);
     };
     fetchData();
   }, [props.userId, props.currency]);
-
-  // let transactionTypesAmount = {};
-  // transactionTypesAmount = balance?.transactionTypesAmount;
-  // console.log(transactionTypesAmount , balance);
   return (
     <>
       <h2>Partner Balances : {props.userId}</h2>
@@ -84,7 +91,7 @@ const PartnerBalanceFarmLineChart = (props: IPartnerBalancesProps) => {
       {loading && <h1>Loading</h1>}
       <ReactEChartsCore
         echarts={echarts}
-        option={option}
+        option={data}
         notMerge={true}
         lazyUpdate={true}
         theme={"theme_name"}
