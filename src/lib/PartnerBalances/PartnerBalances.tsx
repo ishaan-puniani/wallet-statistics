@@ -8,6 +8,7 @@ export interface IPartnerBalancesProps {
   currency?: "COINS" | "USD";
 }
 
+
 const PartnerBalances = (props: IPartnerBalancesProps) => {
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState([]);
@@ -42,7 +43,7 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
               </p>
               <p>
                 <strong>Amount</strong> : {parseFloat(record.amount).toFixed(2)}
-              </p>
+              </p> 
             </div>
           ))}
       </div>
