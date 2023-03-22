@@ -34,57 +34,6 @@ const PartnerBalancesPieChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState([]);
 
-  // const [data, setData] = useState({
-  //   title: {
-  //     text: "Different Types of Payments",
-  //     subtext: "Amounts",
-  //     left: "center",
-  //   },
-  //   tooltip: {
-  //     trigger: "item",
-  //   },
-  //   legend: {
-  //     orient: "vertical",
-  //     left: "left",
-  //   },
-  //   series: [
-  //     {
-  //       name: "Amount",
-  //       type: "pie",
-  //       radius: "50%",
-
-  //       data: [
-  //         { value: 12.9706, name: "MINT_BURN" },
-  //         // { value: 0.0, name: "REGISTER_LICENSE" },
-  //         // { value: 0.0, name: "WALLET_CPWALLET_FEE" },
-  //         // { value: 13.0171, name: "UNLOCKED" },
-  //         // { value: 91.4727, name: "LOCKED" },
-  //         // { value: 259.5346, name: "PORTFOLIO" },
-  //         // { value: 18.304, name: "UNLOCKED_WALLET_FEE" },
-  //         // { value: 0.0, name: "MINT" },
-  //         // { value: 5.767, name: "MINING_FEES" },
-  //         // { value: 3.8651, name: "REFERRAL_SIGNUP_REWARDS" },
-  //         // { value: 2.1, name: "MINING_REWARDS_WALLET_FEE" },
-  //         // { value: 9.9008, name: "MINT_REWARDS" },
-  //         // { value: 4.4603, name: "REFERRAL" },
-  //         // { value: 26.171, name: "FEE" },
-  //         // { value: 89.9751, name: "MINING_REWARDS" },
-  //         // { value: 0.5952, name: "COMMISSION" },
-  //         // { value: 169.5595, name: "WALLET" },
-  //         // { value: 110.2103, name: "MINED" },
-  //       ],
-
-  //       emphasis: {
-  //         itemStyle: {
-  //           shadowBlur: 10,
-  //           shadowOffsetX: 0,
-  //           shadowColor: "rgba(0, 0, 0, 0.5)",
-  //         },
-  //       },
-  //     },
-  //   ],
-  // });
-
   const [data, setData] = useState({
     title: {
       text: "Different Types of Payments",
@@ -116,6 +65,7 @@ const PartnerBalancesPieChart = (props: IPartnerBalancesPieChartProps) => {
       },
     ],
   });
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -176,61 +126,6 @@ const PartnerBalancesPieChart = (props: IPartnerBalancesPieChartProps) => {
       ],
     });
 
-    // setData({
-    //   backgroundColor: '#ffffff',
-    //   title: {
-    //     text: 'Transaction Type',
-    //     left: 'center',
-    //     top: 20,
-    //     textStyle: {
-    //       color: '#000000'
-    //     }
-    //   },
-    //   tooltip: {
-    //     trigger: 'item'
-    //   },
-    //   visualMap: {
-    //     show: false,
-    //     min: 80,
-    //     max: 600,
-    //     inRange: {
-    //       colorLightness: [0, 1]
-    //     }
-    //   },
-    //   series: [
-    //     {
-    //       name: 'Amount',
-    //       type: 'pie',
-    //       radius: '55%',
-    //       center: ['50%', '50%'],
-    //       data: chartData.sort(function (a, b) {
-    //         return a.value - b.value;
-    //       }),
-    //       roseType: 'radius',
-    //       label: {
-    //         color: '#000000'
-    //       },
-    //       labelLine: {
-    //         lineStyle: {
-    //           color: '#000000'
-    //         },
-    //         smooth: 0.2,
-    //         length: 10,
-    //         length2: 20
-    //       },
-    //       itemStyle: {
-    //         color: '#14a3c7',
-    //         shadowBlur: 200,
-    //         shadowColor: 'rgba(0, 0, 0, 0.5)'
-    //       },
-    //       animationType: 'scale',
-    //       animationEasing: 'elasticOut',
-    //       animationDelay: function (idx) {
-    //         return Math.random() * 200;
-    //       }
-    //     }
-    //   ]
-    // });
   }, [balance]);
   return (
     <>
