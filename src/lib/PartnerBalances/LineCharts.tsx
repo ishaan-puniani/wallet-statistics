@@ -54,13 +54,12 @@ const Charts = (props: ISimulatorProps) => {
         const outputDateString = `${day}/${month}/${year}`;
         return outputDateString
     }
-
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             const fetchBalance = await axios.post(
                 // `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?dateRange[]='10-03-2023'`,
-                `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?filter[userId]=${props.userId}&filter[currency]=${props.currency}&filter[dateRange][]='${newDates(props.startDate)}'&filter[dateRange][]=${newDates(props.endDate)}`,
+                `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?filter[userId]=${props.userId}&filter[currency]=${props.currency}&filter[dateRange][]=${newDates(props.startDate)}&filter[dateRange][]=${newDates(props.endDate)}`,
                 {
                     ...props.credentials,
                 }

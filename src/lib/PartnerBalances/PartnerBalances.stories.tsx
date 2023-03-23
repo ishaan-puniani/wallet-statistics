@@ -5,8 +5,6 @@ import PartnerBalances from "./PartnerBalances";
 import { getMachineUserCredentials } from "../../utilities/storage";
 import Charts from "./Charts";
 import LineCharts from "./LineCharts";
-import Calendar from "./Calender";
-import DateType from "@storybook/addon-knobs/dist/components/types/Date";
 import { date } from "@storybook/addon-knobs";
 
 export default {
