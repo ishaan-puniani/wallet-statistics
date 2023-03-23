@@ -6,7 +6,7 @@ export interface IPartnerBalancesProps {
   credentials?: any;
   userId?: string;
   currency?: "COINS" | "USD";
-  amountType: "Amount" | "Virtual Value"
+  amountType?: "Amount" | "Virtual Value"
 }
 
 const PartnerBalances = (props: IPartnerBalancesProps) => {
@@ -22,6 +22,7 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
         }
       );
       if (fetchBalance.data) {
+        console.log(fetchBalance.data)
         setBalance(fetchBalance.data);
       }
       setLoading(false);
