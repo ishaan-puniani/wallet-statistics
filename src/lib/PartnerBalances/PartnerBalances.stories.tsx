@@ -3,8 +3,8 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import PartnerBalances from "./PartnerBalances";
 import { getMachineUserCredentials } from "../../utilities/storage";
-import Charts from "./Charts";
-import LineCharts from "./LineCharts";
+import BalancesChart from "./BalancesChart";
+import BalancesReportChart from "./BalancesReportChart";
 import { date } from "@storybook/addon-knobs";
 import PayerTransaction from "./PayerTransaction";
 import PartnerBalancesPieChart from "./PartnerBalancesPieChart";
@@ -21,11 +21,11 @@ export default {
 const Template: ComponentStory<typeof PartnerBalances> = (args) => (
   <PartnerBalances {...args} />
 );
-const TemplateOne: ComponentStory<typeof Charts> = (args) => (
-  <Charts {...args} />
+const TemplateOne: ComponentStory<typeof BalancesChart> = (args) => (
+  <BalancesChart {...args} />
 );
-const TemplateTwo: ComponentStory<typeof LineCharts> = (args) => (
-  <LineCharts {...args} />
+const TemplateTwo: ComponentStory<typeof BalancesReportChart> = (args) => (
+  <BalancesReportChart {...args} />
 );
 const TemplateThree: ComponentStory<typeof PayerTransaction> = (args) => (
   <PayerTransaction {...args} />

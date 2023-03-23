@@ -39,7 +39,7 @@ export interface ISimulatorProps {
     amountType: "Amount" | "Virtual Value"
 }
 
-const Charts = (props: ISimulatorProps) => {
+const BalancesReportChart = (props: ISimulatorProps) => {
     const [loading, setLoading] = useState(false);
     const [balance, setBalance] = useState([]);
     const [date, setDate] = useState([]);
@@ -168,4 +168,4 @@ const Charts = (props: ISimulatorProps) => {
         </>
     );
 };
-export default Charts;
+export default BalancesReportChart;
