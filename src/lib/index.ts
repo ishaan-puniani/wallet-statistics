@@ -1,4 +1,5 @@
 import "./index.css";
+import { renderBalances, renderBalancesChart } from "./PartnerBalances";
 import { renderPartnerHeirarchyTreeView } from "./partnerHeirarchy";
 import { render } from "./simulator";
 
@@ -17,6 +18,13 @@ class WalletStatistics {
   renderPartnerHeirarchyTree = (container: any, props: any) => {
     renderPartnerHeirarchyTreeView(container, props);
   };
+  renderPartnerBalances = (container: any, props: any) => {
+    renderBalances(container, props);
+  };
+  renderPartnerBalancesChart = (container: any, props: any) => {
+    renderBalancesChart(container, props);
+  };
+  
 }
 
 export default WalletStatistics;
