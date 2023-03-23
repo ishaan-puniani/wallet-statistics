@@ -9,7 +9,7 @@ export interface Payers {
 }
 const PayerTransaction = (props: Payers) => {
     const [loading, setLoading] = useState(false);
-    const [balance, setBalance] = useState({});
+    const [balance, setBalance] = useState<any>();
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -31,20 +31,8 @@ const PayerTransaction = (props: Payers) => {
     }, [props.userId, props.currency]);
     // TransactionTypesAmount
     const newObjectKeys = balance?.transactionTypesAmount
-    if (newObjectKeys !== null && typeof newObjectKeys === 'object') {
-        const myKeys = Object.keys(newObjectKeys);
-        console.log(myKeys);
-    } else {
-        console.error('Invalid object');
-    }
     // TransactionTypesVirtualValues
     const typesVirtualValues = balance?.transactionTypesVirtualValue
-    if (typesVirtualValues !== null && typeof typesVirtualValues === 'object') {
-        const myKeys = Object.keys(typesVirtualValues);
-        console.log(myKeys);
-    } else {
-        console.error('Invalid object');
-    }
     console.log(balance)
     return (
         <>
