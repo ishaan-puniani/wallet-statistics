@@ -2,13 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../../constants";
 import "./partner_balances.css";
-export interface IPartnerBalancesLineChartProps {
-  credentials?: any;
-  userId?: string;
-  currency?: "COINS" | "USD";
-  startDate?: Date;
-  endDate?: Date;
-}
 import ReactEChartsCore from "echarts-for-react/lib/core";
 // Import the echarts core module, which provides the necessary interfaces for using echarts.
 import * as echarts from "echarts/core";
@@ -34,6 +27,15 @@ echarts.use([
   LineChart,
   CanvasRenderer,
 ]);
+
+export interface IPartnerBalancesLineChartProps {
+  credentials?: any;
+  userId?: string;
+  currency?: "COINS" | "USD";
+  amountType: "Amount" | "Virtual Value";
+  startDate?: Date;
+  endDate?: Date;
+}
 
 const PartnerBalanceFarmLineChart = (props: IPartnerBalancesLineChartProps) => {
   const [loading, setLoading] = useState(false);
@@ -71,152 +73,173 @@ const PartnerBalanceFarmLineChart = (props: IPartnerBalancesLineChartProps) => {
       {
         name: "",
         type: "",
-        stack: "",
         data: [],
       },
     ],
   });
+
+  const formatDate = (newDate: Date) => {
+    const timestamp = newDate;
+    const newStartDate = new Date(timestamp);
+    const inputDate = new Date(newStartDate);
+    const day = ("0" + inputDate.getDate()).slice(-2); // ensure leading zero if necessary
+    const month = ("0" + (inputDate.getMonth() + 1)).slice(-2); // add 1 to month since January is 0
+    const year = inputDate.getFullYear();
+    const outputDateString = `${day}/${month}/${year}`;
+    return outputDateString;
+  };
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?filter[userId]=${props.userId}&filter[currency]=${props.currency}&filter[dateRange][]=${props.startDate}&filter[dateRange][]=${props.endDate}`,
+        `${API_HOST}/tenant/${
+          props.credentials.application_id
+        }/reports/get-partner-balances-report-by-date?filter[userId]=${
+          props.userId
+        }&filter[currency]=${props.currency}&filter[dateRange][]=${formatDate(
+          props.startDate
+        )}&filter[dateRange][]=${formatDate(props.endDate)}`,
         {
           ...props.credentials,
         }
       );
 
       if (fetchBalance.data) {
-        console.log(fetchBalance.data.rows);
         const chartDataDate = [];
-        const chartSeriesData = []; // array for y-axis data
+        console.log(fetchBalance.data.rows);
+        const chartSeriesData: { name: string; type: string; data: any[] }[] =
+          []; // array for y-axis data
+
         for (let i = 0; i < fetchBalance.data.rows.length; i++) {
-          chartDataDate.push(fetchBalance.data.rows[i].createdAt.split("T")[0]);
-          // chartDataDate.reverse()
-          // loop through each transaction type category and push corresponding value to chartSeriesData
-          const transactionTypesAmountBalance =
-            fetchBalance.data.rows[i].transactionTypesAmountBalance;
-          // console.log(transactionTypesAmountBalance)
-
-          const keys = Object.keys(transactionTypesAmountBalance);
-
-          keys.forEach((type) => console.log(type));
-          // console.log(keys);
-          Object.keys(transactionTypesAmountBalance).forEach((type) => {
-            const index = chartSeriesData.findIndex(
-              (item) => item.name === type
+          if (props.amountType === "Amount") {
+            chartDataDate.push(
+              fetchBalance.data.rows[i].createdAt.split("T")[0]
             );
-            if (index === -1) {
-              // add new series for category
-              chartSeriesData.push({
-                name: type,
-                type: "line",
-                data: [transactionTypesAmountBalance[type]],
-              });
-            } else {
-              // add value to existing series for category
-              chartSeriesData[index].data.push(
-                transactionTypesAmountBalance[type]
+
+            const transactionTypesAmountBalance =
+              fetchBalance.data.rows[i].transactionTypesAmountBalance;
+
+            Object.keys(transactionTypesAmountBalance).forEach((type) => {
+              const index = chartSeriesData.findIndex(
+                (item) => item.name === type
               );
-            }
-          });
+              if (index === -1) {
+                // add new series for category
+                chartSeriesData.push({
+                  name: type,
+                  type: "line",
+                  data: [transactionTypesAmountBalance[type]],
+                });
+              } else {
+                // add value to existing series for category
+                chartSeriesData[index].data.push(
+                  transactionTypesAmountBalance[type]
+                );
+              }
+            });
+            setData({
+              title: {
+                text: "Line Chart",
+              },
+              tooltip: {
+                trigger: "axis",
+              },
+              legend: {
+                data: Object.keys(
+                  fetchBalance.data.rows[0].transactionTypesAmountBalance
+                ),
+              },
+              grid: {
+                left: "3%",
+                right: "4%",
+                bottom: "3%",
+                containLabel: true,
+              },
+              toolbox: {
+                feature: {
+                  saveAsImage: {},
+                },
+              },
+              xAxis: {
+                type: "category",
+                boundaryGap: false,
+                data: chartDataDate,
+              },
+              yAxis: {
+                type: "value",
+              },
+              series: chartSeriesData, // use dynamically generated y-axis data
+            });
+          } else {
+            chartDataDate.push(
+              fetchBalance.data.rows[i].createdAt.split("T")[0]
+            );
+            const transactionTypesVirtualValue =
+              fetchBalance.data.rows[i].transactionTypesVirtualValue;
+            Object.keys(transactionTypesVirtualValue).forEach((type) => {
+              const index = chartSeriesData.findIndex(
+                (item) => item.name === type
+              );
+              if (index === -1) {
+                // add new series for category
+                chartSeriesData.push({
+                  name: type,
+                  type: "line",
+                  data: [transactionTypesVirtualValue[type]],
+                });
+              } else {
+                // add value to existing series for category
+                chartSeriesData[index].data.push(
+                  transactionTypesVirtualValue[type]
+                );
+              }
+            });
+            setData({
+              title: {
+                text: "Line Chart",
+              },
+              tooltip: {
+                trigger: "axis",
+              },
+              legend: {
+                data: Object.keys(
+                  fetchBalance.data.rows[0].transactionTypesVirtualValue
+                ),
+              },
+              grid: {
+                left: "3%",
+                right: "4%",
+                bottom: "3%",
+                containLabel: true,
+              },
+              toolbox: {
+                feature: {
+                  saveAsImage: {},
+                },
+              },
+              xAxis: {
+                type: "category",
+                boundaryGap: false,
+                data: chartDataDate,
+              },
+              yAxis: {
+                type: "value",
+              },
+              series: chartSeriesData, // use dynamically generated y-axis data
+            });
+          }
         }
-
-        // console.log(chartSeriesData);
-        setData({
-          title: {
-            text: "Line Chart",
-          },
-          tooltip: {
-            trigger: "axis",
-          },
-          legend: {
-            data: Object.keys(
-              fetchBalance.data.rows[0].transactionTypesAmountBalance
-            ),
-          },
-          grid: {
-            left: "3%",
-            right: "4%",
-            bottom: "3%",
-            containLabel: true,
-          },
-          toolbox: {
-            feature: {
-              saveAsImage: {},
-            },
-          },
-          xAxis: {
-            type: "category",
-            boundaryGap: false,
-            data: chartDataDate,
-          },
-          yAxis: {
-            type: "value",
-          },
-          series: chartSeriesData, // use dynamically generated y-axis data
-        });
       }
-
-      // if (fetchBalance.data) {
-      //   console.log(fetchBalance.data.rows);
-      //   const chartDataDate = [];
-      //   const chartName = [];
-      //   for (let i = 0; i < fetchBalance.data.rows.length; i++) {
-      //     chartDataDate.push(fetchBalance.data.rows[i].date);
-      //     chartName.push(
-      //       Object.keys(fetchBalance.data.rows[i].transactionTypesAmountBalance)
-      //     );
-      //     setData({
-      //       title: {
-      //         text: "Stacked Line",
-      //       },
-      //       tooltip: {
-      //         trigger: "axis",
-      //       },
-      //       legend: {
-      //         data: [
-      //           "Email",
-      //           "Union Ads",
-      //           "Video Ads",
-      //           "Direct",
-      //           "Search Engine",
-      //         ],
-      //       },
-      //       grid: {
-      //         left: "3%",
-      //         right: "4%",
-      //         bottom: "3%",
-      //         containLabel: true,
-      //       },
-      //       toolbox: {
-      //         feature: {
-      //           saveAsImage: {},
-      //         },
-      //       },
-      //       xAxis: {
-      //         type: "category",
-      //         boundaryGap: false,
-      //         data: chartDataDate,
-      //       },
-      //       yAxis: {
-      //         type: "value",
-      //       },
-      //       series: [
-      //         {
-      //           name: "email",
-      //           type: "line",
-      //           stack: "Total",
-      //           data: [120, 132, 101, 134, 90, 230, 210],
-      //         },
-      //       ],
-      //     })
-      //   }
-      // }
       setLoading(false);
     };
     fetchData();
-  }, [props.userId, props.currency]);
+  }, [
+    props.userId,
+    props.currency,
+    props.startDate,
+    props.endDate,
+    props.amountType,
+  ]);
   return (
     <>
       <h2>Partner Balances : {props.userId}</h2>

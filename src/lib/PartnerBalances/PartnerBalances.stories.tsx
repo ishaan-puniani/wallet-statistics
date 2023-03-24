@@ -25,7 +25,7 @@ const Template: ComponentStory<typeof PartnerBalances> = (args) => (
 );
 const TemplatePartnerBalanceFarm: ComponentStory<typeof PartnerBalances> = (
   args
-) => <PartnerBalanceFarmLineChart {...args} />;
+) => <PartnerBalanceFarmLineChart amountType={"Amount"} {...args} />;
 
 const TemplateOne: ComponentStory<typeof BalancesChart> = (args) => (
   <BalancesChart {...args} />
