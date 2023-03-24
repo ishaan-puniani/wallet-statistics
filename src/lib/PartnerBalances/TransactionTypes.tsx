@@ -14,7 +14,7 @@ const TransactionType = (props: ITransactionType) => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
+        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete?filter[userId]=${props.userId}`,
 
         // /api//tenant/:tenantId/get-transaction-type-autocomplete
         {
@@ -34,7 +34,7 @@ const TransactionType = (props: ITransactionType) => {
   return (
     <>
       {" "}
-      <h2>Partner Balances : Transaction Types</h2>
+      <h2>Transaction Types : {props.userId}</h2>
       {loading && <h1>Loading</h1>}
       <div className="wrapper">
         {!loading &&
