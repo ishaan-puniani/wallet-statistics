@@ -29,6 +29,6 @@ Default.args = {
 export const LineChart = TemplatePartnerBalanceFarm.bind({});
 LineChart.args = {
   credentials: getMachineUserCredentials() || {},
-  
-
+  startDate: "string",
+  endDate: "string",
 };
