@@ -8,6 +8,7 @@ import BalancesReportChart from "./BalancesReportChart";
 import { date } from "@storybook/addon-knobs";
 import PayerTransaction from "./PayerTransaction";
 import PartnerBalancesPieChart from "./PartnerBalancesPieChart";
+import CurrenciesCard from "./CurrenciesCard";
 
 export default {
   title: "Example/PartnerBalances",
@@ -33,6 +34,9 @@ const TemplateThree: ComponentStory<typeof PayerTransaction> = (args) => (
 const Template1: ComponentStory<typeof PartnerBalances> = (args) => (
   <PartnerBalancesPieChart {...args} />
 )
+const TemplateCurrencyCard: ComponentStory<typeof PartnerBalances> = (args) => (
+  <CurrenciesCard {...args} />
+)
 export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
@@ -53,5 +57,9 @@ Payer.args = {
 };
 export const PieChart = Template1.bind({});
 PieChart.args = {
+  credentials: getMachineUserCredentials() || {},
+}
+export const CurrencyCard = TemplateCurrencyCard.bind({});
+CurrencyCard.args = {
   credentials: getMachineUserCredentials() || {},
 }
