@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Multiselect from "multiselect-react-dropdown";
 import { API_HOST } from "../../constants";
+import "./Dropdown.css";
 export interface IDropdownProps {
   credentials?: any;
 }
@@ -13,14 +14,14 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const fetchBalance = await axios.post(
+      const fetchCurrencyTypes = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
         {
           ...props.credentials,
         }
       );
-      if (fetchBalance.data) {
-        const items = fetchBalance.data;
+      if (fetchCurrencyTypes.data) {
+        const items = fetchCurrencyTypes.data;
         setCurrencyData(items);
       }
       setLoading(false);
@@ -33,19 +34,20 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
   );
   return (
     <>
-      <h2>Currency</h2>
-      {loading && <h1>Loading</h1>}
-
-      <div className="">
-        {" "}
-        <Multiselect
-          isObject={false}
-          onKeyPressFn={function noRefCheck() {}}
-          onRemove={function noRefCheck() {}}
-          onSearch={function noRefCheck() {}}
-          onSelect={function noRefCheck() {}}
-          options={options}
-        />
+      <div className="dropdown-wrapper">
+        <h2>Currency Types</h2>
+        {loading ? (
+          <h1>Loading</h1>
+        ) : (
+          <Multiselect
+            isObject={false}
+            onKeyPressFn={function noRefCheck() {}}
+            onRemove={function noRefCheck() {}}
+            onSearch={function noRefCheck() {}}
+            onSelect={function noRefCheck() {}}
+            options={options}
+          />
+        )}
       </div>
     </>
   );
