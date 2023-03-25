@@ -1,4 +1,3 @@
-import { object } from "@storybook/addon-knobs";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../../constants";
@@ -30,8 +29,7 @@ const TransactionType = (props: ITransactionType) => {
     };
     fetchData();
   }, [props.userId, props.currency]);
-  console.log(balance);
-  //   c58d2999-42df-401d-9eef-32a584232370
+
   return (
     <>
       {" "}
