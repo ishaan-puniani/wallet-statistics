@@ -9,6 +9,7 @@ import { date } from "@storybook/addon-knobs";
 import PayerTransaction from "./PayerTransaction";
 import PartnerBalancesPieChart from "./PartnerBalancesPieChart";
 import TransactionType from "./TransactionTypes";
+import CurrenciesCard from "./CurrenciesCard";
 import UserAchievement from "../Achievement/UserAchievements";
 
 export default {
@@ -38,6 +39,10 @@ const Template1: ComponentStory<typeof PartnerBalances> = (args) => (
 const TemplateTransaction: ComponentStory<typeof TransactionType> = (args) => (
   <TransactionType {...args} />
 );
+)
+const TemplateCurrencyCard: ComponentStory<typeof CurrenciesCard> = (args) => (
+  <CurrenciesCard {...args} />
+)
 export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
@@ -64,3 +69,8 @@ export const Transaction = TemplateTransaction.bind({});
 Transaction.args = {
   credentials: getMachineUserCredentials() || {},
 };
+}
+export const CurrencyCard = TemplateCurrencyCard.bind({});
+CurrencyCard.args = {
+  credentials: getMachineUserCredentials() || {},
+}
