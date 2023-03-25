@@ -38,10 +38,7 @@ const CurrenciesCard = (props: ICurrencies) => {
         balance?.map((record: { id: string; label: string }) => (
           <div className="card">
             <p>
-              <strong>Id</strong> : {record.id}
-            </p>
-            <p>
-              <strong>Currency</strong> : {record.label}
+              <strong>{Object.keys(record)[1]}</strong> : {record.label}
             </p>
           </div>
         ))}

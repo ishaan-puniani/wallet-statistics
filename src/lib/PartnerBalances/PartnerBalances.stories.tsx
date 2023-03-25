@@ -34,7 +34,7 @@ const TemplateThree: ComponentStory<typeof PayerTransaction> = (args) => (
 const Template1: ComponentStory<typeof PartnerBalances> = (args) => (
   <PartnerBalancesPieChart {...args} />
 )
-const TemplateCurrencyCard: ComponentStory<typeof PartnerBalances> = (args) => (
+const TemplateCurrencyCard: ComponentStory<typeof CurrenciesCard> = (args) => (
   <CurrenciesCard {...args} />
 )
 export const Default = Template.bind({});
