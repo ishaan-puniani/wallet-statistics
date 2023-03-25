@@ -22,7 +22,7 @@ const TransactionType = (props: ITransactionType) => {
         }
       );
       if (fetchBalance.data) {
-        console.log(fetchBalance.data);
+       
         const items = fetchBalance.data;
         setBalance(items);
       }
@@ -49,11 +49,7 @@ const TransactionType = (props: ITransactionType) => {
               </div>
             )
           )}
-        {/* {balance.map((data) => (
-            <div>
-              <p>{data.label}</p>
-            </div>
-          ))} */}
+       
       </div>
     </>
   );
