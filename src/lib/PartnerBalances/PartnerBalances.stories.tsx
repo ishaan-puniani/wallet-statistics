@@ -9,6 +9,7 @@ import { date } from "@storybook/addon-knobs";
 import PayerTransaction from "./PayerTransaction";
 import PartnerBalancesPieChart from "./PartnerBalancesPieChart";
 import CurrenciesCard from "./CurrenciesCard";
+import UserAchievement from "../Achievement/UserAchievements";
 
 export default {
   title: "Example/PartnerBalances",
@@ -41,12 +42,12 @@ export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
 };
-export const Chart = TemplateOne.bind({});
-Chart.args = {
+export const PartnerBalanceChart = TemplateOne.bind({});
+PartnerBalanceChart.args = {
   credentials: getMachineUserCredentials() || {},
 };
-export const LinesChart = TemplateTwo.bind({});
-LinesChart.args = {
+export const PartnerBalanceReport = TemplateTwo.bind({});
+PartnerBalanceReport.args = {
   credentials: getMachineUserCredentials() || {},
   startDate: date,
   endDate: date
