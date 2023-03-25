@@ -9,7 +9,7 @@ import { date } from "@storybook/addon-knobs";
 import PayerTransaction from "./PayerTransaction";
 import PartnerBalancesPieChart from "./PartnerBalancesPieChart";
 import CurrenciesCard from "./CurrenciesCard";
-import UserAchievement from "../Achievement/UserAchievements";
+// import UserAchievement from "../Achievement/UserAchievements";
 
 export default {
   title: "Example/PartnerBalances",
