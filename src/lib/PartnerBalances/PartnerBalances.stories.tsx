@@ -39,7 +39,7 @@ const Template1: ComponentStory<typeof PartnerBalances> = (args) => (
 const TemplateTransaction: ComponentStory<typeof TransactionType> = (args) => (
   <TransactionType {...args} />
 );
-)
+
 const TemplateCurrencyCard: ComponentStory<typeof CurrenciesCard> = (args) => (
   <CurrenciesCard {...args} />
 )
@@ -69,7 +69,7 @@ export const Transaction = TemplateTransaction.bind({});
 Transaction.args = {
   credentials: getMachineUserCredentials() || {},
 };
-}
+
 export const CurrencyCard = TemplateCurrencyCard.bind({});
 CurrencyCard.args = {
   credentials: getMachineUserCredentials() || {},
