@@ -30,6 +30,7 @@ const CurrenciesCard = (props: ICurrencies) => {
     fetchData();
   }, [props.userId, props.currency]);
   console.log(balance);
+//   c58d2999-42df-401d-9eef-32a584232370
   return (
     <>
       <h2>Currency : {props.userId}</h2>
@@ -37,6 +38,9 @@ const CurrenciesCard = (props: ICurrencies) => {
       {!loading &&
         balance?.map((record: { id: string; label: string }) => (
           <div className="card">
+            <p>
+              <strong>{Object.keys(record)[0]}</strong> : {record.id}
+            </p>
             <p>
               <strong>{Object.keys(record)[1]}</strong> : {record.label}
             </p>
