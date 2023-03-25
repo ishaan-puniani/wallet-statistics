@@ -10,7 +10,7 @@ export interface ICurrencies {
 }
 const CurrenciesCard = (props: ICurrencies) => {
   const [loading, setLoading] = useState(false);
-  const [balance, setBalance] = useState<any>();
+  const [currencyData, setCurrencyData] = useState<any>();
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -23,7 +23,7 @@ const CurrenciesCard = (props: ICurrencies) => {
       );
       if (fetchBalance.data) {
         const items = fetchBalance.data;
-        setBalance(items);
+        setCurrencyData(items);
       }
       setLoading(false);
     };
@@ -35,7 +35,7 @@ const CurrenciesCard = (props: ICurrencies) => {
       <h2>Currency : {props.userId}</h2>
       {loading && <h1>Loading</h1>}
       {!loading &&
-        balance?.map((record: { id: string; label: string }) => (
+        currencyData?.map((record: { id: string; label: string }) => (
           <div className="card">
             <p>
               <strong>id</strong> : {record.id}
