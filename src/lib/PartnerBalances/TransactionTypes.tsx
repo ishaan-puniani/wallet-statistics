@@ -1,3 +1,4 @@
+import { object } from "@storybook/addon-knobs";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../../constants";
@@ -22,7 +23,6 @@ const TransactionType = (props: ITransactionType) => {
         }
       );
       if (fetchBalance.data) {
-       
         const items = fetchBalance.data;
         setBalance(items);
       }
@@ -30,7 +30,8 @@ const TransactionType = (props: ITransactionType) => {
     };
     fetchData();
   }, [props.userId, props.currency]);
-
+  console.log(balance);
+  //   c58d2999-42df-401d-9eef-32a584232370
   return (
     <>
       {" "}
@@ -38,18 +39,14 @@ const TransactionType = (props: ITransactionType) => {
       {loading && <h1>Loading</h1>}
       <div className="wrapper">
         {!loading &&
-          balance?.map(
-            (record: {
-              transactionType: string | any[];
-              amount: string;
-              label: string;
-            }) => (
-              <div className="card">
-                <p>{record.label}</p>
-              </div>
-            )
-          )}
-       
+          balance?.map((record: { id: string; label: string }) => (
+            <div className="card">
+              <p>
+                <strong>{Object.keys(record)[0]}</strong> : {record.id}
+              </p>
+              <p>  <strong>{Object.keys(record)[1]}</strong> : {record.label}</p>
+            </div>
+          ))}
       </div>
     </>
   );
