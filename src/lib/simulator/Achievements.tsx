@@ -1,20 +1,20 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { API_HOST } from "../../constants";
 import "./stimulator.css";
 export interface IAchievements {
   credentials?: any;
   achieverId?: any;
-  action? : string
-  value?:number
+  action?: string;
+  value?: number;
 }
 
 const Achievements = (props: IAchievements) => {
   console.log("REACHED");
 
   const { register, handleSubmit } = useForm();
-console.log(props.achieverId)
+  console.log(props.achieverId);
   const onSubmit = async (data: any) => {
     const fetchBalance = await axios.post(
       `${API_HOST}/tenant/${props.credentials.application_id}/sim-user-achievements`,
@@ -22,7 +22,6 @@ console.log(props.achieverId)
         data,
       }
     );
-    console.log(fetchBalance);
   };
 
   return (
@@ -33,10 +32,7 @@ console.log(props.achieverId)
           <div>
             <li>
               <label>Achiever Id :</label>
-              <input
-                value={props.achieverId}
-                {...register("achieverId")}
-              />
+              <input value={props.achieverId} {...register("achieverId")} />
             </li>
             <li>
               <label>Action : </label>
