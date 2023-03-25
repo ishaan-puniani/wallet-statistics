@@ -9,21 +9,19 @@ export interface ITransactionType {
 }
 const TransactionType = (props: ITransactionType) => {
   const [loading, setLoading] = useState(false);
-  const [balance, setBalance] = useState<any>();
+  const [transactionData, setTransactionData] = useState<any>();
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete?filter[userId]=${props.userId}`,
-
-        // /api//tenant/:tenantId/get-transaction-type-autocomplete
         {
           ...props.credentials,
         }
       );
       if (fetchBalance.data) {
         const items = fetchBalance.data;
-        setBalance(items);
+        setTransactionData(items);
       }
       setLoading(false);
     };
@@ -32,12 +30,11 @@ const TransactionType = (props: ITransactionType) => {
 
   return (
     <>
-      {" "}
       <h2>Transaction Types : {props.userId}</h2>
       {loading && <h1>Loading</h1>}
       <div className="wrapper">
         {!loading &&
-          balance?.map((record: { id: string; label: string }) => (
+          transactionData?.map((record: { id: string; label: string }) => (
             <div className="card">
               <p>
                 <strong>id</strong> : {record.id}
