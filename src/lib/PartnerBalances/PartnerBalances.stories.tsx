@@ -10,7 +10,7 @@ import PayerTransaction from "./PayerTransaction";
 import PartnerBalancesPieChart from "./PartnerBalancesPieChart";
 import TransactionType from "./TransactionTypes";
 import CurrenciesCard from "./CurrenciesCard";
-import UserAchievement from "../Achievement/UserAchievements";
+// import UserAchievement from "../Achievement/UserAchievements";
 
 export default {
   title: "Example/PartnerBalances",
