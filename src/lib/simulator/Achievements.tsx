@@ -11,12 +11,9 @@ export interface IAchievements {
 }
 
 const Achievements = (props: IAchievements) => {
-  console.log("REACHED");
-
   const { register, handleSubmit } = useForm();
-  console.log(props.achieverId);
   const onSubmit = async (data: any) => {
-    const fetchBalance = await axios.post(
+    const simulateUserAchievement = await axios.post(
       `${API_HOST}/tenant/${props.credentials.application_id}/sim-user-achievements`,
       {
         data,
