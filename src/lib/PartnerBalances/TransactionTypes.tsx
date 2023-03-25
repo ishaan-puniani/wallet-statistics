@@ -42,9 +42,9 @@ const TransactionType = (props: ITransactionType) => {
           balance?.map((record: { id: string; label: string }) => (
             <div className="card">
               <p>
-                <strong>{Object.keys(record)[0]}</strong> : {record.id}
+                <strong>id</strong> : {record.id}
               </p>
-              <p>  <strong>{Object.keys(record)[1]}</strong> : {record.label}</p>
+              <p>  <strong>label</strong> : {record.label}</p>
             </div>
           ))}
       </div>
