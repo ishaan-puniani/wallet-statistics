@@ -25,10 +25,6 @@ export interface ISimulatorProps {
   onBehalfOfName?: string;
   additionalData?: string;
   baseTransaction?: string;
-
-
-
-
   service?: string;
   provider?: string;
   vendor?: string;
@@ -36,12 +32,12 @@ export interface ISimulatorProps {
   executeCommissionAmount?: string;
   metadata?: string;
   fromWallet?: string;
- 
-
+  achieverId?: string;
+  action?: string;
+  value?: number;
 }
 
 const Simulator = (props: ISimulatorProps) => {
-  
   console.log("REACHED");
 
   const { register, handleSubmit } = useForm();
@@ -166,38 +162,18 @@ const Simulator = (props: ISimulatorProps) => {
               />
             </li>
 
-
-
-
-
-
-
-
-
-           
-
             <li>
               <label>service :</label>
-              <input
-                value={props.service}
-                {...register("service")}
-              />
+              <input value={props.service} {...register("service")} />
             </li>
-
 
             <li>
               <label>provider :</label>
-              <input
-                value={props.provider}
-                {...register("provider")}
-              />
+              <input value={props.provider} {...register("provider")} />
             </li>
             <li>
               <label>vendor :</label>
-              <input
-                value={props.vendor}
-                {...register("vendor")}
-              />
+              <input value={props.vendor} {...register("vendor")} />
             </li>
             <li>
               <label>executeCommissionFor :</label>
@@ -215,21 +191,13 @@ const Simulator = (props: ISimulatorProps) => {
             </li>
             <li>
               <label>metadata :</label>
-              <input
-                value={props.metadata}
-                {...register("metadata")}
-              />
+              <input value={props.metadata} {...register("metadata")} />
             </li>
 
             <li>
               <label>fromWallet :</label>
-              <input
-                value={props.fromWallet}
-                {...register("fromWallet")}
-              />
+              <input value={props.fromWallet} {...register("fromWallet")} />
             </li>
-
-
           </div>
         </ul>
         <div className="formStyle">
