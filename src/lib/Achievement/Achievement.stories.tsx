@@ -21,13 +21,13 @@ const TemplateTwo: ComponentStory<typeof AvailableAchievement> = (args) => (
     <AvailableAchievement {...args} />
 );
 
-export const Achievement = Template.bind({});
-Achievement.args = {
+export const UserAchievements = Template.bind({});
+UserAchievements.args = {
     credentials: getMachineUserCredentials() || {},
-    userId: ''
+    achieverId: ''
 };
 export const AvailableAchievements = TemplateTwo.bind({});
 AvailableAchievements.args = {
     credentials: getMachineUserCredentials() || {},
-    userId: ''
+    showRaw: false
 };
