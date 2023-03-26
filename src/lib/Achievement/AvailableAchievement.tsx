@@ -4,11 +4,11 @@ import "./available_achievement.css";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { API_HOST } from "../../constants";
-export interface Achievements {
+export interface AchievementsFilter {
   showRaw?: boolean;
   credentials?: any;
 }
-const AvailableAchievement = (props: Achievements) => {
+const AvailableAchievement = (props: AchievementsFilter) => {
   const [loading, setLoading] = useState(false);
   const [achievement, setAchievement] = useState([]);
   useEffect(() => {
