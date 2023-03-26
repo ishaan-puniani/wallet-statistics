@@ -11,6 +11,6 @@ export const renderBalancesChart =  (container: any, props: any) => {
   ReactDOM.render(<BalancesChart {...props}/>, container);
 };
 
-export const renderBalancesReportChart =  (container: any, props: any) => {
+export const _renderBalancesReportChart =  (container: any, props: any) => {
   ReactDOM.render(<BalancesReportChart {...props}/>, container);
 };

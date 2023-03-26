@@ -1,5 +1,6 @@
+import { renderAvailableAchievements, renderUserAchievements, _renderAvailableAchievements, _renderUserAchievements } from "./Achievement";
 import "./index.css";
-import { renderBalances, renderBalancesChart } from "./PartnerBalances";
+import { renderBalances, renderBalancesChart, _renderBalancesReportChart } from "./PartnerBalances";
 import { renderPartnerHeirarchyTreeView } from "./partnerHeirarchy";
 import { render } from "./simulator";
 
@@ -24,6 +25,17 @@ class WalletStatistics {
   renderPartnerBalancesChart = (container: any, props: any) => {
     renderBalancesChart(container, props);
   };
+  renderPartnerBalancesReportChart = (container: any, props: any) => {
+    _renderBalancesReportChart(container, props);
+  };
+
+  renderAchievements = (container: any, props: any) => {
+    _renderAvailableAchievements(container, props);
+  };
+  renderUserAchievements = (container: any, props: any) => {
+    _renderUserAchievements(container, props);
+  };
+
   
 }
 
