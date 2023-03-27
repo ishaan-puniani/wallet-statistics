@@ -1,4 +1,4 @@
-import { renderAvailableAchievements, renderUserAchievements, _renderAvailableAchievements, _renderUserAchievements } from "./Achievement";
+import { _renderAvailableAchievements, _renderUserAchievements } from "./Achievement";
 import "./index.css";
 import { renderBalances, renderBalancesChart, _renderBalancesReportChart } from "./PartnerBalances";
 import { renderPartnerHeirarchyTreeView } from "./partnerHeirarchy";
