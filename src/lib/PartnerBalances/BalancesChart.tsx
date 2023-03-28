@@ -19,6 +19,9 @@ import {
 import axios from "axios";
 import { API_HOST } from "../../constants";
 
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
 // Register the required components
 echarts.use([
   TitleComponent,
@@ -30,32 +33,32 @@ echarts.use([
 ]);
 
 
-export interface ISimulatorProps {
+export interface IPartnerBalancesPieChartProps {
   userId: unknown;
   currency: unknown;
   credentials: any;
-  amountType: "Amount" | "Virtual Value"
+  amountType: "amount" | "virtual",
+  showRaw?: boolean
 }
 
-const BalancesChart = (props: ISimulatorProps) => {
+const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState([]);
-  console.log(props.amountType)
+  const [rawData, setRawData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
-        // `${API_HOST}/tenant/${props.credentials.application_id}/get-balance-by-identifier-for-currency/de092340-812b-402f-8192-c814cf6aff21/${props.currency}`,
         {
           ...props.credentials,
         }
       );
       if (fetchBalance.data) {
         const datas = fetchBalance?.data
-        console.log(datas)
+        setRawData(datas)
         const modifiedArray = datas.map((item: { amount: any; transactionType: any; virtualValue: any; }) => {
-          if (props.amountType === "Amount") {
+          if (props.amountType === "amount") {
             return {
               value: item.amount,
               name: item.transactionType
@@ -74,44 +77,66 @@ const BalancesChart = (props: ISimulatorProps) => {
   }, [props.userId, props.currency, props.amountType]);
   const option = {
     tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b} : {c} ({d}%)'
+      trigger: 'item'
     },
-    toolbox: {
-      show: true,
-      feature: {
-        mark: { show: true },
-        dataView: { show: true, readOnly: false },
-        restore: { show: true },
-        saveAsImage: { show: true }
-      }
+    legend: {
+      top: '0%',
+      left: 'center'
+    },
+    grid: {
+      top: 1000,
+      left: 60,
+      right: 60,
+      bottom: 60,
     },
     series: [
       {
-        name: 'Area Mode',
+        name: 'Wallet And Bonus',
         type: 'pie',
-        radius: [20, 140],
-        center: ['50%', '50%'],
-        roseType: 'area',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
         itemStyle: {
-          borderRadius: 5
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
         },
         data: balance
       }
     ]
   };
-  console.log("REACHED");
   // console.log(balance)
   return (
     <>
       {loading && <h1>Loading</h1>}
-      <ReactEChartsCore
-        echarts={echarts}
-        option={option}
-        notMerge={true}
-        lazyUpdate={true}
-        theme={"theme_name"}
-      />
+      {props?.showRaw ? <>
+        {rawData?.map(item => <>
+          <div className="card">
+            <SyntaxHighlighter language="javascript" style={docco}>
+              {JSON.stringify(item, null, 2)}
+            </SyntaxHighlighter>
+          </div></>)}
+      </> : <div style={{ marginTop: '20px' }}>
+        <ReactEChartsCore
+          echarts={echarts}
+          option={option}
+          notMerge={true}
+          lazyUpdate={true}
+          theme={"theme_name"}
+        /></div>}
     </>
   );
 };

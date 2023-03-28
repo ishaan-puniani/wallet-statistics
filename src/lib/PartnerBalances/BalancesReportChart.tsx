@@ -36,7 +36,7 @@ export interface BalanceReportChartFilterProps {
     currency: unknown;
     credentials: any;
     label: string;
-    amountType: "Amount" | "Virtual Value"
+    amountType: "amount" | "virtual"
 }
 
 const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
@@ -76,7 +76,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                     transactionTypesAmount: unknown; createdAt: any;
                 }) => {
                     allDate.push(item?.createdAt.split('T')[0])
-                    if (props.amountType === "Amount") {
+                    if (props.amountType === "amount") {
                         const xData = Object.keys(item?.transactionTypesAmount)
                         xData?.forEach(item => {
                             xAxisData.push(item)
@@ -85,7 +85,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                         balaceArray.push(item.transactionTypesAmount)
                         return setBalance(balaceArray)
                     }
-                    else if (props.amountType === "Virtual Value") {
+                    else if (props.amountType === "virtual") {
                         const xData = Object.keys(item?.transactionTypesVirtualValue
                         )
                         xData?.forEach(item => {

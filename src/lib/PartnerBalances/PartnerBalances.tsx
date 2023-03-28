@@ -6,7 +6,7 @@ export interface IPartnerBalancesProps {
   credentials?: any;
   userId?: string;
   currency?: "COINS" | "USD";
-  amountType?: "Amount" | "Virtual Value"
+  amountType?: "amount" | "virtual"
 }
 
 
@@ -45,7 +45,7 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
               </p>
               <p>
                 <strong>Amount</strong> : {parseFloat(record.amount).toFixed(2)}
-              </p> 
+              </p>
             </div>
           ))}
       </div>
