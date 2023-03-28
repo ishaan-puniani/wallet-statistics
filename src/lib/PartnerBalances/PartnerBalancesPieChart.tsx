@@ -9,6 +9,7 @@ import {
   GridComponent,
   TooltipComponent,
   TitleComponent,
+  LegendComponent
 } from "echarts/components";
 
 import {
@@ -16,10 +17,14 @@ import {
   // SVGRenderer,
 } from "echarts/renderers";
 
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
 export interface IPartnerBalancesPieChartProps {
   credentials?: any;
   userId?: string;
   currency?: "COINS" | "USD";
+  showRaw?: boolean
 }
 
 echarts.use([
@@ -28,6 +33,7 @@ echarts.use([
   GridComponent,
   PieChart,
   CanvasRenderer,
+  LegendComponent
 ]);
 
 const PartnerBalancesPieChart = (props: IPartnerBalancesPieChartProps) => {
@@ -35,35 +41,53 @@ const PartnerBalancesPieChart = (props: IPartnerBalancesPieChartProps) => {
   const [balance, setBalance] = useState([]);
 
   const [data, setData] = useState({
-    title: {
-      text: "Different Types of Payments",
-      subtext: "Amounts",
-      left: "center",
-    },
     tooltip: {
-      trigger: "item",
+      trigger: 'item'
     },
     legend: {
-      orient: "vertical",
-      left: "left",
+      top: '0%',
+      left: 'center'
+    },
+    grid: {
+      top: 1000,
+      left: 60,
+      right: 60,
+      bottom: 60,
     },
     series: [
       {
-        name: "Amount",
-        type: "pie",
-        radius: "50%",
-
-        data: [{ value: 12, name: "amount" }],
-
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: "rgba(0, 0, 0, 0.5)",
-          },
+        name: 'Wallet And Bonus',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
         },
-      },
-    ],
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 40,
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 1048, name: 'Search Engine' },
+          { value: 735, name: 'Direct' },
+          { value: 580, name: 'Email' },
+          { value: 484, name: 'Union Ads' },
+          { value: 300, name: 'Video Ads' }
+        ]
+      }
+    ]
   });
 
   useEffect(() => {
@@ -95,51 +119,70 @@ const PartnerBalancesPieChart = (props: IPartnerBalancesPieChartProps) => {
     }));
 
     setData({
-      title: {
-        text: "Different Types of Payments",
-        subtext: "Amounts",
-        left: "center",
-      },
       tooltip: {
-        trigger: "item",
+        trigger: 'item'
       },
       legend: {
-        orient: "vertical",
-        left: "left",
+        top: '0%',
+        left: 'center'
+      },
+      grid: {
+        top: 1000,
+        left: 60,
+        right: 60,
+        bottom: 60,
       },
       series: [
         {
-          name: "Amount",
-          type: "pie",
-          radius: "50%",
-
-          data: chartData,
-
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: "rgba(0, 0, 0, 0.5)",
-            },
+          name: 'Wallet And Bonus',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
           },
-        },
-      ],
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 40,
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: chartData
+        }
+      ]
     });
 
   }, [balance]);
+  console.log(balance)
   return (
     <>
-      <h2>Partner Balances : {props.userId}</h2>
-
       {loading && <h1>Loading</h1>}
-      <ReactEChartsCore
-        echarts={echarts}
-        // option={data}
-        option={data}
-        notMerge={true}
-        lazyUpdate={true}
-        theme={"theme_name"}
-      />
+      {props?.showRaw ? <>
+        {balance?.map(item => <>
+          <div className="card">
+            <SyntaxHighlighter language="javascript" style={docco}>
+              {JSON.stringify(item, null, 2)}
+            </SyntaxHighlighter>
+          </div></>)}
+      </> : <div style={{ marginTop: '20px' }}>
+        <ReactEChartsCore
+          echarts={echarts}
+          // option={data}
+          option={data}
+          notMerge={true}
+          lazyUpdate={true}
+          theme={"theme_name"}
+        /></div>}
     </>
   );
 };

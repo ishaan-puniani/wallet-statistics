@@ -64,6 +64,7 @@ Payer.args = {
 export const PieChart = Template1.bind({});
 PieChart.args = {
   credentials: getMachineUserCredentials() || {},
+  showRaw: false
 };
 export const Transaction = TemplateTransaction.bind({});
 Transaction.args = {
