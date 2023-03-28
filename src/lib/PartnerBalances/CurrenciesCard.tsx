@@ -5,8 +5,7 @@ import "./partner_balances.css";
 export interface ICurrencies {
   userId: string;
   currency: string;
-  credentials: any;
-  amountType?: "Amount" | "Virtual Value";
+  credentials: any
 }
 const CurrenciesCard = (props: ICurrencies) => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +28,7 @@ const CurrenciesCard = (props: ICurrencies) => {
     };
     fetchData();
   }, [props.userId, props.currency]);
- 
+
   return (
     <>
       <h2>Currency : {props.userId}</h2>
