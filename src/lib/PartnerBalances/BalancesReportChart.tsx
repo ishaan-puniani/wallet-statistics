@@ -29,7 +29,7 @@ echarts.use([
 ]);
 
 
-export interface ISimulatorProps {
+export interface BalanceReportChartFilterProps {
     endDate: Date;
     startDate: Date;
     userId: unknown;
@@ -39,7 +39,7 @@ export interface ISimulatorProps {
     amountType: "Amount" | "Virtual Value"
 }
 
-const BalancesReportChart = (props: ISimulatorProps) => {
+const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     const [loading, setLoading] = useState(false);
     const [balance, setBalance] = useState([]);
     const [date, setDate] = useState([]);
