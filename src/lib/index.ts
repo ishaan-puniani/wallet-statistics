@@ -1,7 +1,17 @@
-import { _renderAvailableAchievements, _renderUserAchievements } from "./Achievement";
+import {
+  _renderAvailableAchievements,
+  _renderUserAchievements,
+} from "./Achievement";
 import "./index.css";
-import { renderBalances, renderBalancesChart, _renderBalancesReportChart } from "./PartnerBalances";
-import { renderPartnerHeirarchyTreeView } from "./partnerHeirarchy";
+import {
+  renderBalances,
+  renderBalancesChart,
+  _renderBalancesReportChart,
+} from "./PartnerBalances";
+import {
+  renderPartnerHeirarchyTreeView,
+  renderPartnerHeirarchyView,
+} from "./partnerHeirarchy";
 import { render } from "./simulator";
 
 class WalletStatistics {
@@ -35,8 +45,9 @@ class WalletStatistics {
   renderUserAchievements = (container: any, props: any) => {
     _renderUserAchievements(container, props);
   };
-
-  
+  renderPartnerHeirarchy = (container: any, props: any) => {
+    renderPartnerHeirarchyView(container, props);
+  };
 }
 
 export default WalletStatistics;
