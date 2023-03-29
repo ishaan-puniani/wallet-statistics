@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { API_HOST } from '../../constants';
-import "./partner_balances.css";
+import "./payer_transaction.css";
 export interface Payers {
     userId: string;
     currency: string;
@@ -39,7 +39,7 @@ const PayerTransaction = (props: Payers) => {
 
             {loading && <h1>Loading</h1>}
             <div className="wrapper">
-                <div className="card">
+                <div className="cards">
 
                     <p>
                         <strong>Identifier</strong>: <small style={{ marginTop: '5px' }}>{balance?.identifier}</small>

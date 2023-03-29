@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../../constants";
-import "./partner_balances.css";
+import "./transaction_types.css";
 export interface ITransactionType {
   userId: string;
   currency: string;
@@ -35,7 +35,7 @@ const TransactionType = (props: ITransactionType) => {
       <div className="wrapper">
         {!loading &&
           transactionData?.map((record: { id: string; label: string }) => (
-            <div className="card">
+            <div className="payer-transaction-card">
               <p>
                 <strong>id</strong> : {record.id}
               </p>

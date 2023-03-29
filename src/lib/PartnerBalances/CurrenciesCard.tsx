@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../../constants";
-import "./partner_balances.css";
+import "./currencies_card.css";
 export interface ICurrencies {
   userId: string;
   currency: string;
@@ -35,7 +35,7 @@ const CurrenciesCard = (props: ICurrencies) => {
       {loading && <h1>Loading</h1>}
       {!loading &&
         currencyData?.map((record: { id: string; label: string }) => (
-          <div className="card">
+          <div className="currencies-card">
             <p>
               <strong>id</strong> : {record.id}
             </p>
