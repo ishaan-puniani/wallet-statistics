@@ -31,7 +31,7 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
   }, [props.userId, props.currency]);
   return (
     <>
-      <h2>Partner Balances type : {props.userId}</h2>
+      <h2>Partner Balances {props.userId}</h2>
 
       {loading && <h1>Loading</h1>}
       <div className="balance-Wrapper">
