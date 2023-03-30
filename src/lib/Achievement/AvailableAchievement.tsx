@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import "./available_achievement.css";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { API_HOST } from "../../constants";
+import styled from 'styled-components';
 export interface AchievementsFilter {
   showRaw?: boolean;
   credentials?: any;
@@ -34,7 +34,7 @@ const AvailableAchievement = (props: AchievementsFilter) => {
   return (
     <>
       {loading && <h1>Loading</h1>}
-      <div className="available-achievement-wrapper">
+      <AvailableAchievementWrapper>
         {achievement?.map((rec) =>
           props.showRaw ? (
             <>
@@ -92,9 +92,60 @@ const AvailableAchievement = (props: AchievementsFilter) => {
             </>
           )
         )}
-      </div>
+      </AvailableAchievementWrapper>
     </>
   );
 };
 
+
+const AvailableAchievementWrapper = styled.div`
+  width: 500px;
+  margin-bottom: 10px;
+  padding: 15px;
+  background-color: #f1efef;
+.container {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5px;
+  padding: 20px;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+}
+
+.image-container {
+  margin-right: 1rem;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.available-achievement-title {
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+.available-achievement-identifier {
+  font-size: 11px;
+  color: #656565;
+}
+.available-achievement-subtitle {
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 100;
+  margin-bottom: 5px;
+}
+.available-achievement-description {
+  margin: 0;
+}
+.available-achievement-2col {
+  margin: 0;
+  margin-top: 10px;
+  width: 400px;
+  display: grid;
+  grid-template-columns: 40% 30%;
+  font-size: 14px;
+}
+
+`;
 export default AvailableAchievement;

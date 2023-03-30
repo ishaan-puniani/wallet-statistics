@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { API_HOST } from "../../constants";
-import "./transaction_types.css";
+import { ViewsWrapper } from "../Achievement/UserAchievements";
 export interface ITransactionType {
   userId: string;
   currency: string;
   credentials: any;
+  showRaw: boolean
 }
 const TransactionType = (props: ITransactionType) => {
   const [loading, setLoading] = useState(false);
@@ -32,17 +35,26 @@ const TransactionType = (props: ITransactionType) => {
     <>
       <h2>Transaction Types : {props.userId}</h2>
       {loading && <h1>Loading</h1>}
-      <div className="wrapper">
-        {!loading &&
-          transactionData?.map((record: { id: string; label: string }) => (
-            <div className="payer-transaction-card">
-              <p>
-                <strong>id</strong> : {record.id}
-              </p>
-              <p>  <strong>label</strong> : {record.label}</p>
-            </div>
-          ))}
-      </div>
+      {props.showRaw ? <>
+        <div className="card">
+          <SyntaxHighlighter language="javascript" style={docco}>
+            {JSON.stringify(transactionData, null, 2)}
+          </SyntaxHighlighter>
+        </div>
+      </> : <>
+        <ViewsWrapper>
+          {!loading &&
+            transactionData?.map((record: { id: string; label: string }) => (
+              <div className="card">
+                <div>
+                  <p>
+                    <strong>id</strong> : {record.id}
+                  </p>
+                  <p>  <strong>label</strong> : {record.label}</p>
+                </div>
+              </div>
+            ))}
+        </ViewsWrapper></>}
     </>
   );
 };
