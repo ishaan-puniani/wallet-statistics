@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { API_HOST } from "../../constants";
-import "./currencies_card.css";
+import { ViewsWrapper } from "../Achievement/UserAchievements";
 export interface ICurrencies {
   userId: string;
   currency: string;
-  credentials: any
+  credentials: any;
+  showRaw: boolean
 }
 const CurrenciesCard = (props: ICurrencies) => {
   const [loading, setLoading] = useState(false);
@@ -33,17 +36,29 @@ const CurrenciesCard = (props: ICurrencies) => {
     <>
       <h2>Currency : {props.userId}</h2>
       {loading && <h1>Loading</h1>}
-      {!loading &&
-        currencyData?.map((record: { id: string; label: string }) => (
-          <div className="currencies-card">
-            <p>
-              <strong>id</strong> : {record.id}
-            </p>
-            <p>
-              <strong>label</strong> : {record.label}
-            </p>
-          </div>
-        ))}
+      {props.showRaw ? <>
+
+        <div className="card">
+          <SyntaxHighlighter language="javascript" style={docco}>
+            {JSON.stringify(currencyData, null, 2)}
+          </SyntaxHighlighter>
+        </div>
+      </> : <>
+        <ViewsWrapper>
+          {!loading &&
+            currencyData?.map((record: { id: string; label: string }, idx: React.Key) => (
+              <div className="card" key={idx}>
+                <div>
+                  <p>
+                    <strong>id</strong> : {record.id}
+                  </p>
+                  <p>
+                    <strong>label</strong> : {record.label}
+                  </p>
+                </div>
+              </div>
+            ))}
+        </ViewsWrapper></>}
     </>
   );
 };

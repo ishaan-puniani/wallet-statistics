@@ -42,6 +42,7 @@ const TemplateCurrencyCard: ComponentStory<typeof CurrenciesCard> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
+  showRaw: false
 };
 export const PartnerBalanceChart = TemplateOne.bind({});
 PartnerBalanceChart.args = {
@@ -53,17 +54,21 @@ PartnerBalanceReport.args = {
   credentials: getMachineUserCredentials() || {},
   startDate: date,
   endDate: date,
+  showRaw: false
 };
 export const Payer = TemplateThree.bind({});
 Payer.args = {
   credentials: getMachineUserCredentials() || {},
+  showRaw: false
 };
 export const Transaction = TemplateTransaction.bind({});
 Transaction.args = {
   credentials: getMachineUserCredentials() || {},
+  showRaw: false
 };
 
 export const CurrencyCard = TemplateCurrencyCard.bind({});
 CurrencyCard.args = {
   credentials: getMachineUserCredentials() || {},
+  showRaw: false
 }

@@ -25,7 +25,7 @@ const TemplateOne: ComponentStory<typeof PartnerHeirarchy> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
-  hierarchyType: "CHILDREN"
+  hierarchyType: "CHILDREN",
 };
 
 export const Hierarchy = TemplateOne.bind({});

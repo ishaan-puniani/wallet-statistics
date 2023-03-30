@@ -18,6 +18,8 @@ import {
 } from "echarts/renderers";
 import axios from "axios";
 import { API_HOST } from "../../constants";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 // Register the required components
 echarts.use([
@@ -36,7 +38,8 @@ export interface BalanceReportChartFilterProps {
     currency: unknown;
     credentials: any;
     label: string;
-    amountType: "amount" | "virtual"
+    amountType: "amount" | "virtual";
+    showRaw: boolean;
 }
 
 const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
@@ -44,6 +47,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     const [balance, setBalance] = useState([]);
     const [date, setDate] = useState([]);
     const [names, setNames] = useState([]);
+    const [rawData, setRawData] = useState([]);
     const newDates = (newDate: Date) => {
         const timestamp = newDate;
         const newStartDate = new Date(timestamp);
@@ -66,7 +70,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
             );
             if (fetchBalance.data) {
                 const items = fetchBalance.data.rows
-                console.log(items)
+                setRawData(items)
 
                 const xAxisData: any = []
                 const allDate: React.SetStateAction<any[]> = []
@@ -157,14 +161,21 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     return (
         <>
             {loading && <h1>Loading</h1>}
-            <h2>{props.label}</h2>
-            <ReactEChartsCore
-                echarts={echarts}
-                option={option}
-                notMerge={true}
-                lazyUpdate={true}
-                theme={"theme_name"}
-            />
+            {props.showRaw ? <>
+                <div className="card">
+                    <SyntaxHighlighter language="javascript" style={docco}>
+                        {JSON.stringify(rawData, null, 2)}
+                    </SyntaxHighlighter>
+                </div>
+            </> : <>
+                <h2>{props.label}</h2>
+                <ReactEChartsCore
+                    echarts={echarts}
+                    option={option}
+                    notMerge={true}
+                    lazyUpdate={true}
+                    theme={"theme_name"}
+                /></>}
         </>
     );
 };
