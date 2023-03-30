@@ -1,4 +1,5 @@
-import { styled } from "@storybook/theming";
+
+import styled from 'styled-components';
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";

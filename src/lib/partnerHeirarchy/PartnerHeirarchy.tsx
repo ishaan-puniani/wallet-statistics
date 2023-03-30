@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { API_HOST } from '../../constants';
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { styled } from '@storybook/theming';
+import styled from 'styled-components';
 export interface IPartnerHeirarchy {
     credentials?: any;
     partnerId?: string;

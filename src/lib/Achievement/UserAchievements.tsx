@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { API_HOST } from "../../constants";
-import { styled } from "@storybook/theming";
+import styled from 'styled-components';
 export interface UserAchievementsFilter {
   achieverId?: string;
   credentials?: any;
