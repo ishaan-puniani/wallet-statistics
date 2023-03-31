@@ -56,8 +56,8 @@ PartnerBalanceReport.args = {
   endDate: date,
   showRaw: false
 };
-export const Payer = TemplateThree.bind({});
-Payer.args = {
+export const TransactionProfile = TemplateThree.bind({});
+TransactionProfile.args = {
   credentials: getMachineUserCredentials() || {},
   showRaw: false
 };
