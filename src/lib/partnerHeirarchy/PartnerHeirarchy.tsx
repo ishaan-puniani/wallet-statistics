@@ -189,7 +189,7 @@ const PartnerHeirarchyWrapper = styled.div`
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    max-width: 400px;    margin-bottom: 10px;
+    max-width: 450px;    margin-bottom: 10px;
   }
 .title-container {
     display: flex;
