@@ -70,21 +70,19 @@ const PartnerHeirarchy = ({
     ]);
     console.log(heirarchy.slice(1))
     return (
-        <div>
-            <h1>{loading && <>Loading</>}</h1>
-            {showRaw ? <>
-                {heirarchy?.map(item => <>
-                    <PartnerHeirarchyWrapper>
+        <PartnerHeirarchyWrapper>
+            <div className='heirachy-container'>
+                <h1>{loading && <>Loading</>}</h1>
+                {showRaw ? <>
+                    {heirarchy?.map(item => <>
                         <div className="card">
                             <SyntaxHighlighter language="javascript" style={docco}>
                                 {JSON.stringify(item, null, 2)}
                             </SyntaxHighlighter>
                         </div>
-                    </PartnerHeirarchyWrapper>
-                </>)}
-            </> : <>
-                {heirarchy.map(item => <>
-                    <PartnerHeirarchyWrapper>
+                    </>)}
+                </> : <>
+                    {heirarchy.map(item => <>
                         <div className="card">
                             <ul className="timeline">
                                 {/* <li>
@@ -174,14 +172,19 @@ const PartnerHeirarchy = ({
                         </li> */}
                             </ul>
                         </div>
-                    </PartnerHeirarchyWrapper>
-                </>)}
-            </>}
-        </div>
+                    </>)}
+                </>}
+            </div>
+        </PartnerHeirarchyWrapper>
     );
 };
 
 const PartnerHeirarchyWrapper = styled.div`
+.heirachy-container{
+    @media screen and (max-width: 425px) {
+        margin:10px
+    }
+}
 .card {
     display: flex;
     flex-direction: row;
@@ -189,7 +192,12 @@ const PartnerHeirarchyWrapper = styled.div`
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    max-width: 450px;    margin-bottom: 10px;
+    max-width: 400px;    
+    margin-bottom: 10px;
+    @media screen and (max-width: 425px) {
+        max-width:100%;
+        padding: 10px;
+      }
   }
 .title-container {
     display: flex;
@@ -281,6 +289,9 @@ const PartnerHeirarchyWrapper = styled.div`
     padding: 0;
     list-style: none;
     counter-reset: section;
+    @media screen and (max-width: 425px) {
+        width:100%;
+      }
   }
   .timeline:before {
     content: "";
@@ -300,6 +311,9 @@ const PartnerHeirarchyWrapper = styled.div`
     box-sizing: border-box;
     padding-left: 15px;
     width: 400px;
+    @media screen and (max-width: 425px) {
+        width:100%;
+      }
   }
   .timeline > li:before,
   .timeline > li:after {
@@ -341,6 +355,7 @@ const PartnerHeirarchyWrapper = styled.div`
   .under-the-info {
     flex-basis: 0;
   }
+  
   
 `;
 
