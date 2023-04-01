@@ -103,12 +103,26 @@ const AvailableAchievementWrapper = styled.div`
   margin-bottom: 10px;
   padding: 15px;
   background-color: #f1efef;
+  @media screen and (max-width: 768px) {
+      max-width:100%;
+      padding: 10px;
+    margin: 5px;
+    }
+    @media screen and (max-width: 425px) {
+      max-width:92%;
+    }
 .container {
   display: flex;
   align-items: flex-start;
   margin-bottom: 5px;
   padding: 20px;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+  
+  @media screen and (max-width: 425px) {
+    padding: 10px;
+    flex-direction: column;
+    gap: 15px;
+  }
 }
 
 .image-container {
@@ -124,6 +138,19 @@ const AvailableAchievementWrapper = styled.div`
   font-size: 18px;
   margin: 0;
   margin-bottom: 10px;
+  
+  @media screen and (max-width: 425px) {
+    display: flex;
+    flex-direction: column;
+    gap:5px;
+    font-size:16px;
+    width: 300px;
+    word-wrap: break-word;
+  }
+  @media screen and (max-width: 425px) {
+  width:250px
+  }
+
 }
 .available-achievement-identifier {
   font-size: 11px;
@@ -145,6 +172,11 @@ const AvailableAchievementWrapper = styled.div`
   display: grid;
   grid-template-columns: 40% 30%;
   font-size: 14px;
+  
+  @media screen and (max-width: 425px) {
+    width:100%;
+    grid-template-columns: 50% 45%;
+  }
 }
 
 `;
