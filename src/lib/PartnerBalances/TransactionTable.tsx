@@ -26,6 +26,7 @@ export interface IPartnerTransactionTable {
     currency: string;
     credentials: any;
     showRaw: boolean;
+    dataLimit: number;
 }
 export interface IPartnerTable {
     columns: any;
@@ -142,17 +143,19 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     const [loading, setLoading] = useState(false);
     const [transactionTable, setTransactionTable] = useState([]);
     const [rawData, setRawData] = useState([]);
+    const [transactionTableCount, setTransactionTableTotal] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             const fetchTransactionTable = await axios.post(
-                `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?limit=100&offset=0`,
+                `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?limit=${props.dataLimit}&offset=0`,
                 {
                     ...props.credentials,
                 }
             );
             if (fetchTransactionTable.data) {
                 const items = fetchTransactionTable.data.rows
+                setTransactionTableTotal(fetchTransactionTable?.data?.count)
                 setRawData(items)
                 const tableData: any = []
                 items?.map((data: any, idx: any) => {
@@ -170,7 +173,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
             setLoading(false);
         };
         fetchData();
-    }, [props.userId, props.currency]);
+    }, [props.userId, props.dataLimit]);
     const columns = [
         {
             Header: 'Id',
@@ -209,6 +212,8 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
             {loading && <h1>Loading</h1>}
 
             {!loading && props.showRaw ? <>
+
+                <h2>Total Transaction Number : {transactionTableCount}</h2>
                 {rawData?.map(item => <>
                     <div className="card">
                         <SyntaxHighlighter language="javascript" style={docco}>
@@ -217,8 +222,10 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
                     </div>
                 </>)}
             </> : <>
-                {!loading && transactionTable?.length > 0 && (
+                {!loading && transactionTable?.length > 0 && (<>
+                    <h2>Total Transaction Number : {transactionTableCount}</h2>
                     <Table columns={columns} data={transactionTable} />
+                </>
                 )}
             </>}
         </TransactionTableWrapper>
