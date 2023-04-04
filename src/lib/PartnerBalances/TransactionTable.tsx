@@ -3,6 +3,23 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { API_HOST } from '../../constants';
 import { usePagination, useTable } from 'react-table';
+import { TableInstance } from 'react-table';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
+interface MyTable extends TableInstance {
+    page: any; // Replace 'any' with the type of your data if applicable
+    canPreviousPage: any;
+    canNextPage: any;
+    pageOptions: any;
+    pageCount: any;
+    gotoPage: any;
+    nextPage: any;
+    previousPage: any;
+    setPageSize: any;
+    state: any;
+    pageIndex: number
+}
 
 export interface IPartnerTransactionTable {
     userId: string;
@@ -10,9 +27,13 @@ export interface IPartnerTransactionTable {
     credentials: any;
     showRaw: boolean;
 }
-
-function Table({ columns, data }) {
+export interface IPartnerTable {
+    columns: any;
+    data: any;
+}
+function Table({ columns, data }: IPartnerTable) {
     // Use the state and functions returned from useTable to build your UI
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -35,11 +56,11 @@ function Table({ columns, data }) {
         {
             columns,
             data,
-            initialState: { pageIndex: 0 },
+            // initialState: { pageIndex: 4 }, // This initialState set which table page show, when we see the table
         },
         usePagination
-    )
-
+    ) as MyTable
+    // const { pageIndex, pageSize } = state
     // Render the UI for your table
     return (
         <>
@@ -120,6 +141,7 @@ function Table({ columns, data }) {
 const TransactionTable = (props: IPartnerTransactionTable) => {
     const [loading, setLoading] = useState(false);
     const [transactionTable, setTransactionTable] = useState([]);
+    const [rawData, setRawData] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -131,6 +153,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
             );
             if (fetchTransactionTable.data) {
                 const items = fetchTransactionTable.data.rows
+                setRawData(items)
                 const tableData: any = []
                 items?.map((data: any, idx: any) => {
                     const newObject = {
@@ -172,7 +195,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
         {
             Header: 'Actions',
             accessor: 'actions',
-            Cell: ({ value }) => (
+            Cell: ({ value }: any) => (
                 <div style={{ display: 'flex', gap: '5px', alignItems: 'center', justifyContent: 'center' }}>
                     {value?.map((image: any, index: any) => (
                         <img key={index} src={image} style={{ width: '24px', height: '24px' }} alt={`Image ${index}`} />
@@ -184,9 +207,20 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     return (
         <TransactionTableWrapper>
             {loading && <h1>Loading</h1>}
-            {!loading && transactionTable?.length > 0 && (
-                <Table columns={columns} data={transactionTable} />
-            )}
+
+            {!loading && props.showRaw ? <>
+                {rawData?.map(item => <>
+                    <div className="card">
+                        <SyntaxHighlighter language="javascript" style={docco}>
+                            {JSON.stringify(item, null, 2)}
+                        </SyntaxHighlighter>
+                    </div>
+                </>)}
+            </> : <>
+                {!loading && transactionTable?.length > 0 && (
+                    <Table columns={columns} data={transactionTable} />
+                )}
+            </>}
         </TransactionTableWrapper>
     );
 };
