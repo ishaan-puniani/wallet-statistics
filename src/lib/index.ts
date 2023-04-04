@@ -14,7 +14,7 @@ import {
   renderPartnerHeirarchyTreeView,
   renderPartnerHeirarchyView,
 } from "./partnerHeirarchy";
-import { render } from "./simulator";
+import { render, renderSimulatorAchievement } from "./simulator";
 
 class WalletStatistics {
   constructor() {
@@ -27,6 +27,9 @@ class WalletStatistics {
   };
   initSimulator = (container: any) => {
     render(container);
+  };
+  renderPartnerSimulatorAchievement = (container: any, props: any) => {
+    renderSimulatorAchievement(container, props);
   };
   renderPartnerHeirarchyTree = (container: any, props: any) => {
     renderPartnerHeirarchyTreeView(container, props);
