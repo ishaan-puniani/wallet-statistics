@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Multiselect from "multiselect-react-dropdown";
 import { API_HOST } from "../../constants";
-import "./Dropdown.css";
+import { DropdownWrapper } from "./DropdownCurrencyTypes";
 export interface IDropdownTransactionProps {
   credentials?: any;
 }
@@ -35,21 +35,23 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
   );
   return (
     <>
-      <div className="dropdown-wrapper">
-        <h2>Transaction Types</h2>
-        {loading ? (
-          <h1>Loading</h1>
-        ) : (
-          <Multiselect
-            isObject={false}
-            onKeyPressFn={function noRefCheck() {}}
-            onRemove={function noRefCheck() {}}
-            onSearch={function noRefCheck() {}}
-            onSelect={function noRefCheck() {}}
-            options={options}
-          />
-        )}
-      </div>
+      <DropdownWrapper>
+        <div className="dropdown-wrapper">
+          <h2>Transaction Types</h2>
+          {loading ? (
+            <h1>Loading</h1>
+          ) : (
+            <Multiselect
+              isObject={false}
+              onKeyPressFn={function noRefCheck() { }}
+              onRemove={function noRefCheck() { }}
+              onSearch={function noRefCheck() { }}
+              onSelect={function noRefCheck() { }}
+              options={options}
+            />
+          )}
+        </div>
+      </DropdownWrapper>
     </>
   );
 };

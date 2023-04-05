@@ -2,6 +2,7 @@ import {
   _renderAvailableAchievements,
   _renderUserAchievements,
 } from "./Achievement";
+import { renderDropdownCurrencyTypes, renderDropdownTransactionTypes } from "./Dropdown";
 import "./index.css";
 import {
   renderBalances,
@@ -59,6 +60,13 @@ class WalletStatistics {
   renderPartnerTransactionTable = (container: any, props: any) => {
     renderTransactionTableView(container, props);
   };
+  renderPartnerDropdownTransactionType = (container: any, props: any) => {
+    renderDropdownTransactionTypes(container, props);
+  };
+  renderPartnerDropdownCurrencyType = (container: any, props: any) => {
+    renderDropdownCurrencyTypes(container, props);
+  };
+  
 }
 
 export default WalletStatistics;
