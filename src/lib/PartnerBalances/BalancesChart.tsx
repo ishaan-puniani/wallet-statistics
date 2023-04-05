@@ -85,11 +85,12 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
       top: '0%',
       left: 'center'
     },
+
     grid: {
-      top: 1000,
-      left: 60,
-      right: 60,
-      bottom: 60,
+      left: '3%',
+      right: '4%',
+      bottom: '0%',
+      containLabel: true
     },
     series: [
       {

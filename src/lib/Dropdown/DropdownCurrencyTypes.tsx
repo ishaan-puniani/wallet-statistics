@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Multiselect from "multiselect-react-dropdown";
 import { API_HOST } from "../../constants";
-import "./Dropdown.css";
+import styled from "styled-components";
 export interface IDropdownProps {
   credentials?: any;
   singleSelect: boolean;
@@ -37,28 +37,55 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
   );
   return (
     <>
-      <div className="dropdown-wrapper">
-        <h2>Currencies</h2>
-        {loading ? (
-          <h1>Loading</h1>
-        ) : (
-          <Multiselect
-            selectedValues={props.initialValues}
-            singleSelect={props.singleSelect}
-            isObject={false}
-            onKeyPressFn={function noRefCheck() {}}
-            onRemove={function noRefCheck() {}}
-            onSearch={function noRefCheck() {}}
-            onSelect={(selected) => {
-              if (props.onSelectionChanged) {
-                props.onSelectionChanged(selected);
-              }
-            }}
-            options={options}
-          />
-        )}
-      </div>
+
+      <DropdownWrapper>
+        {/* <div className="dropdown-wrapper">
+          <h2>Currency Types</h2>
+          {loading ? (
+            <h1>Loading</h1>
+          ) : (
+            <Multiselect
+              isObject={false}
+              onKeyPressFn={function noRefCheck() { }}
+              onRemove={function noRefCheck() { }}
+              onSearch={function noRefCheck() { }}
+              onSelect={function noRefCheck() { }}
+              options={options}
+            />
+          )}
+        </div> */}
+        <div className="dropdown-wrapper">
+          <h2>Currencies</h2>
+          {loading ? (
+            <h1>Loading</h1>
+          ) : (
+            <Multiselect
+              selectedValues={props.initialValues}
+              singleSelect={props.singleSelect}
+              isObject={false}
+              onKeyPressFn={function noRefCheck() { }}
+              onRemove={function noRefCheck() { }}
+              onSearch={function noRefCheck() { }}
+              onSelect={(selected) => {
+                if (props.onSelectionChanged) {
+                  props.onSelectionChanged(selected);
+                }
+              }}
+              options={options}
+            />
+          )}
+        </div>
+      </DropdownWrapper>
+
+
+
     </>
   );
 };
+export const DropdownWrapper = styled.div`
+.dropdown-wrapper{
+  margin: 20px 20px 20px 20px;
+}
+
+`;
 export default DropdownCurrencyTypes;
