@@ -5,6 +5,9 @@ import { API_HOST } from "../../constants";
 import "./Dropdown.css";
 export interface IDropdownTransactionProps {
   credentials?: any;
+  singleSelect: boolean;
+  initialValues?: [string];
+  onSelectionChanged?: (selected: [string]) => void;
 }
 
 const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
@@ -41,11 +44,17 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
           <h1>Loading</h1>
         ) : (
           <Multiselect
+            selectedValues={props.initialValues}
+            singleSelect={props.singleSelect}
             isObject={false}
             onKeyPressFn={function noRefCheck() {}}
             onRemove={function noRefCheck() {}}
             onSearch={function noRefCheck() {}}
-            onSelect={function noRefCheck() {}}
+            onSelect={(selected) => {
+              if (props.onSelectionChanged) {
+                props.onSelectionChanged(selected);
+              }
+            }}
             options={options}
           />
         )}

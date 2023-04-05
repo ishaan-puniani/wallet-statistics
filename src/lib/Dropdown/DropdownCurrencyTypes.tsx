@@ -5,6 +5,9 @@ import { API_HOST } from "../../constants";
 import "./Dropdown.css";
 export interface IDropdownProps {
   credentials?: any;
+  singleSelect: boolean;
+  initialValues?: [string];
+  onSelectionChanged?: (selected: [string]) => void;
 }
 
 const DropdownCurrencyTypes = (props: IDropdownProps) => {
@@ -35,16 +38,22 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
   return (
     <>
       <div className="dropdown-wrapper">
-        <h2>Currency Types</h2>
+        <h2>Currencies</h2>
         {loading ? (
           <h1>Loading</h1>
         ) : (
           <Multiselect
+            selectedValues={props.initialValues}
+            singleSelect={props.singleSelect}
             isObject={false}
             onKeyPressFn={function noRefCheck() {}}
             onRemove={function noRefCheck() {}}
             onSearch={function noRefCheck() {}}
-            onSelect={function noRefCheck() {}}
+            onSelect={(selected) => {
+              if (props.onSelectionChanged) {
+                props.onSelectionChanged(selected);
+              }
+            }}
             options={options}
           />
         )}
