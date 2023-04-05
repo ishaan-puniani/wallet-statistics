@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { API_HOST } from "../../constants";
-import "./stimulator.css";
+import { SimulatorWrapper } from "./Simulator";
 export interface IAchievements {
   credentials?: any;
   achieverId?: any;
@@ -23,28 +23,30 @@ const Achievements = (props: IAchievements) => {
 
   return (
     <>
-      <h1>Achievement Stimulator</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <ul className="formStyle">
-          <div>
-            <li>
-              <label>Achiever Id :</label>
-              <input value={props.achieverId} {...register("achieverId")} />
-            </li>
-            <li>
-              <label>Action : </label>
-              <input value={props.action} {...register("action")} />
-            </li>
-            <li>
-              <label>Value :</label>
-              <input value={props.value} {...register("value")} />
-            </li>
+      <SimulatorWrapper>
+        <h1>Achievement Stimulator</h1>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ul className="formStyle">
+            <div>
+              <li>
+                <label>Achiever Id :</label>
+                <input value={props.achieverId} {...register("achieverId")} />
+              </li>
+              <li>
+                <label>Action : </label>
+                <input value={props.action} {...register("action")} />
+              </li>
+              <li>
+                <label>Value :</label>
+                <input value={props.value} {...register("value")} />
+              </li>
+            </div>
+          </ul>
+          <div className="formStyle">
+            <input type="submit" />
           </div>
-        </ul>
-        <div className="formStyle">
-          <input type="submit" />
-        </div>
-      </form>
+        </form>
+      </SimulatorWrapper>
     </>
   );
 };
