@@ -35,6 +35,7 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
     (record: { [s: string]: unknown } | ArrayLike<unknown>) =>
       Object.values(record)[1]
   );
+  console.log(options)
   return (
     <>
 

@@ -2,7 +2,7 @@ import {
   _renderAvailableAchievements,
   _renderUserAchievements,
 } from "./Achievement";
-import { renderDropdownCurrencyTypes, renderDropdownTransactionTypes } from "./Dropdown";
+import { renderDropdownAmountTypes, renderDropdownCurrencyTypes, renderDropdownTransactionTypes } from "./Dropdown";
 import "./index.css";
 import {
   renderBalances,
@@ -65,6 +65,10 @@ class WalletStatistics {
   };
   renderPartnerDropdownCurrencyType = (container: any, props: any) => {
     renderDropdownCurrencyTypes(container, props);
+  };
+  
+  renderMetadataDropdownCurrencyType = (container: any, props: any) => {
+    renderDropdownAmountTypes(container, props);
   };
   
 }

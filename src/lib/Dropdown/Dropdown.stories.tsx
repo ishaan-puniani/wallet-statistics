@@ -4,6 +4,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { getMachineUserCredentials } from "../../utilities/storage";
 import DropdownCurrencyTypes from "./DropdownCurrencyTypes";
 import DropdownTransactionTypes from "./DropdownTransactionTypes";
+import DropdownAmountTypes from "./DropdownAmountTypes";
 
 export default {
   title: "Example/Dropdown",
@@ -21,10 +22,19 @@ export const currencyTypes = Template.bind({});
 currencyTypes.args = {
   credentials: getMachineUserCredentials() || {},
 };
+
 const TemplateTransactionTypes: ComponentStory<
   typeof DropdownTransactionTypes
 > = (args) => <DropdownTransactionTypes {...args} />;
 export const TransactionTypes = TemplateTransactionTypes.bind({});
 TransactionTypes.args = {
+  credentials: getMachineUserCredentials() || {},
+};
+
+const TemplateAmountTypes: ComponentStory<typeof DropdownAmountTypes> = (
+  args
+) => <DropdownAmountTypes {...args} />;
+export const AmountTypes = TemplateAmountTypes.bind({});
+AmountTypes.args = {
   credentials: getMachineUserCredentials() || {},
 };
