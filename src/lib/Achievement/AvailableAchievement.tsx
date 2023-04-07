@@ -9,11 +9,11 @@ export interface AchievementsFilter {
   credentials?: any;
 }
 const AvailableAchievement = (props: AchievementsFilter) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [achievement, setAchievement] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchBalance = await axios.post(
         // `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
         `${API_HOST}/tenant/${props.credentials.application_id}/get-achievement?limit=100&offset=0`,
@@ -26,14 +26,14 @@ const AvailableAchievement = (props: AchievementsFilter) => {
         setAchievement(items);
         console.log(items);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, []);
   console.log(achievement);
   return (
     <>
-      {loading && <h1>Loading</h1>}
+      {/* {loading && <h1>Loading</h1>} */}
       <AvailableAchievementWrapper>
         {achievement?.map((rec) =>
           props.showRaw ? (

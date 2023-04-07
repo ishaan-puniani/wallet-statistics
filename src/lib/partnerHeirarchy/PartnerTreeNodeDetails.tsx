@@ -7,7 +7,7 @@ const PartnerTreeNodeDetails = ({
   title,
   partnerId,
   defaultExpanded = false,
-  loading,
+  // loading,
   hasChildren = true,
   treeNodeDepth,
   record,

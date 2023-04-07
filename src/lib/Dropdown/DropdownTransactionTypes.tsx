@@ -11,12 +11,12 @@ export interface IDropdownTransactionProps {
 }
 
 const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [transactionData, setTransactionData] = useState<any>();
   let options = [];
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchTransactionData = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
         {
@@ -27,7 +27,7 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
         const items = fetchTransactionData.data;
         setTransactionData(items);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, []);
@@ -40,26 +40,20 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
     <>
       <DropdownWrapper>
 
-        <div className="dropdown-wrapper">
-          <h2>Transaction Types</h2>
-          {loading ? (
-            <h1>Loading</h1>
-          ) : (
-            <Multiselect
-              selectedValues={props.initialValues}
-              singleSelect={props.singleSelect}
-              isObject={false}
-              onKeyPressFn={function noRefCheck() { }}
-              onRemove={function noRefCheck() { }}
-              onSearch={function noRefCheck() { }}
-              onSelect={(selected) => {
-                if (props.onSelectionChanged) {
-                  props.onSelectionChanged(selected);
-                }
-              }}
-              options={options}
-            />
-          )}
+        <div><Multiselect
+          selectedValues={props.initialValues}
+          singleSelect={props.singleSelect}
+          isObject={false}
+          onKeyPressFn={function noRefCheck() { }}
+          onRemove={function noRefCheck() { }}
+          onSearch={function noRefCheck() { }}
+          onSelect={(selected) => {
+            if (props.onSelectionChanged) {
+              props.onSelectionChanged(selected);
+            }
+          }}
+          options={options}
+        />
         </div>
         {/* <div className="dropdown-wrapper">
           <h2>Transaction Types</h2>

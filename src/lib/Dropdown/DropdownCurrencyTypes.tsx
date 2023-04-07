@@ -11,12 +11,12 @@ export interface IDropdownProps {
 }
 
 const DropdownCurrencyTypes = (props: IDropdownProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [currencyData, setCurrencyData] = useState<any>();
   let options = [];
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchCurrencyTypes = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
         {
@@ -27,7 +27,7 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
         const items = fetchCurrencyTypes.data;
         setCurrencyData(items);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, []);
@@ -55,26 +55,20 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
             />
           )}
         </div> */}
-        <div className="dropdown-wrapper">
-          <h2>Currencies</h2>
-          {loading ? (
-            <h1>Loading</h1>
-          ) : (
-            <Multiselect
-              selectedValues={props.initialValues}
-              singleSelect={props.singleSelect}
-              isObject={false}
-              onKeyPressFn={function noRefCheck() { }}
-              onRemove={function noRefCheck() { }}
-              onSearch={function noRefCheck() { }}
-              onSelect={(selected) => {
-                if (props.onSelectionChanged) {
-                  props.onSelectionChanged(selected);
-                }
-              }}
-              options={options}
-            />
-          )}
+        <div><Multiselect
+          selectedValues={props.initialValues}
+          singleSelect={props.singleSelect}
+          isObject={false}
+          onKeyPressFn={function noRefCheck() { }}
+          onRemove={function noRefCheck() { }}
+          onSearch={function noRefCheck() { }}
+          onSelect={(selected) => {
+            if (props.onSelectionChanged) {
+              props.onSelectionChanged(selected);
+            }
+          }}
+          options={options}
+        />
         </div>
       </DropdownWrapper>
 
@@ -84,9 +78,9 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
   );
 };
 export const DropdownWrapper = styled.div`
-.dropdown-wrapper{
-  margin: 20px 20px 20px 20px;
-}
+// .dropdown-wrapper{
+//   margin: 20px 20px 20px 20px;
+// }
 
 `;
 export default DropdownCurrencyTypes;

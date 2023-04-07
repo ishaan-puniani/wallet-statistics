@@ -16,11 +16,11 @@ const PartnerTreeNode = ({
   orderByCount,
   relativeTo,
 }: any) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [heirarchy, setHeirary] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const heirarchyResponse = await axios.post(
         `${API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
         {
@@ -40,7 +40,7 @@ const PartnerTreeNode = ({
       if (heirarchyResponse.data) {
         setHeirary(heirarchyResponse.data);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, [
@@ -57,28 +57,27 @@ const PartnerTreeNode = ({
   return (
     <>
       <div className="treeNode">
-        <h1>{loading && <>Loading</>}</h1>
-        {!loading &&
-          heirarchy.slice(1).map((record) => (
-            <PartnerTreeNodeDetails
-              key={record.partnerId}
-              partnerId={record.partnerId}
-              credentials={credentials}
-              title={`[${record.relativeLevelName}]: ${record.partnerName} (${record.childrenCount})`}
-              loading={loading}
-              hasChildren={record.childrenCount > 0}
-              treeNodeDepth={treeNodeDepth}
-              record={record}
-              hierarchyType={hierarchyType}
-              uptoPartner={uptoPartner}
-              forLevel={forLevel}
-              limit={limit}
-              skip={skip}
-              orderByRank={orderByRank}
-              orderByCount={orderByCount}
-              relativeTo={relativeTo}
-            />
-          ))}
+        {/* <h1>{loading && <>Loading</>}</h1> */}
+        {heirarchy.slice(1).map((record) => (
+          <PartnerTreeNodeDetails
+            key={record.partnerId}
+            partnerId={record.partnerId}
+            credentials={credentials}
+            title={`[${record.relativeLevelName}]: ${record.partnerName} (${record.childrenCount})`}
+            // loading={loading}
+            hasChildren={record.childrenCount > 0}
+            treeNodeDepth={treeNodeDepth}
+            record={record}
+            hierarchyType={hierarchyType}
+            uptoPartner={uptoPartner}
+            forLevel={forLevel}
+            limit={limit}
+            skip={skip}
+            orderByRank={orderByRank}
+            orderByCount={orderByCount}
+            relativeTo={relativeTo}
+          />
+        ))}
       </div>
     </>
   );
