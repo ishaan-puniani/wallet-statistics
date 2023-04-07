@@ -102,7 +102,7 @@ const AvailableAchievementWrapper = styled.div`
   // width: 500px;
   margin-bottom: 10px;
   padding: 15px;
-  background-color: #f1efef;
+  // background-color: #f1efef;
   @media screen and (max-width: 768px) {
       max-width:100%;
       padding: 10px;
@@ -117,7 +117,8 @@ const AvailableAchievementWrapper = styled.div`
   margin-bottom: 5px;
   padding: 20px;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
-  
+  background: #FFFFFF;
+    box-shadow: 0px 2px 9px rgba(50, 71, 92, 0.06), 0px 4px 9px 1px rgba(50, 71, 92, 0.04), 0px 2px 6px 4px rgba(50, 71, 92, 0.02);
   @media screen and (max-width: 425px) {
     padding: 10px;
     flex-direction: column;

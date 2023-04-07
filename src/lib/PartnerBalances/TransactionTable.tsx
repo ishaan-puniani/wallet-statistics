@@ -70,7 +70,7 @@ function Table({ columns, data }: IPartnerTable) {
                     {headerGroups.map((headerGroup: any) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column: any) => (
-                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                                <th  {...column.getHeaderProps()}>{column.render('Header')}</th>
                             ))}
                         </tr>
                     ))}
@@ -81,7 +81,7 @@ function Table({ columns, data }: IPartnerTable) {
                         return (
                             <tr {...row.getRowProps()}>
                                 {row.cells.map((cell: any) => {
-                                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                                    return <td  {...cell.getCellProps()}>{cell.render('Cell')}</td>
                                 })}
                             </tr>
                         )
@@ -238,7 +238,7 @@ padding: 1rem;
   table {
     border-spacing: 0;
     border: 1px solid black;
-
+    width:100%;
     tr {
       :last-child {
         td {
@@ -263,6 +263,7 @@ padding: 1rem;
   .pagination {
     padding: 0.5rem;
   }
+  
 `;
 
 export default TransactionTable;
