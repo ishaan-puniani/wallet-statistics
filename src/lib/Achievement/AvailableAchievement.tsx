@@ -111,6 +111,10 @@ const AvailableAchievementWrapper = styled.div`
     @media screen and (max-width: 425px) {
       max-width:92%;
     }
+    @media screen and (max-width: 320px) {
+      max-width:100%;
+      margin:0;
+    }
 .container {
   display: flex;
   align-items: flex-start;
