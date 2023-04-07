@@ -140,13 +140,13 @@ function Table({ columns, data }: IPartnerTable) {
     )
 }
 const TransactionTable = (props: IPartnerTransactionTable) => {
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [transactionTable, setTransactionTable] = useState([]);
     const [rawData, setRawData] = useState([]);
     const [transactionTableCount, setTransactionTableTotal] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
+            // setLoading(true);
             const fetchTransactionTable = await axios.post(
                 `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?limit=${props.dataLimit}&offset=0`,
                 {
@@ -170,7 +170,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
                     setTransactionTable(tableData)
                 })
             }
-            setLoading(false);
+            // setLoading(false);
         };
         fetchData();
     }, [props.userId, props.dataLimit]);
@@ -209,9 +209,9 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     ]
     return (
         <TransactionTableWrapper>
-            {loading && <h1>Loading</h1>}
+            {/* {loading && <h1>Loading</h1>} */}
 
-            {!loading && props.showRaw ? <>
+            {props.showRaw ? <>
 
                 <h2>Total Transaction Number : {transactionTableCount}</h2>
                 {rawData?.map(item => <>
@@ -222,7 +222,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
                     </div>
                 </>)}
             </> : <>
-                {!loading && transactionTable?.length > 0 && (<>
+                {transactionTable?.length > 0 && (<>
                     <h2>Total Transaction Number : {transactionTableCount}</h2>
                     <Table columns={columns} data={transactionTable} />
                 </>

@@ -11,12 +11,12 @@ export interface IDropdownTransactionProps {
 }
 
 const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [transactionData, setTransactionData] = useState<any>();
   let options = [];
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchTransactionData = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
         {
@@ -27,7 +27,7 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
         const items = fetchTransactionData.data;
         setTransactionData(items);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, []);

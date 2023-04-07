@@ -43,7 +43,7 @@ export interface BalanceReportChartFilterProps {
 }
 
 const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [balance, setBalance] = useState([]);
     const [date, setDate] = useState([]);
     const [names, setNames] = useState([]);
@@ -60,7 +60,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     }
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
+            // setLoading(true);
             const fetchBalance = await axios.post(
                 // `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?dateRange[]='10-03-2023'`,
                 `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?filter[userId]=${props.userId}&filter[currency]=${props.currency}&filter[dateRange][]=${newDates(props.startDate)}&filter[dateRange][]=${newDates(props.endDate)}`,
@@ -103,7 +103,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                 });
                 setDate(allDate)
             }
-            setLoading(false);
+            // setLoading(false);
         };
         fetchData();
     }, [props.userId, props.amountType, props.currency, props.startDate, props.endDate]);
@@ -160,7 +160,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
 
     return (
         <>
-            {loading && <h1>Loading</h1>}
+            {/* {loading && <h1>Loading</h1>} */}
             {props.showRaw ? <>
                 <div className="card">
                     <SyntaxHighlighter language="javascript" style={docco}>

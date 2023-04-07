@@ -11,12 +11,12 @@ export interface IDropdownProps {
 }
 
 const DropdownCurrencyTypes = (props: IDropdownProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [currencyData, setCurrencyData] = useState<any>();
   let options = [];
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchCurrencyTypes = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
         {
@@ -27,7 +27,7 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
         const items = fetchCurrencyTypes.data;
         setCurrencyData(items);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, []);
