@@ -72,7 +72,8 @@ const PartnerHeirarchy = ({
   return (
     <PartnerHeirarchyWrapper>
       <div className="heirachy-container">
-        <h1>{loading && <>Loading</>}</h1>
+        {loading && <h1> Loading </h1>}
+
         {showRaw ? (
           <>
             {heirarchy?.map((item) => (
@@ -247,7 +248,7 @@ const PartnerHeirarchyWrapper = styled.div`
     box-shadow: 0px 2px 9px rgba(50, 71, 92, 0.06),
       0px 4px 9px 1px rgba(50, 71, 92, 0.04),
       0px 2px 6px 4px rgba(50, 71, 92, 0.02);
-    padding: 20px;
+    padding: 24px;
     max-width: auto;
     @media screen and (max-width: 425px) {
       margin: 24px;
@@ -311,6 +312,7 @@ const PartnerHeirarchyWrapper = styled.div`
 
   .card-title {
     margin: 0;
+    text-transform: capitalize;
     font-size: 18px;
     font-weight: bold;
   }
@@ -330,7 +332,7 @@ const PartnerHeirarchyWrapper = styled.div`
   }
 
   .card-side-subtitle {
-    margin: 0;
+    margin-top: 5px;
     font-size: 14px;
     font-weight: normal;
     color: gray;
@@ -380,7 +382,7 @@ const PartnerHeirarchyWrapper = styled.div`
     margin-bottom: 15px;
     box-sizing: border-box;
     padding-left: 15px;
-    width: 400px;
+    width: auto;
     @media screen and (max-width: 425px) {
       width: 100%;
     }
@@ -416,7 +418,7 @@ const PartnerHeirarchyWrapper = styled.div`
   .member-count-container {
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 5px;
     gap: 5px;
   }
   .member-count-container:first-child {
