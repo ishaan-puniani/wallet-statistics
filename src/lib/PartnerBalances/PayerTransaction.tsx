@@ -12,9 +12,10 @@ export interface Payers {
   showRaw: boolean;
 }
 
-function roundToTwo(num: any) {
-  return +(Math.round(num + "e+3") + "e-2");
+function roundToTwo(num: number) {
+  return +num.toFixed(2);
 }
+
 console.log(roundToTwo(3.394792));
 const PayerTransaction = (props: Payers) => {
   const [loading, setLoading] = useState(false);
