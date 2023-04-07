@@ -7,13 +7,13 @@ export interface IDropdownProps {
   credentials?: any;
   singleSelect: boolean;
   initialValues?: [string];
-  onSelectionChanged?: (selected: [string]) => void;
+  onSelectionChanged?: (selected: string| [string]) => void;
 }
 
 const DropdownCurrencyTypes = (props: IDropdownProps) => {
   // const [loading, setLoading] = useState(false);
   const [currencyData, setCurrencyData] = useState<any>();
-  let options = [];
+
   useEffect(() => {
     const fetchData = async () => {
       // setLoading(true);
@@ -31,11 +31,7 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
     };
     fetchData();
   }, []);
-  options = currencyData?.map(
-    (record: { [s: string]: unknown } | ArrayLike<unknown>) =>
-      Object.values(record)[1]
-  );
-  console.log(options)
+
   return (
     <>
 
@@ -64,10 +60,14 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
           onSearch={function noRefCheck() { }}
           onSelect={(selected) => {
             if (props.onSelectionChanged) {
-              props.onSelectionChanged(selected);
+              if(props.singleSelect){
+                props.onSelectionChanged(selected[0]);
+              }else{
+                props.onSelectionChanged(selected);
+              }
             }
           }}
-          options={options}
+          options={currencyData?.map((c:any)=>c.id)}
         />
         </div>
       </DropdownWrapper>

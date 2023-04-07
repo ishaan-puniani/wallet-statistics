@@ -7,13 +7,13 @@ export interface IDropdownTransactionProps {
   credentials?: any;
   singleSelect: boolean;
   initialValues?: [string];
-  onSelectionChanged?: (selected: [string]) => void;
+  onSelectionChanged?: (selected: string| [string]) => void;
 }
 
 const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
   // const [loading, setLoading] = useState(false);
   const [transactionData, setTransactionData] = useState<any>();
-  let options = [];
+ 
   useEffect(() => {
     const fetchData = async () => {
       // setLoading(true);
@@ -32,10 +32,7 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
     fetchData();
   }, []);
 
-  options = transactionData?.map(
-    (record: { [s: string]: unknown } | ArrayLike<unknown>) =>
-      Object.values(record)[1]
-  );
+
   return (
     <>
       <DropdownWrapper>
@@ -49,10 +46,14 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
           onSearch={function noRefCheck() { }}
           onSelect={(selected) => {
             if (props.onSelectionChanged) {
-              props.onSelectionChanged(selected);
+              if(props.singleSelect){
+                props.onSelectionChanged(selected[0]);
+              }else{
+                props.onSelectionChanged(selected);
+              }
             }
           }}
-          options={options}
+          options={transactionData?.map((tt:any)=>tt.id)}
         />
         </div>
         {/* <div className="dropdown-wrapper">

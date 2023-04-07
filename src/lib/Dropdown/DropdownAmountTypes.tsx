@@ -6,7 +6,7 @@ export interface IDropdownProps {
   credentials?: any;
   singleSelect: boolean;
   initialValues?: [string];
-  onSelectionChanged?: (selected: [string]) => void;
+  onSelectionChanged?: (selected: string| [string]) => void;
 }
 
 const DropdownAmountTypes = (props: IDropdownProps) => {
@@ -25,7 +25,11 @@ const DropdownAmountTypes = (props: IDropdownProps) => {
             onSearch={function noRefCheck() {}}
             onSelect={(selected) => {
               if (props.onSelectionChanged) {
-                props.onSelectionChanged(selected);
+                if(props.singleSelect){
+                  props.onSelectionChanged(selected[0]);
+                }else{
+                  props.onSelectionChanged(selected);
+                }
               }
             }}
             options={options}
