@@ -80,4 +80,6 @@ export const TransactionsTable = TemplateTransactionTable.bind({});
 TransactionsTable.args = {
   credentials: getMachineUserCredentials() || {},
   showRaw: false,
+  loadLinkedTransactions: false,
+  loadLinkedAchievements: false
 }

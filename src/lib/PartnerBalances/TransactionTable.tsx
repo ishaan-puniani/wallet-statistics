@@ -6,6 +6,7 @@ import { usePagination, useTable } from "react-table";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Modal from "react-modal";
+import TransactionDetails from "../Transactions/TransactionDetails";
 
 export interface IPartnerTransactionTable {
   userId: string;
@@ -317,10 +318,11 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
   ];
 
   const afterDetailsDialogClose = () => {
-    alert("closed");
+   
   };
   const doCloseDetailsDialog = () => {
-    alert("close");
+    setTransactionForDetails(undefined);
+    setDetailsDialogVisible(false);
   };
 
   return (
@@ -359,8 +361,15 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
               //   style={customStyles}
               contentLabel="Example Modal"
             >
-              <h1>Dialog Content</h1>
+              <h1>Transaction Details</h1>
               <p>{transactionForDetails}</p>
+              <TransactionDetails
+                credentials={props.credentials}
+                transactionId={transactionForDetails}
+                showRaw
+                loadLinkedTransactions={true}
+                loadLinkedAchievements={true}
+              />
             </Modal>
           </>
         </>

@@ -114,7 +114,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     const newObjects = uniqueArray.map(item => {
         const aArrays = [`${balance.map(ea => {
             if (ea[item]) {
-                return parseFloat(ea[item]);
+                return Math.abs(parseFloat(ea[item]));
             }
             else if (ea[item] === undefined) {
                 return 0;
