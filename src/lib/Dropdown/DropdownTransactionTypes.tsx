@@ -40,26 +40,20 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
     <>
       <DropdownWrapper>
 
-        <div className="dropdown-wrapper">
-          <h2>Transaction Types</h2>
-          {loading ? (
-            <h1>Loading</h1>
-          ) : (
-            <Multiselect
-              selectedValues={props.initialValues}
-              singleSelect={props.singleSelect}
-              isObject={false}
-              onKeyPressFn={function noRefCheck() { }}
-              onRemove={function noRefCheck() { }}
-              onSearch={function noRefCheck() { }}
-              onSelect={(selected) => {
-                if (props.onSelectionChanged) {
-                  props.onSelectionChanged(selected);
-                }
-              }}
-              options={options}
-            />
-          )}
+        <div><Multiselect
+          selectedValues={props.initialValues}
+          singleSelect={props.singleSelect}
+          isObject={false}
+          onKeyPressFn={function noRefCheck() { }}
+          onRemove={function noRefCheck() { }}
+          onSearch={function noRefCheck() { }}
+          onSelect={(selected) => {
+            if (props.onSelectionChanged) {
+              props.onSelectionChanged(selected);
+            }
+          }}
+          options={options}
+        />
         </div>
         {/* <div className="dropdown-wrapper">
           <h2>Transaction Types</h2>

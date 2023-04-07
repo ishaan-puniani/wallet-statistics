@@ -55,26 +55,20 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
             />
           )}
         </div> */}
-        <div className="dropdown-wrapper">
-          <h2>Currencies</h2>
-          {loading ? (
-            <h1>Loading</h1>
-          ) : (
-            <Multiselect
-              selectedValues={props.initialValues}
-              singleSelect={props.singleSelect}
-              isObject={false}
-              onKeyPressFn={function noRefCheck() { }}
-              onRemove={function noRefCheck() { }}
-              onSearch={function noRefCheck() { }}
-              onSelect={(selected) => {
-                if (props.onSelectionChanged) {
-                  props.onSelectionChanged(selected);
-                }
-              }}
-              options={options}
-            />
-          )}
+        <div><Multiselect
+          selectedValues={props.initialValues}
+          singleSelect={props.singleSelect}
+          isObject={false}
+          onKeyPressFn={function noRefCheck() { }}
+          onRemove={function noRefCheck() { }}
+          onSearch={function noRefCheck() { }}
+          onSelect={(selected) => {
+            if (props.onSelectionChanged) {
+              props.onSelectionChanged(selected);
+            }
+          }}
+          options={options}
+        />
         </div>
       </DropdownWrapper>
 
@@ -84,9 +78,9 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
   );
 };
 export const DropdownWrapper = styled.div`
-.dropdown-wrapper{
-  margin: 20px 20px 20px 20px;
-}
+// .dropdown-wrapper{
+//   margin: 20px 20px 20px 20px;
+// }
 
 `;
 export default DropdownCurrencyTypes;
