@@ -80,5 +80,4 @@ export const TransactionsTable = TemplateTransactionTable.bind({});
 TransactionsTable.args = {
   credentials: getMachineUserCredentials() || {},
   showRaw: false,
-  dataLimit: 10,
 }

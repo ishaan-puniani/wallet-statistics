@@ -10,7 +10,7 @@ import {
   GridComponent,
   TooltipComponent,
   TitleComponent,
-  LegendComponent
+  LegendComponent,
 } from "echarts/components";
 // Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
 import {
@@ -31,16 +31,15 @@ echarts.use([
   BarChart,
   CanvasRenderer,
   PieChart,
-  LegendComponent
+  LegendComponent,
 ]);
-
 
 export interface IPartnerBalancesPieChartProps {
   userId: unknown;
   currency: unknown;
   credentials: any;
-  amountType: "amount" | "virtual",
-  showRaw?: boolean
+  amountType: "amount" | "virtual";
+  showRaw?: boolean;
 }
 
 const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
@@ -57,21 +56,23 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         }
       );
       if (fetchBalance.data) {
-        const datas = fetchBalance?.data
-        setRawData(datas)
-        const modifiedArray = datas.map((item: { amount: any; transactionType: any; virtualValue: any; }) => {
-          if (props.amountType === "amount") {
+        const datas = fetchBalance?.data;
+        setRawData(datas);
+        const modifiedArray = datas.map(
+          (item: { amount: any; transactionType: any; virtualValue: any }) => {
+            if (props.amountType === "amount") {
+              return {
+                value: Math.abs(item.amount),
+                name: item.transactionType,
+              };
+            }
             return {
-              value: item.amount,
-              name: item.transactionType
+              value: Math.abs(item.virtualValue),
+              name: item.transactionType,
             };
           }
-          return {
-            value: item.virtualValue,
-            name: item.transactionType
-          };
-        });
-        setBalance(modifiedArray)
+        );
+        setBalance(modifiedArray);
       }
       // setLoading(false);
     };
@@ -79,67 +80,75 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   }, [props.userId, props.currency, props.amountType]);
   const option = {
     tooltip: {
-      trigger: 'item'
+      trigger: "item",
     },
     legend: {
-      top: '0%',
-      left: 'center'
+      top: "0%",
+      left: "center",
     },
 
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '0%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "0%",
+      containLabel: true,
     },
     series: [
       {
-        name: 'Wallet And Bonus',
-        type: 'pie',
-        radius: ['40%', '70%'],
+        name: "Wallet And Bonus",
+        type: "pie",
+        radius: ["40%", "70%"],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 10,
-          borderColor: '#fff',
-          borderWidth: 2
+          borderColor: "#fff",
+          borderWidth: 2,
         },
         label: {
           show: false,
-          position: 'center'
+          position: "center",
         },
         emphasis: {
           label: {
             show: true,
             fontSize: 40,
-            fontWeight: 'bold'
-          }
+            fontWeight: "bold",
+          },
         },
         labelLine: {
-          show: false
+          show: false,
         },
-        data: balance
-      }
-    ]
+        data: balance,
+      },
+    ],
   };
   // console.log(balance)
   return (
     <>
       {/* {loading && <h1>Loading</h1>} */}
-      {props?.showRaw ? <>
-        {rawData?.map(item => <>
-          <div className="card">
-            <SyntaxHighlighter language="javascript" style={docco}>
-              {JSON.stringify(item, null, 2)}
-            </SyntaxHighlighter>
-          </div></>)}
-      </> : <div style={{ marginTop: '20px' }}>
-        <ReactEChartsCore
-          echarts={echarts}
-          option={option}
-          notMerge={true}
-          lazyUpdate={true}
-          theme={"theme_name"}
-        /></div>}
+      {props?.showRaw ? (
+        <>
+          {rawData?.map((item) => (
+            <>
+              <div className="card">
+                <SyntaxHighlighter language="javascript" style={docco}>
+                  {JSON.stringify(item, null, 2)}
+                </SyntaxHighlighter>
+              </div>
+            </>
+          ))}
+        </>
+      ) : (
+        <div style={{ marginTop: "20px" }}>
+          <ReactEChartsCore
+            echarts={echarts}
+            option={option}
+            notMerge={true}
+            lazyUpdate={true}
+            theme={"theme_name"}
+          />
+        </div>
+      )}
     </>
   );
 };
