@@ -11,11 +11,11 @@ export interface ICurrencies {
   showRaw: boolean
 }
 const CurrenciesCard = (props: ICurrencies) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [currencyData, setCurrencyData] = useState<any>();
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete?filter[userId]=${props.userId}`,
 
@@ -27,7 +27,7 @@ const CurrenciesCard = (props: ICurrencies) => {
         const items = fetchBalance.data;
         setCurrencyData(items);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, [props.userId, props.currency]);
@@ -35,7 +35,7 @@ const CurrenciesCard = (props: ICurrencies) => {
   return (
     <>
       <h2>Currency : {props.userId}</h2>
-      {loading && <h1>Loading</h1>}
+      {/* {loading && <h1>Loading</h1>} */}
       {props.showRaw ? <>
 
         <div className="card">
@@ -45,19 +45,18 @@ const CurrenciesCard = (props: ICurrencies) => {
         </div>
       </> : <>
         <ViewsWrapper>
-          {!loading &&
-            currencyData?.map((record: { id: string; label: string }, idx: React.Key) => (
-              <div className="card" key={idx}>
-                <div>
-                  <p>
-                    <strong>id</strong> : {record.id}
-                  </p>
-                  <p>
-                    <strong>label</strong> : {record.label}
-                  </p>
-                </div>
+          {currencyData?.map((record: { id: string; label: string }, idx: React.Key) => (
+            <div className="card" key={idx}>
+              <div>
+                <p>
+                  <strong>id</strong> : {record.id}
+                </p>
+                <p>
+                  <strong>label</strong> : {record.label}
+                </p>
               </div>
-            ))}
+            </div>
+          ))}
         </ViewsWrapper></>}
     </>
   );

@@ -30,11 +30,11 @@ const PartnerHeirarchy = ({
     relativeTo,
     showRaw
 }: IPartnerHeirarchy) => {
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [heirarchy, setHeirary] = useState([]);
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
+            // setLoading(true);
             const heirarchyResponse = await axios.post(
                 `${API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
                 {
@@ -54,7 +54,7 @@ const PartnerHeirarchy = ({
             if (heirarchyResponse.data) {
                 setHeirary(heirarchyResponse.data);
             }
-            setLoading(false);
+            // setLoading(false);
         };
         fetchData();
     }, [
@@ -72,7 +72,7 @@ const PartnerHeirarchy = ({
     return (
         <PartnerHeirarchyWrapper>
             <div className='heirachy-container'>
-                <h1>{loading && <>Loading</>}</h1>
+                {/* <h1>{loading && <>Loading</>}</h1> */}
                 {showRaw ? <>
                     {heirarchy?.map(item => <>
                         <div className="card">

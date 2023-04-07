@@ -14,11 +14,11 @@ export interface IPartnerBalancesProps {
 }
 
 const PartnerBalances = (props: IPartnerBalancesProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
         {
@@ -29,7 +29,7 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
         console.log(fetchBalance.data);
         setBalance(fetchBalance.data);
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, [props.userId, props.currency]);
@@ -37,7 +37,7 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
     <>
       <h2>Partner Balances {props.userId}</h2>
 
-      {loading && <h1>Loading</h1>}
+      {/* {loading && <h1>Loading</h1>} */}
       {props.showRaw ? <>
         <div className="card">
           <SyntaxHighlighter language="javascript" style={docco}>
@@ -46,20 +46,19 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
         </div></> : <>
         <PartnerBalancesWrapper>
           <div className="balance-Wrapper">
-            {!loading &&
-              balance.map((record) => (
-                <div className="balance-card">
-                  <div>
-                    <img
+            {balance.map((record) => (
+              <div className="balance-card">
+                <div>
+                  <img
 
-                      src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
-                      alt=""
-                    />
-                    <p> {record.transactionType.slice(0, 17)}</p>
-                  </div>
-                  <p>{parseFloat(record.amount).toFixed(2)}</p>
+                    src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
+                    alt=""
+                  />
+                  <p> {record.transactionType.slice(0, 17)}</p>
                 </div>
-              ))}
+                <p>{parseFloat(record.amount).toFixed(2)}</p>
+              </div>
+            ))}
           </div>
         </PartnerBalancesWrapper></>}
     </>

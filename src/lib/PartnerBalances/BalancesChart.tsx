@@ -44,12 +44,12 @@ export interface IPartnerBalancesPieChartProps {
 }
 
 const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState([]);
   const [rawData, setRawData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
+      // setLoading(true);
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
         {
@@ -73,7 +73,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         });
         setBalance(modifiedArray)
       }
-      setLoading(false);
+      // setLoading(false);
     };
     fetchData();
   }, [props.userId, props.currency, props.amountType]);
@@ -124,7 +124,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   // console.log(balance)
   return (
     <>
-      {loading && <h1>Loading</h1>}
+      {/* {loading && <h1>Loading</h1>} */}
       {props?.showRaw ? <>
         {rawData?.map(item => <>
           <div className="card">
