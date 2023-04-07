@@ -11,6 +11,11 @@ export interface Payers {
   credentials: any;
   showRaw: boolean;
 }
+
+function roundToTwo(num: any) {
+  return +(Math.round(num + "e+3") + "e-2");
+}
+console.log(roundToTwo(3.394792));
 const PayerTransaction = (props: Payers) => {
   const [loading, setLoading] = useState(false);
   const [payerData, setPayerData] = useState<any>();
@@ -52,8 +57,8 @@ const PayerTransaction = (props: Payers) => {
       ) : (
         <>
           <PayerTransactionWrapper>
-            <div className="cards">
-              <p>
+            <div className="">
+              {/* <p>
                 <strong>Identifier</strong>:{" "}
                 <small style={{ marginTop: "5px" }}>
                   {payerData?.identifier}
@@ -76,29 +81,43 @@ const PayerTransaction = (props: Payers) => {
               <p>
                 <strong>Current Virtual Value</strong> :
                 {payerData?.currentVirtualValue}
-              </p>
+              </p> */}
               <p>
                 <strong>Transaction Types Amount</strong>
                 {newObjectKeys !== null && typeof newObjectKeys === "object"
                   ? Object.keys(newObjectKeys).map((item) => (
-                      <p>
-                        <strong>{item}</strong>:{" "}
-                        <span>{newObjectKeys[item]}</span>
-                      </p>
+                      <div className="transaction-container">
+                        {" "}
+                        <img
+                          className="transaction-image"
+                          src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
+                          alt=""
+                        />{" "}
+                        <p>
+                          <strong className="transaction-title">{item}</strong>:{" "}
+                          <span> {roundToTwo(newObjectKeys[item])}</span>
+                        </p>
+                      </div>
                     ))
                   : "Not valid"}
               </p>
+
               <p>
-                <strong style={{ textDecoration: "underline" }}>
-                  Transaction Virtual Values
-                </strong>
+                <strong>Transaction Virtual Values</strong>
                 {typesVirtualValues !== null &&
                 typeof typesVirtualValues === "object"
                   ? Object.keys(typesVirtualValues).map((item) => (
-                      <p>
-                        <strong>{item}</strong>:{" "}
-                        <span>{typesVirtualValues[item]}</span>
-                      </p>
+                      <div className="transaction-container">
+                        <img
+                          className="transaction-image"
+                          src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
+                          alt=""
+                        />{" "}
+                        <p>
+                          <strong className="transaction-title">{item}</strong>:{" "}
+                          <span>{roundToTwo(typesVirtualValues[item])}</span>
+                        </p>
+                      </div>
                     ))
                   : "Not valid"}
               </p>
@@ -107,7 +126,7 @@ const PayerTransaction = (props: Payers) => {
                             <p>{item}</p>
                         })
                     } */}
-              <p>
+              {/* <p>
                 <strong>Current Virtual Value</strong> :
                 {payerData?.currentVirtualValue}
               </p>
@@ -121,7 +140,7 @@ const PayerTransaction = (props: Payers) => {
               <p>
                 <strong>Updated By</strong>:
                 <small>{payerData?.updatedById}</small>
-              </p>
+              </p> */}
             </div>
           </PayerTransactionWrapper>
         </>
@@ -130,14 +149,49 @@ const PayerTransaction = (props: Payers) => {
   );
 };
 const PayerTransactionWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+    margin: 24px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 9px rgba(50, 71, 92, 0.06),
+      0px 4px 9px 1px rgba(50, 71, 92, 0.04),
+      0px 2px 6px 4px rgba(50, 71, 92, 0.02);
+    padding: 24px;
+    max-width: auto;
+    @media screen and (max-width: 425px) {
+      margin: 24px;
+    }
+  }
+  .transaction-container {
+    display: flex;
+    align-items: center;
+  }
 
+  .transaction-container>p{
+   display:flex;
+   flex-wrap:wrap;
+  }
+
+  .transaction-container>p>strong{
+    padding-left:5px 
+  }
+  .transaction-container>p>span{
+    padding-left:2px ;
+  }
+  .transaction-title{
+    @media screen and (max-width: 425px) {
+        display: block;
+        width: 105px;
+        word-wrap: break-word;
+      }
+    
+  }
   .cards {
-    max-width: 350px;
     padding: 15px;
     width: 100%;
     margin: 10px;
+  }
+  .transaction-image {
+    width: 30px;
+    height: 30px;
   }
 `;
 
