@@ -133,6 +133,10 @@ const AvailableAchievementWrapper = styled.div`
 .text-container {
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 768px){
+    width: 300px;
+      word-wrap: break-word;
+  }
 }
 
 .available-achievement-title {
@@ -156,6 +160,12 @@ const AvailableAchievementWrapper = styled.div`
 .available-achievement-identifier {
   font-size: 11px;
   color: #656565;
+  @media screen and (max-width: 768px){
+    display: block;
+  }
+  @media screen and (max-width: 425px) {
+  width:250px
+  }
 }
 .available-achievement-subtitle {
   font-size: 1rem;
@@ -178,7 +188,11 @@ const AvailableAchievementWrapper = styled.div`
     width:100%;
     grid-template-columns: 50% 45%;
   }
+  @media screen and (max-width: 768px){
+    width:100%
+  }
 }
+
 
 `;
 export default AvailableAchievement;
