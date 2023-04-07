@@ -50,7 +50,7 @@ const AvailableAchievement = (props: AchievementsFilter) => {
                 <div className="image-container">
                   {/* <img src={rec?.iconLink} alt="icon" /> */}
                   <img
-                    src={rec?.iconLink}
+                    src={!rec?.iconLink ? 'https://i.ibb.co/LQCZTwN/5718718.png' : rec?.iconLink}
                     style={{ width: "44px" }}
                     alt="icon"
                   />
@@ -99,7 +99,7 @@ const AvailableAchievement = (props: AchievementsFilter) => {
 
 
 const AvailableAchievementWrapper = styled.div`
-  width: 500px;
+  // width: 500px;
   margin-bottom: 10px;
   padding: 15px;
   background-color: #f1efef;
