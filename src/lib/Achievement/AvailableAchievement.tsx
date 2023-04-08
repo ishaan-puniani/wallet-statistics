@@ -135,8 +135,8 @@ const AvailableAchievementWrapper = styled.div`
 }
 
 .text-container {
-  display: flex;
-  flex-direction: column;
+  width: 89%;
+    word-wrap: break-word;
   @media screen and (max-width: 769px){
     width: 300px;
       word-wrap: break-word;
@@ -152,7 +152,8 @@ const AvailableAchievementWrapper = styled.div`
   font-size: 18px;
   margin: 0;
   margin-bottom: 4px;
-  
+  width: 89%;
+    word-wrap: break-word;
   @media screen and (max-width: 426px) {
     font-size:16px;
   }
