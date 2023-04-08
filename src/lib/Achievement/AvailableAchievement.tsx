@@ -164,7 +164,10 @@ const AvailableAchievementWrapper = styled.div`
   @media screen and (max-width: 425px) {
   width:250px
   }
-
+  @media screen and (max-width: 290px){
+    width: 150px;
+    word-wrap: break-word;
+  }
 }
 .available-achievement-identifier {
   font-size: 11px;
@@ -173,6 +176,10 @@ const AvailableAchievementWrapper = styled.div`
     line-height: 1.5;
   @media screen and (max-width: 425px) {
   width:250px
+  }
+  @media screen and (max-width: 290px){
+    width: 150px;
+    word-wrap: break-word;
   }
 }
 .available-achievement-subtitle {
