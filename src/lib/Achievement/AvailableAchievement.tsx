@@ -57,11 +57,11 @@ const AvailableAchievement = (props: AchievementsFilter) => {
                 </div>
                 <div className="text-container">
                   <h2 className="available-achievement-title">
-                    <span>{rec?.title}</span>
-                    <span className="available-achievement-identifier">
-                      {rec?.identifier.replace(/[_]/gi, " ")}
-                    </span>
-                  </h2>
+                    {rec?.title}
+
+                  </h2><h3 className="available-achievement-identifier">
+                    {rec?.identifier.replace(/[_]/gi, " ")}
+                  </h3>
                   {/* <h3 className="subtitle">{rec.subTitle}</h3>
                                 <p className="description">{rec?.description}</p> */}
                   <h3 className="available-achievement-subtitle">
@@ -135,8 +135,8 @@ const AvailableAchievementWrapper = styled.div`
 }
 
 .text-container {
-  display: flex;
-  flex-direction: column;
+  width: 89%;
+    word-wrap: break-word;
   @media screen and (max-width: 769px){
     width: 300px;
       word-wrap: break-word;
@@ -151,36 +151,18 @@ const AvailableAchievementWrapper = styled.div`
 .available-achievement-title {
   font-size: 18px;
   margin: 0;
-  margin-bottom: 10px;
-  
+  margin-bottom: 4px;
+  width: 88%;
+    word-wrap: break-word;
   @media screen and (max-width: 426px) {
-    display: flex;
-    flex-direction: column;
-    gap:5px;
     font-size:16px;
-    width: 300px;
-    word-wrap: break-word;
   }
-  @media screen and (max-width: 426px) {
-  width:250px
-  }
-  @media screen and (max-width: 291px){
-    width: 150px;
-    word-wrap: break-word;
-  }
+  
 }
 .available-achievement-identifier {
   font-size: 11px;
   color: #656565;
-  display: block;
-    line-height: 1.5;
-  @media screen and (max-width: 426px) {
-  width:250px
-  }
-  @media screen and (max-width: 291px){
-    width: 150px;
-    word-wrap: break-word;
-  }
+  margin: 0;
 }
 .available-achievement-subtitle {
   font-size: 1rem;
@@ -194,7 +176,7 @@ const AvailableAchievementWrapper = styled.div`
 .available-achievement-2col {
   margin: 0;
   margin-top: 10px;
-  width: 400px;
+  width: 100%;
   display: grid;
   grid-template-columns: 40% 30%;
   font-size: 14px;
