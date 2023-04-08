@@ -57,7 +57,7 @@ const AvailableAchievement = (props: AchievementsFilter) => {
                 </div>
                 <div className="text-container">
                   <h2 className="available-achievement-title">
-                    {rec?.title}{" "}
+                    <span>{rec?.title}</span>
                     <span className="available-achievement-identifier">
                       {rec?.identifier.replace(/[_]/gi, " ")}
                     </span>
@@ -141,6 +141,11 @@ const AvailableAchievementWrapper = styled.div`
     width: 300px;
       word-wrap: break-word;
   }
+  @media screen and (max-width: 325px){
+    width: 100%;
+      word-wrap: break-word;
+  }
+  
 }
 
 .available-achievement-title {
@@ -164,9 +169,8 @@ const AvailableAchievementWrapper = styled.div`
 .available-achievement-identifier {
   font-size: 11px;
   color: #656565;
-  @media screen and (max-width: 768px){
-    display: block;
-  }
+  display: block;
+    line-height: 1.5;
   @media screen and (max-width: 425px) {
   width:250px
   }
