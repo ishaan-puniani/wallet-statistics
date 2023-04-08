@@ -1,12 +1,57 @@
+// https://react-table-v7.tanstack.com/docs/api/useFilters
+// https://codesandbox.io/s/github/tannerlinsley/react-table/tree/v7/examples/filtering?file=/src/App.js
+// https://dev.to/inimist/react-table-server-side-pagination-with-sorting-and-search-3163
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import { API_HOST } from "../../constants";
-import { usePagination, useTable } from "react-table";
+import { useFilters, useGlobalFilter, usePagination, useTable } from "react-table";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Modal from "react-modal";
 import TransactionDetails from "../Transactions/TransactionDetails";
+import { useAsyncDebounce } from "react-table";
+
+const ColumnFilter = ({ column }:any) => {
+  const { filterValue, setFilter } = column;
+  const [value, setValue] = useState(filterValue);
+  const onChange = useAsyncDebounce((value) => {
+    setFilter(value || undefined);
+  }, 300);
+  return (
+    <span>
+      <input
+        className="border-0 h-6 w-full text-black"
+        placeholder="Search"
+        value={value || ""}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+      />
+    </span>
+  );
+};
+
+const GlobalFilter = ({ filter, setFilter }:any) => {
+  const [value, setValue] = useState(filter);
+  const onChange = useAsyncDebounce((value) => {
+    setFilter(value || undefined);
+  }, 300);
+  return (
+    <span>
+      Search:{" "}
+      <input
+        className="border h-10 mb-5 w-72"
+        value={value || ""}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+      />
+    </span>
+  );
+};
 
 export interface IPartnerTransactionTable {
   userId: string;
@@ -20,6 +65,7 @@ export interface IPartnerTable {
 }
 
 function Table({
+  defaultColumn,
   columns,
   data,
   fetchData,
@@ -40,26 +86,34 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
+    
+    setGlobalFilter,
     // Get the state from the instance
-    state: { pageIndex, pageSize },
+    state: { pageIndex, pageSize , globalFilter, filters},
   }: any = useTable(
     {
       columns,
       data,
+      defaultColumn,
       initialState: { pageIndex: 0 }, // Pass our hoisted table state
       manualPagination: true, // Tell the usePagination
       // hook that we'll handle our own data fetching
       // This means we'll also have to provide our own
       // pageCount.
       pageCount: controlledPageCount,
+      manualGlobalFilter: true,
+      manualFilters: true,
     } as any,
-    usePagination
+   
+    useFilters,
+    useGlobalFilter,
+    usePagination,
   );
 
   // Listen for changes in pagination and use the state to fetch our new data
   React.useEffect(() => {
-    fetchData({ pageIndex, pageSize });
-  }, [fetchData, pageIndex, pageSize]);
+    fetchData({ pageIndex, pageSize }, globalFilter, filters);
+  }, [fetchData, pageIndex, pageSize, globalFilter, filters]);
 
   // Render the UI for your table
   return (
@@ -79,6 +133,8 @@ function Table({
           )}
         </code>
       </pre>
+      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+    
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup: any) => (
@@ -93,6 +149,11 @@ function Table({
                         : " 🔼"
                       : ""}
                   </span>
+                  <div>
+                        {column.canFilter && column.id !== "id"
+                          ? column.render("Filter")
+                          : null}
+                      </div>
                 </th>
               ))}
             </tr>
@@ -217,8 +278,13 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
   const [loading, setLoading] = React.useState(false);
   const [pageCount, setPageCount] = React.useState(0);
   const fetchIdRef = React.useRef(0);
-
-  const fetchData = React.useCallback(async ({ pageSize, pageIndex }: any) => {
+  const defaultColumn = useMemo(
+    () => ({
+      Filter: ColumnFilter,
+    }),
+    []
+  );
+  const fetchData = React.useCallback(async ({ pageSize, pageIndex }: any, searchText:string, filters:any) => {
     // This will get called when the table needs new data
     // You could fetch your data from literally anywhere,
     // even a server. But for this example, we'll just fake it.
@@ -228,7 +294,6 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
 
     // Set the loading state
     setLoading(true);
-
     // We'll even set a delay to simulate a server here
 
     // Only update the data if this is the latest fetch
@@ -352,6 +417,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
               fetchData={fetchData}
               loading={loading}
               pageCount={pageCount}
+              defaultColumn={defaultColumn}
             />
 
             <Modal
