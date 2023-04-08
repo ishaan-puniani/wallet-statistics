@@ -6,7 +6,7 @@ import {
   renderDropdownAmountTypes,
   renderDropdownCurrencyTypes,
   renderDropdownTransactionTypes,
-} from "./Dropdown";
+} from "./Metadata";
 import "./index.css";
 import {
   renderBalances,
