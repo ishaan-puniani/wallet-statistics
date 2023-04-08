@@ -103,15 +103,15 @@ const AvailableAchievementWrapper = styled.div`
   margin-bottom: 10px;
   padding: 15px;
   // background-color: #f1efef;
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 769px) {
       max-width:100%;
       padding: 10px;
     margin: 5px;
     }
-    @media screen and (max-width: 425px) {
+    @media screen and (max-width: 426px) {
       max-width:92%;
     }
-    @media screen and (max-width: 320px) {
+    @media screen and (max-width: 321px) {
       max-width:100%;
       margin:0;
     }
@@ -123,7 +123,7 @@ const AvailableAchievementWrapper = styled.div`
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
   background: #FFFFFF;
     box-shadow: 0px 2px 9px rgba(50, 71, 92, 0.06), 0px 4px 9px 1px rgba(50, 71, 92, 0.04), 0px 2px 6px 4px rgba(50, 71, 92, 0.02);
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 426px) {
     padding: 10px;
     flex-direction: column;
     gap: 15px;
@@ -137,11 +137,11 @@ const AvailableAchievementWrapper = styled.div`
 .text-container {
   display: flex;
   flex-direction: column;
-  @media screen and (max-width: 768px){
+  @media screen and (max-width: 769px){
     width: 300px;
       word-wrap: break-word;
   }
-  @media screen and (max-width: 325px){
+  @media screen and (max-width: 326px){
     width: 100%;
       word-wrap: break-word;
   }
@@ -153,7 +153,7 @@ const AvailableAchievementWrapper = styled.div`
   margin: 0;
   margin-bottom: 10px;
   
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 426px) {
     display: flex;
     flex-direction: column;
     gap:5px;
@@ -161,10 +161,10 @@ const AvailableAchievementWrapper = styled.div`
     width: 300px;
     word-wrap: break-word;
   }
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 426px) {
   width:250px
   }
-  @media screen and (max-width: 290px){
+  @media screen and (max-width: 291px){
     width: 150px;
     word-wrap: break-word;
   }
@@ -174,10 +174,10 @@ const AvailableAchievementWrapper = styled.div`
   color: #656565;
   display: block;
     line-height: 1.5;
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 426px) {
   width:250px
   }
-  @media screen and (max-width: 290px){
+  @media screen and (max-width: 291px){
     width: 150px;
     word-wrap: break-word;
   }
@@ -199,11 +199,11 @@ const AvailableAchievementWrapper = styled.div`
   grid-template-columns: 40% 30%;
   font-size: 14px;
   
-  @media screen and (max-width: 425px) {
+  @media screen and (max-width: 426px) {
     width:100%;
     grid-template-columns: 50% 45%;
   }
-  @media screen and (max-width: 768px){
+  @media screen and (max-width: 769px){
     width:100%
   }
 }
