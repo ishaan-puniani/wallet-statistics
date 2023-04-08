@@ -152,7 +152,7 @@ const AvailableAchievementWrapper = styled.div`
   font-size: 18px;
   margin: 0;
   margin-bottom: 4px;
-  width: 89%;
+  width: 88%;
     word-wrap: break-word;
   @media screen and (max-width: 426px) {
     font-size:16px;
@@ -176,7 +176,7 @@ const AvailableAchievementWrapper = styled.div`
 .available-achievement-2col {
   margin: 0;
   margin-top: 10px;
-  width: 400px;
+  width: 100%;
   display: grid;
   grid-template-columns: 40% 30%;
   font-size: 14px;
