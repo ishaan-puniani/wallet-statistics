@@ -5,14 +5,23 @@ import axios from "axios";
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import { API_HOST } from "../../constants";
-import { useFilters, useGlobalFilter, usePagination, useTable } from "react-table";
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useTable,
+} from "react-table";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Modal from "react-modal";
 import TransactionDetails from "../Transactions/TransactionDetails";
 import { useAsyncDebounce } from "react-table";
+import {
+  getFilterQueryString,
+  getFilterMapFromArray,
+} from "../../utilities/queryParams";
 
-const ColumnFilter = ({ column }:any) => {
+const ColumnFilter = ({ column }: any) => {
   const { filterValue, setFilter } = column;
   const [value, setValue] = useState(filterValue);
   const onChange = useAsyncDebounce((value) => {
@@ -33,7 +42,7 @@ const ColumnFilter = ({ column }:any) => {
   );
 };
 
-const GlobalFilter = ({ filter, setFilter }:any) => {
+const GlobalFilter = ({ filter, setFilter }: any) => {
   const [value, setValue] = useState(filter);
   const onChange = useAsyncDebounce((value) => {
     setFilter(value || undefined);
@@ -86,10 +95,10 @@ function Table({
     nextPage,
     previousPage,
     setPageSize,
-    
+
     setGlobalFilter,
     // Get the state from the instance
-    state: { pageIndex, pageSize , globalFilter, filters},
+    state: { pageIndex, pageSize, globalFilter, filters },
   }: any = useTable(
     {
       columns,
@@ -104,10 +113,10 @@ function Table({
       manualGlobalFilter: true,
       manualFilters: true,
     } as any,
-   
+
     useFilters,
     useGlobalFilter,
-    usePagination,
+    usePagination
   );
 
   // Listen for changes in pagination and use the state to fetch our new data
@@ -118,23 +127,23 @@ function Table({
   // Render the UI for your table
   return (
     <>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              pageIndex,
-              pageSize,
-              pageCount,
-              canNextPage,
-              canPreviousPage,
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
+      {/* <pre>
+                    <code>
+                        {JSON.stringify(
+                            {
+                                pageIndex,
+                                pageSize,
+                                pageCount,
+                                canNextPage,
+                                canPreviousPage,
+                            },
+                            null,
+                            2
+                        )}
+                    </code>
+                </pre>    */}
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-    
+
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup: any) => (
@@ -150,10 +159,10 @@ function Table({
                       : ""}
                   </span>
                   <div>
-                        {column.canFilter && column.id !== "id"
-                          ? column.render("Filter")
-                          : null}
-                      </div>
+                    {column.canFilter && column.id !== "id"
+                      ? column.render("Filter")
+                      : null}
+                  </div>
                 </th>
               ))}
             </tr>
@@ -284,42 +293,48 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     }),
     []
   );
-  const fetchData = React.useCallback(async ({ pageSize, pageIndex }: any, searchText:string, filters:any) => {
-    // This will get called when the table needs new data
-    // You could fetch your data from literally anywhere,
-    // even a server. But for this example, we'll just fake it.
+  const fetchData = React.useCallback(
+    async ({ pageSize, pageIndex }: any, searchText: string, filters: any) => {
+      // This will get called when the table needs new data
+      // You could fetch your data from literally anywhere,
+      // even a server. But for this example, we'll just fake it.
 
-    // Give this fetch an ID
-    const fetchId = ++fetchIdRef.current;
+      // Give this fetch an ID
+      const fetchId = ++fetchIdRef.current;
 
-    // Set the loading state
-    setLoading(true);
-    // We'll even set a delay to simulate a server here
+      // Set the loading state
+      setLoading(true);
+      // We'll even set a delay to simulate a server here
 
-    // Only update the data if this is the latest fetch
-    if (fetchId === fetchIdRef.current) {
-      const startRow = pageSize * pageIndex;
-      //   const endRow = startRow + pageSize
+      // Only update the data if this is the latest fetch
+      if (fetchId === fetchIdRef.current) {
+        const startRow = pageSize * pageIndex;
+        //   const endRow = startRow + pageSize
+        const filterMap = getFilterMapFromArray(filters);
+        const filterQuery = getFilterQueryString({ filter: filterMap });
 
-      const fetchTransactionTable = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?limit=${pageSize}&offset=${startRow}`,
-        {
-          ...props.credentials,
+        const fetchTransactionTable = await axios.post(
+          `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?limit=${pageSize}&offset=${startRow}&${filterQuery}`,
+          {
+            ...props.credentials,
+          }
+        );
+
+        if (fetchTransactionTable.data) {
+          const items = fetchTransactionTable.data.rows;
+          setTransactionTable(items);
+          setPageCount(fetchTransactionTable.data.count);
         }
-      );
-      if (fetchTransactionTable.data) {
-        const items = fetchTransactionTable.data.rows;
-        setTransactionTable(items);
-        setPageCount(fetchTransactionTable.data.count);
+
+        // Your server could send back total page count.
+        // For now we'll just fake it, too
+        // setPageCount(Math.ceil(serverData.length / pageSize))
+
+        setLoading(false);
       }
-
-      // Your server could send back total page count.
-      // For now we'll just fake it, too
-      // setPageCount(Math.ceil(serverData.length / pageSize))
-
-      setLoading(false);
-    }
-  }, []);
+    },
+    []
+  );
 
   const columns = [
     {
@@ -382,9 +397,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     },
   ];
 
-  const afterDetailsDialogClose = () => {
-   
-  };
+  const afterDetailsDialogClose = () => {};
   const doCloseDetailsDialog = () => {
     setTransactionForDetails(undefined);
     setDetailsDialogVisible(false);
@@ -393,10 +406,8 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
   return (
     <TransactionTableWrapper>
       {/* {loading && <h1>Loading</h1>} */}
-      <h1>Ishaan</h1>
       {props.showRaw ? (
         <>
-          <h2>Total Transaction Number : {transactionTableCount}</h2>
           {transactionTable?.map((item) => (
             <>
               <div className="card">
@@ -410,7 +421,6 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
       ) : (
         <>
           <>
-            <h2>Total Transaction Number : {transactionTableCount}</h2>
             <Table
               columns={columns}
               data={transactionTable}
@@ -446,7 +456,6 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
 
 const TransactionTableWrapper = styled.div`
   padding: 1rem;
-
   table {
     border-spacing: 0;
     border: 1px solid black;
@@ -458,20 +467,17 @@ const TransactionTableWrapper = styled.div`
         }
       }
     }
-
     th,
     td {
       margin: 0;
       padding: 0.5rem;
       border-bottom: 1px solid black;
       border-right: 1px solid black;
-
       :last-child {
         border-right: 0;
       }
     }
   }
-
   .pagination {
     padding: 0.5rem;
   }
