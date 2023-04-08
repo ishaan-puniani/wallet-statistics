@@ -135,7 +135,7 @@ const AvailableAchievementWrapper = styled.div`
 }
 
 .text-container {
-  width: 89%;
+  width: 88%;
     word-wrap: break-word;
   @media screen and (max-width: 769px){
     width: 300px;
