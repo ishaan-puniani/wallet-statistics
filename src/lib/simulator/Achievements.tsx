@@ -27,7 +27,7 @@ const Achievements = (props: IAchievements) => {
         <h1>Achievement Stimulator</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ul className="formStyle">
-            <div>
+            <div className="achievement">
               <li>
                 <label>Achiever Id :</label>
                 <input value={props.achieverId} {...register("achieverId")} />
@@ -42,7 +42,10 @@ const Achievements = (props: IAchievements) => {
               </li>
             </div>
           </ul>
-          <div className="formStyle">
+          <div
+          
+            className="formStyle formStyle-btn"
+          >
             <input type="submit" />
           </div>
         </form>
