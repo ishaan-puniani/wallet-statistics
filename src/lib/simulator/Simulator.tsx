@@ -387,12 +387,12 @@ export const SimulatorWrapper = styled.div`
     @media screen and (max-width: 1380px) {
       width: 540px;
     }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 845px) {
       width: 330px;
       display: grid;
     }
-    @media screen and (max-width: 380px) {
-      width: 215px;
+    @media screen and (max-width: 425px) {
+      width: 195px;
       display: grid;
     }
   }
@@ -401,10 +401,10 @@ export const SimulatorWrapper = styled.div`
   }
   .formStyle li input {
     width: 330px;
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 845px) {
       width: 340px;
     }
-    @media screen and (max-width: 380px) {
+    @media screen and (max-width: 425px) {
       width: 220px;
     }
   }
