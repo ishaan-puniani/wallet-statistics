@@ -388,7 +388,7 @@ export const SimulatorWrapper = styled.div`
       width: 540px;
     }
     @media screen and (max-width: 845px) {
-      width: 330px;
+      width: 295px;
       display: grid;
     }
     @media screen and (max-width: 425px) {
@@ -409,12 +409,12 @@ export const SimulatorWrapper = styled.div`
     }
   }
   .formStyle .achievement > li {
-    width: 330px;
+    width: 480px;
     @media screen and (max-width: 845px) {
-      width: 340px;
+      width: 260px;
     }
-    @media screen and (max-width: 425px) {
-      width: 220px;
+    @media screen and (max-width: 445px) {
+      width: 160px;
     }
   }
 
