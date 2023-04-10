@@ -10,16 +10,18 @@ import {
   useGlobalFilter,
   usePagination,
   useTable,
+  useAsyncDebounce,
 } from "react-table";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Modal from "react-modal";
 import TransactionDetails from "../Transactions/TransactionDetails";
-import { useAsyncDebounce } from "react-table";
 import {
   getFilterQueryString,
   getFilterMapFromArray,
 } from "../../utilities/queryParams";
+import { getTheme } from "../../utilities/theme";
+import ThemedSpan from "../components/ThemedSpan";
 
 const ColumnFilter = ({ column }: any) => {
   const { filterValue, setFilter } = column;
@@ -348,14 +350,29 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     {
       Header: "Currency",
       accessor: "currency",
+      Cell: ({ value }: any) => {
+        return <ThemedSpan type={"currencies"} value={value} />;
+      },
     },
     {
       Header: "Transaction Type",
       accessor: "transactionTypeIdentifier",
+      Cell: ({ value }: any) => {
+        return <ThemedSpan type={"transactionTypes"} value={value} />;
+      },
     },
     {
       Header: "Amount",
       accessor: "amount",
+      Cell: ({ value }: any) => {
+        return (
+          <ThemedSpan
+            type={"amount"}
+            value={value}
+            valueType={value >= 0 ? "positive" : "negative"}
+          />
+        );
+      },
     },
     {
       Header: "Virtual Value",
