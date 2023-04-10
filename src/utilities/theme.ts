@@ -2,11 +2,9 @@ import style from "react-syntax-highlighter/dist/esm/styles/hljs/a11y-dark";
 
 const THEME = {
   amount: {
-    positive: {
-      color: "red",
-    },
+    positive: { color: "green" },
     negative: {
-      color: "green",
+      color: "red",
     },
   },
   currencies: {

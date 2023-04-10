@@ -4,7 +4,13 @@ import { getTheme } from "../../utilities/theme";
 const theme = getTheme();
 const ThemedSpan = ({ type, value, valueType = "string" }: any) => {
   return (
-    <span>
+    <span
+      style={
+        theme[type] && theme[type][valueType]
+          ? theme[type][valueType]
+          : {}
+      }
+    >
       {theme[type] && theme[type][value] && theme[type][value]["icon"] && (
         <img {...theme[type][value]["icon"]}></img>
       )}
