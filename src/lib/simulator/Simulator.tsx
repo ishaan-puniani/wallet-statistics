@@ -409,12 +409,12 @@ export const SimulatorWrapper = styled.div`
     }
   }
   .formStyle .achievement > li {
-    width: 450px;
-    @media screen and (max-width: 768px) {
-      width: 295px;
+    width: 330px;
+    @media screen and (max-width: 845px) {
+      width: 340px;
     }
-    @media screen and (max-width: 320px) {
-      width: 175px;
+    @media screen and (max-width: 425px) {
+      width: 220px;
     }
   }
 
