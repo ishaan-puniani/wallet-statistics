@@ -365,7 +365,7 @@ export const SimulatorWrapper = styled.div`
   .container {
     display: grid;
     grid-template-columns: auto auto;
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 1380px) {
       display: block;
     }
   }
@@ -380,12 +380,12 @@ export const SimulatorWrapper = styled.div`
     width: auto;
     list-style: none;
     margin: 10px 0 0 0;
-    @media only screen and (max-width: 2560px) and (min-width: 1400px) {
+    @media only screen and (max-width: 2560px) and (min-width: 1700px) {
       width: 650px;
     }
 
-    @media screen and (max-width: 1024px) {
-      width: 520px;
+    @media screen and (max-width: 1380px) {
+      width: 540px;
     }
     @media screen and (max-width: 768px) {
       width: 330px;
@@ -396,7 +396,9 @@ export const SimulatorWrapper = styled.div`
       display: grid;
     }
   }
-
+  .formStyle li label {
+    margin-right: 5px;
+  }
   .formStyle li input {
     width: 330px;
     @media screen and (max-width: 768px) {
