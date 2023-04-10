@@ -353,7 +353,7 @@ const Simulator = (props: ISimulatorProps) => {
             </div>
           </ul> */}
 
-          <div className="formStyle">
+          <div className="formStyle formStyle-btn">
             <input type="submit" />
           </div>
         </form>
@@ -380,24 +380,50 @@ export const SimulatorWrapper = styled.div`
     width: auto;
     list-style: none;
     margin: 10px 0 0 0;
+    @media only screen and (max-width: 2560px) and (min-width: 1400px) {
+      width: 650px;
+    }
+
     @media screen and (max-width: 1024px) {
-      width: 620px;
+      width: 520px;
     }
     @media screen and (max-width: 768px) {
-      width: 260px;
+      width: 330px;
+      display: grid;
+    }
+    @media screen and (max-width: 380px) {
+      width: 215px;
       display: grid;
     }
   }
 
   .formStyle li input {
-    width: 400px;
-    @media screen and (max-width: 768px){
-      width: 245px;
+    width: 330px;
+    @media screen and (max-width: 768px) {
+      width: 340px;
+    }
+    @media screen and (max-width: 380px) {
+      width: 220px;
+    }
+  }
+  .formStyle .achievement > li {
+    width: 450px;
+    @media screen and (max-width: 768px) {
+      width: 295px;
+    }
+    @media screen and (max-width: 320px) {
+      width: 175px;
     }
   }
 
+  .formStyle-btn {
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .formStyle input[type="submit"] {
-    margin: 10px 40px;
+    width: 100px;
+    margin-left: auto;
     background: #4691a4;
     padding: 8px 15px 8px 15px;
     border: none;
