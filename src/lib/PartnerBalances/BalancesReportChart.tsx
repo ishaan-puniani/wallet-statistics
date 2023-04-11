@@ -40,6 +40,7 @@ export interface BalanceReportChartFilterProps {
     label: string;
     amountType: "amount" | "virtual";
     showRaw: boolean;
+    transactionTypes?: string[];
 }
 
 const BalancesReportChart = (props: BalanceReportChartFilterProps) => {

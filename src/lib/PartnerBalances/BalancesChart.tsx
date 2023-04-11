@@ -17,11 +17,11 @@ import {
   CanvasRenderer,
   // SVGRenderer,
 } from "echarts/renderers";
-import axios from "axios";
-import { API_HOST } from "../../constants";
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { _fetchBalance } from "../services/balances";
+import { getTheme, makeRandomColor } from "../../utilities/theme";
 
 // Register the required components
 echarts.use([
@@ -35,93 +35,125 @@ echarts.use([
 ]);
 
 export interface IPartnerBalancesPieChartProps {
-  userId: unknown;
-  currency: unknown;
+  userId: string;
+  currency: string;
   credentials: any;
   amountType: "amount" | "virtual";
   showRaw?: boolean;
+  transactionTypes?: string[];
 }
+
+const option: any = {
+  tooltip: {
+    trigger: "item",
+  },
+  legend: {
+    top: "0%",
+    left: "center",
+  },
+
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "0%",
+    containLabel: true,
+  },
+  series: [
+    {
+      name: "",
+      type: "pie",
+      radius: ["40%", "70%"],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: "#fff",
+        borderWidth: 2,
+      },
+      label: {
+        show: false,
+        position: "center",
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: "bold",
+        },
+      },
+      labelLine: {
+        show: false,
+      },
+      data: [],
+      // color: ["red", "blue"],
+    },
+  ],
+};
 
 const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   // const [loading, setLoading] = useState(false);
-  const [balance, setBalance] = useState([]);
+  const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       // setLoading(true);
-      const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
-        {
-          ...props.credentials,
-        }
+      const balances = await _fetchBalance(
+        props.credentials,
+        props.userId,
+        props.currency
       );
-      if (fetchBalance.data) {
-        const datas = fetchBalance?.data;
-        setRawData(datas);
-        const modifiedArray = datas.map(
-          (item: { amount: any; transactionType: any; virtualValue: any }) => {
-            if (props.amountType === "amount") {
-              return {
-                value: Math.abs(item.amount),
-                name: item.transactionType,
-              };
-            }
-            return {
-              value: Math.abs(item.virtualValue),
-              name: item.transactionType,
-            };
+
+      if (balances) {
+        setRawData(balances);
+        const chartData = [],
+          chartColors = [];
+
+        const theme = getTheme();
+
+        for (let idx = 0; idx < balances.length; idx++) {
+          const balnce = balances[idx];
+          if (props.transactionTypes && !props.transactionTypes.includes(balnce.transactionType)) {
+              continue;
           }
-        );
-        setBalance(modifiedArray);
+          const transactionTypeTheme =
+            theme.transactionTypes[balnce.transactionType];
+          let colorForTransactionType;
+
+          if (transactionTypeTheme) {
+            colorForTransactionType = transactionTypeTheme.chart.color;
+          }
+
+          if (!colorForTransactionType) {
+            colorForTransactionType = makeRandomColor();
+          }
+
+          chartColors.push(colorForTransactionType);
+          if (props.amountType === "amount") {
+            chartData.push({
+              value: Math.abs(balnce.amount),
+              name: balnce.transactionType,
+            });
+          }
+          if (props.amountType === "virtual") {
+            chartData.push({
+              value: Math.abs(balnce.virtualValue),
+              name: balnce.transactionType,
+            });
+          }
+        }
+
+        option.series[0].data = chartData;
+        option.series[0].color = chartColors;
+
+        setChartOption(option);
       }
       // setLoading(false);
     };
-    fetchData();
+    if ((props.userId, props.currency, props.amountType)) {
+      fetchData();
+    }
   }, [props.userId, props.currency, props.amountType]);
-  const option = {
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      top: "0%",
-      left: "center",
-    },
 
-    grid: {
-      left: "3%",
-      right: "4%",
-      bottom: "0%",
-      containLabel: true,
-    },
-    series: [
-      {
-        name: "Wallet And Bonus",
-        type: "pie",
-        radius: ["40%", "70%"],
-        avoidLabelOverlap: false,
-        itemStyle: {
-          borderRadius: 10,
-          borderColor: "#fff",
-          borderWidth: 2,
-        },
-        label: {
-          show: false,
-          position: "center",
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 40,
-            fontWeight: "bold",
-          },
-        },
-        labelLine: {
-          show: false,
-        },
-        data: balance,
-      },
-    ],
-  };
   // console.log(balance)
   return (
     <>
@@ -140,13 +172,14 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         </>
       ) : (
         <div style={{ marginTop: "20px" }}>
-          <ReactEChartsCore
-            echarts={echarts}
-            option={option}
-            notMerge={true}
-            lazyUpdate={true}
-            theme={"theme_name"}
-          />
+          {chartOption && (
+            <ReactEChartsCore
+              echarts={echarts}
+              option={chartOption}
+              notMerge={true}
+              lazyUpdate={true}
+            />
+          )}
         </div>
       )}
     </>

@@ -21,7 +21,15 @@ const THEME = {
     },
   },
   transactionTypes: {
+    MINT: {
+      chart: {
+        color: "red",
+      }
+    },
     MINING_FEES: {
+      chart: {
+        color: "red",
+      },
       icon: {
         src: "https://i.ibb.co/T4bQsPv/download.png",
         style: { width: "24px", height: "24px" },
@@ -35,3 +43,6 @@ const THEME = {
 export const getTheme = () => {
   return THEME;
 };
+
+export const makeRandomColor = () =>
+  "#" + (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0");
