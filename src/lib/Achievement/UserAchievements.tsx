@@ -151,13 +151,16 @@ export const ViewsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (max-width: 426px){
+    flex-direction: column;
+  }
 }
 .level-and-title-container h4{
   margin:0px;
   display: flex;
   gap: 5px;
   font-size: 14px;
-  @media screen and (max-width:321px){
+  @media screen and (max-width:426px){
     width: 100%;
     margin-top: 8px;
   }
@@ -230,7 +233,7 @@ export const ViewsWrapper = styled.div`
   @media screen and (max-width: 769px){
     width:100%
   }
-  @media screen and (max-width:310px){
+  @media screen and (max-width:426px){
     grid-template-columns: 100%;
   }
 }
