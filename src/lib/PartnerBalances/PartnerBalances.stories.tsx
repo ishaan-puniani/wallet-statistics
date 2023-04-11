@@ -51,14 +51,16 @@ Default.args = {
 export const PartnerBalanceChart = TemplateOne.bind({});
 PartnerBalanceChart.args = {
   credentials: getMachineUserCredentials() || {},
-  showRaw: false
+  showRaw: false,
+  // transactionTypes: ["MINT", "MINT_BURN"]
 };
 export const PartnerBalanceReport = TemplateTwo.bind({});
 PartnerBalanceReport.args = {
   credentials: getMachineUserCredentials() || {},
   startDate: date,
   endDate: date,
-  showRaw: false
+  showRaw: false,
+  // transactionTypes: ["MINT", "MINT_BURN"]
 };
 export const TransactionProfile = TemplateThree.bind({});
 TransactionProfile.args = {

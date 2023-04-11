@@ -7,177 +7,231 @@ import * as echarts from "echarts/core";
 import { LineChart } from "echarts/charts";
 // import components, all suffixed with Component
 import {
-    GridComponent,
-    TooltipComponent,
-    TitleComponent,
+  GridComponent,
+  TooltipComponent,
+  TitleComponent,
 } from "echarts/components";
 // Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
 import {
-    CanvasRenderer,
-    // SVGRenderer,
+  CanvasRenderer,
+  // SVGRenderer,
 } from "echarts/renderers";
 import axios from "axios";
 import { API_HOST } from "../../constants";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { _fetchBalanceHistory } from "../services/balances";
+import moment from "moment";
+import { getTheme, makeRandomColor } from "../../utilities/theme";
 
 // Register the required components
 echarts.use([
-    TitleComponent,
-    TooltipComponent,
-    GridComponent,
-    LineChart,
-    CanvasRenderer,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LineChart,
+  CanvasRenderer,
 ]);
 
-
 export interface BalanceReportChartFilterProps {
-    endDate: Date;
-    startDate: Date;
-    userId: unknown;
-    currency: unknown;
-    credentials: any;
-    label: string;
-    amountType: "amount" | "virtual";
-    showRaw: boolean;
-    transactionTypes?: string[];
+  endDate: Date;
+  startDate: Date;
+  userId: string;
+  currency: string;
+  credentials: any;
+  label: string;
+  amountType: "amount" | "virtual";
+  showRaw: boolean;
+  transactionTypes?: string[];
 }
 
+const option: any = {
+  tooltip: {
+    trigger: "axis",
+  },
+  legend: {
+    data: [],
+  },
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "0%",
+    containLabel: true,
+  },
+  toolbox: {
+    feature: {
+      saveAsImage: {},
+    },
+  },
+  xAxis: {
+    type: "category",
+    boundaryGap: false,
+    data: [],
+  },
+  yAxis: {
+    type: "value",
+  },
+  series: [],
+};
+
 const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
-    // const [loading, setLoading] = useState(false);
-    const [balance, setBalance] = useState([]);
-    const [date, setDate] = useState([]);
-    const [names, setNames] = useState([]);
-    const [rawData, setRawData] = useState([]);
-    const newDates = (newDate: Date) => {
-        const timestamp = newDate;
-        const newStartDate = new Date(timestamp);
-        const inputDate = new Date(newStartDate);
-        const day = ("0" + inputDate.getDate()).slice(-2); // ensure leading zero if necessary
-        const month = ("0" + (inputDate.getMonth() + 1)).slice(-2); // add 1 to month since January is 0
-        const year = inputDate.getFullYear();
-        const outputDateString = `${day}/${month}/${year}`;
-        return outputDateString
-    }
-    useEffect(() => {
-        const fetchData = async () => {
-            // setLoading(true);
-            const fetchBalance = await axios.post(
-                // `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?dateRange[]='10-03-2023'`,
-                `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?filter[userId]=${props.userId}&filter[currency]=${props.currency}&filter[dateRange][]=${newDates(props.startDate)}&filter[dateRange][]=${newDates(props.endDate)}`,
-                {
-                    ...props.credentials,
+  // const [loading, setLoading] = useState(false);
+  const [chartOption, setChartOption] = useState();
+
+  const [rawData, setRawData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // setLoading(true);
+
+      const balanceReport: any = await _fetchBalanceHistory(
+        props.credentials,
+        props.userId,
+        props.currency,
+        moment(props.startDate).format("YYYY-MM-DD"),
+        moment(props.endDate).format("YYYY-MM-DD")
+      );
+      if (balanceReport) {
+        const items = balanceReport.rows;
+        setRawData(items);
+        const theme = getTheme();
+
+        const allDate: Array<string> = [];
+        const legends: Array<string> = [];
+        const series: any = [];
+
+        items.forEach(
+          (item: {
+            transactionTypesVirtualValue: unknown;
+            transactionTypesAmount: unknown;
+            date: string;
+          }) => {
+            allDate.push(item.date);
+            let amounts;
+            if (props.amountType === "amount") {
+              amounts = item.transactionTypesAmount;
+            }
+            if (props.amountType === "virtual") {
+              amounts = item.transactionTypesVirtualValue;
+            }
+
+            if (amounts) {
+              const xData = Object.keys(amounts);
+
+              for (let idx = 0; idx < xData.length; idx++) {
+                const transactionType = xData[idx];
+                if (
+                  props.transactionTypes &&
+                  !props.transactionTypes.includes(transactionType)
+                ) {
+                  continue;
                 }
-            );
-            if (fetchBalance.data) {
-                const items = fetchBalance.data.rows
-                setRawData(items)
 
-                const xAxisData: any = []
-                const allDate: React.SetStateAction<any[]> = []
-                const balaceArray: React.SetStateAction<any[]> = []
-                items.forEach((item: {
-                    transactionTypesVirtualValue: unknown;
-                    transactionTypesAmount: unknown; createdAt: any;
-                }) => {
-                    allDate.push(item?.createdAt.split('T')[0])
-                    if (props.amountType === "amount") {
-                        const xData = Object.keys(item?.transactionTypesAmount)
-                        xData?.forEach(item => {
-                            xAxisData.push(item)
-                            setNames(xAxisData)
-                        })
-                        balaceArray.push(item.transactionTypesAmount)
-                        return setBalance(balaceArray)
-                    }
-                    else if (props.amountType === "virtual") {
-                        const xData = Object.keys(item?.transactionTypesVirtualValue
-                        )
-                        xData?.forEach(item => {
-                            xAxisData.push(item)
-                            setNames(xAxisData)
-                        })
-                        balaceArray.push(item.transactionTypesVirtualValue
-                        )
-                        return setBalance(balaceArray)
-                    }
-                });
-                setDate(allDate)
-            }
-            // setLoading(false);
-        };
-        fetchData();
-    }, [props.userId, props.amountType, props.currency, props.startDate, props.endDate]);
+                let seriesOfTransactionType = series.find(
+                  (s: any) => s.id === transactionType
+                );
+                if (!seriesOfTransactionType) {
+                  legends.push(transactionType);
 
-    const uniqueArray = names?.filter((value, index) => {
-        return names?.indexOf(value) === index;
-    });
-    const newObjects = uniqueArray.map(item => {
-        const aArrays = [`${balance.map(ea => {
-            if (ea[item]) {
-                return Math.abs(parseFloat(ea[item]));
+                  const transactionTypeTheme =
+                    theme.transactionTypes[transactionType];
+                  let colorForTransactionType;
+
+                  if (transactionTypeTheme) {
+                    colorForTransactionType = transactionTypeTheme.chart.color;
+                  }
+
+                  if (!colorForTransactionType) {
+                    colorForTransactionType = makeRandomColor();
+                  }
+
+                  seriesOfTransactionType = {
+                    id: transactionType,
+                    name: transactionType,
+                    type: "line",
+                    data: Array(allDate.length),
+                    color: colorForTransactionType,
+                  };
+                  series.push(seriesOfTransactionType);
+                }
+
+                seriesOfTransactionType.data.push(
+                  Math.abs(
+                    parseFloat(
+                      item.transactionTypesAmount[transactionType] || 0
+                    )
+                  )
+                );
+              }
             }
-            else if (ea[item] === undefined) {
-                return 0;
-            }
-        })}`]
-        const strArray = aArrays[0].split(',');
-        const numArray = strArray.filter(str => str !== '').map(str => Number(str));
-        const singleObject = {
-            name: item,
-            type: 'line',
-            data: numArray
-        }
-        return singleObject
-    })
-    const option = {
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            data: uniqueArray
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '0%',
-            containLabel: true
-        },
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            }
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: date
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: newObjects
+          }
+        );
+
+        option.legend.data = legends;
+        option.xAxis.data = allDate;
+        option.series = series;
+
+        setChartOption(option);
+      }
     };
+    fetchData();
+  }, [
+    props.userId,
+    props.amountType,
+    props.currency,
+    props.startDate,
+    props.endDate,
+  ]);
 
-    return (
+  //   const uniqueArray = names?.filter((value, index) => {
+  //     return names?.indexOf(value) === index;
+  //   });
+  //   const newObjects = uniqueArray.map((item) => {
+  //     const aArrays = [
+  //       `${balance.map((ea) => {
+  //         if (ea[item]) {
+  //           return Math.abs(parseFloat(ea[item]));
+  //         } else if (ea[item] === undefined) {
+  //           return 0;
+  //         }
+  //       })}`,
+  //     ];
+  //     const strArray = aArrays[0].split(",");
+  //     const numArray = strArray
+  //       .filter((str) => str !== "")
+  //       .map((str) => Number(str));
+  //     const singleObject = {
+  //       name: item,
+  //       type: "line",
+  //       data: numArray,
+  //     };
+  //     return singleObject;
+  //   });
+
+  return (
+    <>
+      {/* {loading && <h1>Loading</h1>} */}
+      {props.showRaw ? (
         <>
-            {/* {loading && <h1>Loading</h1>} */}
-            {props.showRaw ? <>
-                <div className="card">
-                    <SyntaxHighlighter language="javascript" style={docco}>
-                        {JSON.stringify(rawData, null, 2)}
-                    </SyntaxHighlighter>
-                </div>
-            </> : <>
-                <h2>{props.label}</h2>
-                <ReactEChartsCore
-                    echarts={echarts}
-                    option={option}
-                    notMerge={true}
-                    lazyUpdate={true}
-                    theme={"theme_name"}
-                /></>}
+          <div className="card">
+            <SyntaxHighlighter language="javascript" style={docco}>
+              {JSON.stringify(rawData, null, 2)}
+            </SyntaxHighlighter>
+          </div>
         </>
-    );
+      ) : (
+        <>
+          {chartOption && (
+            <ReactEChartsCore
+              echarts={echarts}
+              option={option}
+              notMerge={true}
+              lazyUpdate={true}
+            />
+          )}
+        </>
+      )}
+    </>
+  );
 };
 export default BalancesReportChart;

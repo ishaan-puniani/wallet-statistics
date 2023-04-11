@@ -128,6 +128,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
           }
 
           chartColors.push(colorForTransactionType);
+          
           if (props.amountType === "amount") {
             chartData.push({
               value: Math.abs(balnce.amount),
