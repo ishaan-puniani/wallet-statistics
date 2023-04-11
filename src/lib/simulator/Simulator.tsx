@@ -392,7 +392,7 @@ export const SimulatorWrapper = styled.div`
       display: grid;
     }
     @media screen and (max-width: 425px) {
-      width: 195px;
+      width: 215px;
       display: grid;
     }
   }
@@ -414,7 +414,7 @@ export const SimulatorWrapper = styled.div`
       width: 275px;
     }
     @media screen and (max-width: 445px) {
-      width: 160px;
+      width: 180px;
     }
   }
 
