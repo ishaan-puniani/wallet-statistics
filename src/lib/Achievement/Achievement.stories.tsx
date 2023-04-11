@@ -24,7 +24,8 @@ const TemplateTwo: ComponentStory<typeof AvailableAchievement> = (args) => (
 export const UserAchievements = Template.bind({});
 UserAchievements.args = {
     credentials: getMachineUserCredentials() || {},
-    achieverId: ''
+    achieverId: '',
+    showRaw: false
 };
 export const AvailableAchievements = TemplateTwo.bind({});
 AvailableAchievements.args = {
