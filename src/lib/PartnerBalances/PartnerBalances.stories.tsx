@@ -10,6 +10,7 @@ import PayerTransaction from "./PayerTransaction";
 import TransactionType from "./TransactionTypes";
 import CurrenciesCard from "./CurrenciesCard";
 import TransactionTable from "./TransactionTable";
+import moment from "moment";
 // import UserAchievement from "../Achievement/UserAchievements";
 
 export default {
@@ -57,8 +58,8 @@ PartnerBalanceChart.args = {
 export const PartnerBalanceReport = TemplateTwo.bind({});
 PartnerBalanceReport.args = {
   credentials: getMachineUserCredentials() || {},
-  startDate: date,
-  endDate: date,
+  startDate: moment().add(-7,"days"),
+  endDate: moment(),
   showRaw: false,
   // transactionTypes: ["MINT", "MINT_BURN"]
 };

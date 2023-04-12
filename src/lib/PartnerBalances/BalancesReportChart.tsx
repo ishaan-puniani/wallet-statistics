@@ -83,7 +83,6 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
   useEffect(() => {
     const fetchData = async () => {
       // setLoading(true);
-
       const balanceReport: any = await _fetchBalanceHistory(
         props.credentials,
         props.userId,
