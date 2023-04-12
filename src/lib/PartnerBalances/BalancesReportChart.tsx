@@ -75,19 +75,21 @@ const option: any = {
 };
 
 const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
 
   const [rawData, setRawData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      // setLoading(true);
+      setLoading(true);
       const balanceReport: any = await _fetchBalanceHistory(
         props.credentials,
         props.userId,
         props.currency,
-        moment(props.startDate).format("YYYY-MM-DD"),
+        props.startDate
+          ? moment(props.startDate).format("YYYY-MM-DD")
+          : moment().add(-7, "days").format("YYYY-MM-DD"),
         moment(props.endDate).format("YYYY-MM-DD")
       );
       if (balanceReport) {
@@ -98,22 +100,21 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
         const allDate: Array<string> = [];
         const legends: Array<string> = [];
         const series: any = [];
-
         items.forEach(
           (item: {
-            transactionTypesVirtualValue: unknown;
-            transactionTypesAmount: unknown;
+            virtualValues: unknown;
+            amounts: unknown;
             date: string;
           }) => {
             allDate.push(item.date);
             let amounts;
             if (props.amountType === "amount") {
-              amounts = item.transactionTypesAmount;
+              amounts = item.amounts;
             }
             if (props.amountType === "virtual") {
-              amounts = item.transactionTypesVirtualValue;
+              amounts = item.virtualValues;
             }
-
+            
             if (amounts) {
               const xData = Object.keys(amounts);
 
@@ -148,18 +149,14 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                     id: transactionType,
                     name: transactionType,
                     type: "line",
-                    data: Array(allDate.length),
+                    data: allDate.length > 0 ? Array(allDate.length) : [],
                     color: colorForTransactionType,
                   };
                   series.push(seriesOfTransactionType);
                 }
 
                 seriesOfTransactionType.data.push(
-                  Math.abs(
-                    parseFloat(
-                      item.transactionTypesAmount[transactionType] || 0
-                    )
-                  )
+                  Math.abs(parseFloat(amounts[transactionType] || 0))
                 );
               }
             }
@@ -171,6 +168,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
         option.series = series;
 
         setChartOption(option);
+        setLoading(false);
       }
     };
     fetchData();
@@ -220,7 +218,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
         </>
       ) : (
         <>
-          {chartOption && (
+          {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}
               option={option}

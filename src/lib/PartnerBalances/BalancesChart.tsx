@@ -90,13 +90,13 @@ const option: any = {
 };
 
 const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      // setLoading(true);
+      setLoading(true);
       const balances = await _fetchBalance(
         props.credentials,
         props.userId,
@@ -148,7 +148,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
 
         setChartOption(option);
       }
-      // setLoading(false);
+      setLoading(false);
     };
     if ((props.userId, props.currency, props.amountType)) {
       fetchData();
@@ -173,7 +173,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         </>
       ) : (
         <div style={{ marginTop: "20px" }}>
-          {chartOption && (
+          {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}
               option={chartOption}
