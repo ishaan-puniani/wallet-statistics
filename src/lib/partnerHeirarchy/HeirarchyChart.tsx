@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 // @ts-ignore
 import OrgChart from "@unicef/react-org-chart";
-// @ts-ignore
-import avatarPersonnel from "./assets/avatar-personnel.svg";
 import styled from "styled-components";
 import { API_HOST } from "../../constants";
 import axios from "axios";
+
+const avatarPersonnel  = "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg"
 
 const partnerToCard = (partner: any): any => {
   return {
