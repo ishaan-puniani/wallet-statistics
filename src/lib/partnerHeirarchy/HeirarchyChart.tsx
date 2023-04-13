@@ -7,28 +7,27 @@ import styled from "styled-components";
 import { API_HOST } from "../../constants";
 import axios from "axios";
 
-
-const partnerToCard = (partner: any):any => {
-    return {
+const partnerToCard = (partner: any): any => {
+  return {
+    id: partner.partnerId,
+    person: {
       id: partner.partnerId,
-      person: {
-        id: partner.partnerId,
-        avatar: avatarPersonnel,
-        department: partner.levelName,
-        name: partner.partnerName,
-        title: partner.additionalData?.email || partner.levelName,
-        totalReports: partner.childrenCount,
-      },
-      hasChild: partner.childrenCount,
-      hasParent: partner.partnerId !== "_ROOT_",
-      children: partner.childrenCount ? [] : undefined,
-    };
+      avatar: avatarPersonnel,
+      department: partner.levelName,
+      name: partner.partnerName,
+      title: partner.additionalData?.email || partner.levelName,
+      totalReports: partner.childrenCount,
+    },
+    hasChild: partner.childrenCount,
+    hasParent: partner.partnerId !== "_ROOT_",
+    children: partner.childrenCount ? [] : undefined,
   };
+};
 
 export interface IPartnerHeirarchy {
   credentials?: any;
   partnerId?: string;
-  hierarchyType?: "CHILDREN" | "PARENT";
+  hierarchyType?: "CHILDREN" | "PARENT" | "PARTNER";
   uptoPartner?: string;
   forLevel?: string;
   limit?: number;
@@ -52,23 +51,10 @@ const HeirarchyChart = ({
   relativeTo,
   showRaw,
 }: any) => {
-  
+  const [loading, setLoading] = useState<boolean>(false);
   const [downloadingChart, setDownloadingChart] = useState<boolean>();
   const [config, setConfig] = useState({ value: {} });
-  const [tree, setTree] = useState({
-    id: partnerId,
-    person: {
-      id: partnerId,
-      avatar: avatarPersonnel,
-      department: '',
-      name: 'Henry monger',
-      title: 'Manager',
-      totalReports: 3,
-    },
-    hasChild: true,
-    hasParent: true,
-    children: [],
-  });
+  const [tree, setTree] = useState();
   // const [highlightPostNumbers, sethHighlightPostNumbers] = useState([1]);
 
   const fetchData = async (
@@ -102,6 +88,20 @@ const HeirarchyChart = ({
     return undefined;
   };
 
+  useEffect(() => {
+    const dataFetcher = async () => {
+      setLoading(true);
+      const currentPartner = await fetchData(partnerId, "PARTNER", 1, "ASC");
+      if (currentPartner && currentPartner.length > 0) {
+        setTree(currentPartner[0]);
+      }
+      setLoading(false);
+    };
+    if (partnerId) {
+      dataFetcher();
+    }
+  }, []);
+
   const getChild = async (id: string) => {
     const heirarchyResponse = await fetchData(
       id,
@@ -112,7 +112,7 @@ const HeirarchyChart = ({
     return heirarchyResponse;
   };
 
-  const getParent = async (d:any) => {
+  const getParent = async (d: any) => {
     const heirarchyResponse = await fetchData(d.id, "PARENT", 1, "ASC");
     if (heirarchyResponse && heirarchyResponse.length > 0) {
       const directParent = heirarchyResponse[0];
@@ -127,9 +127,9 @@ const HeirarchyChart = ({
 
   const handleOnChangeConfig = (_config: any) => {
     setConfig((prev) => {
-        prev.value = _config;
-        return prev;
-      });
+      prev.value = _config;
+      return prev;
+    });
   };
 
   const handleLoadConfig = () => {
@@ -144,50 +144,54 @@ const HeirarchyChart = ({
 
   return (
     <HeirarchyChartWrapper>
-      <div className="zoom-buttons">
-        <button className="btn btn-outline-primary zoom-button" id="zoom-in">
-          +
-        </button>
-        <button className="btn btn-outline-primary zoom-button" id="zoom-out">
-          -
-        </button>
-      </div>
-      <div className="download-buttons">
-        <button className="btn btn-outline-primary" id="download-image">
-          Download as image
-        </button>
-        <button className="btn btn-outline-primary" id="download-pdf">
-          Download as PDF
-        </button>
-        <a
-          className="github-link"
-          href="https://github.com/unicef/react-org-chart"
-        >
-          Github
-        </a>
-        {downloadingChart && <div>Downloading chart</div>}
-      </div>
-      <OrgChart
-        tree={tree}
-        downloadImageId={downloadImageId}
-        downloadPdfId={downloadPdfId}
-        onConfigChange={handleOnChangeConfig}
-        loadConfig={handleLoadConfig}
-        downlowdedOrgChart={(d:any) => {
-          handleDownload();
-        }}
-        loadImage={(d:any) => {
-          return Promise.resolve(avatarPersonnel);
-        }}
-        loadParent={(d:any) => {
-          const parentData = getParent(d);
-          return parentData;
-        }}
-        loadChildren={(d:any) => {
-          const childrenData = getChild(d.id);
-          return childrenData;
-        }}
-      />
+      {!loading && tree && (
+        <>
+          <div className="zoom-buttons">
+            <button
+              className="btn btn-outline-primary zoom-button"
+              id="zoom-in"
+            >
+              +
+            </button>
+            <button
+              className="btn btn-outline-primary zoom-button"
+              id="zoom-out"
+            >
+              -
+            </button>
+          </div>
+          <div className="download-buttons">
+            <button className="btn btn-outline-primary" id="download-image">
+              Download as image
+            </button>
+            <button className="btn btn-outline-primary" id="download-pdf">
+              Download as PDF
+            </button>
+            {downloadingChart && <div>Downloading chart</div>}
+          </div>
+          <OrgChart
+            tree={tree}
+            downloadImageId={downloadImageId}
+            downloadPdfId={downloadPdfId}
+            onConfigChange={handleOnChangeConfig}
+            loadConfig={handleLoadConfig}
+            downlowdedOrgChart={(d: any) => {
+              handleDownload();
+            }}
+            loadImage={(d: any) => {
+              return Promise.resolve(avatarPersonnel);
+            }}
+            loadParent={(d: any) => {
+              const parentData = getParent(d);
+              return parentData;
+            }}
+            loadChildren={(d: any) => {
+              const childrenData = getChild(d.id);
+              return childrenData;
+            }}
+          />
+        </>
+      )}
     </HeirarchyChartWrapper>
   );
 };

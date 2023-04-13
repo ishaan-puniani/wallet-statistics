@@ -1,7 +1,7 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import PartnerHeirarchyTree from "./PartnerHeirarchyTree";
-import { withKnobs, object } from "@storybook/addon-knobs";
+import { withKnobs } from "@storybook/addon-knobs";
 import { getMachineUserCredentials } from "../../utilities/storage";
 import PartnerHeirarchy from "./PartnerHeirarchy";
 import HeirarchyChart from "./HeirarchyChart";
@@ -42,7 +42,7 @@ Hierarchy.args = {
 export const HierarchyChart = HeirarchyChartTemplate.bind({});
 HierarchyChart.args = {
   credentials: getMachineUserCredentials() || {},
-  hierarchyType: "CHILDREN",
+  hierarchyType: "PARTNER",
   showRaw: false
 };
 
