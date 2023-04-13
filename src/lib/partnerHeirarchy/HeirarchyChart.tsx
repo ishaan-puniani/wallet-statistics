@@ -1,9 +1,31 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+// @ts-ignore
 import OrgChart from "@unicef/react-org-chart";
+// @ts-ignore
 import avatarPersonnel from "./assets/avatar-personnel.svg";
 import styled from "styled-components";
 
 import { tree0, tree1, tree2, tree3, tree4 } from "./Tree";
+import { API_HOST } from "../../constants";
+import axios from "axios";
+
+
+const partnerToCard = (partner: any):any => {
+    return {
+      id: partner.partnerId,
+      person: {
+        id: partner.partnerId,
+        avatar: avatarPersonnel,
+        department: partner.levelName,
+        name: partner.partnerName,
+        title: partner.additionalData?.email || partner.levelName,
+        totalReports: partner.childrenCount,
+      },
+      hasChild: partner.childrenCount,
+      hasParent: partner.partnerId !== "_ROOT_",
+      children: partner.childrenCount ? [] : undefined,
+    };
+  };
 
 export interface IPartnerHeirarchy {
   credentials?: any;
@@ -19,73 +41,6 @@ export interface IPartnerHeirarchy {
   showRaw?: boolean;
 }
 
-// const HeirarchyChart = ({
-//   partnerId,
-//   credentials,
-//   hierarchyType,
-//   uptoPartner,
-//   forLevel,
-//   limit,
-//   skip,
-//   orderByRank,
-//   orderByCount,
-//   relativeTo,
-//   showRaw,
-// }: any) => {
-//   const handleLoadConfig = (_d: any) => {
-//     const { config } = { config: "" };
-//     return config;
-//   };
-
-//   function getChildrenData(personData: any) {
-//     throw new Error("Function not implemented.");
-//   }
-
-//   function getImage(email: any) {
-//     throw new Error("Function not implemented.");
-//   }
-
-//   function getParentData(personData: any) {
-//     throw new Error("Function not implemented.");
-//   }
-
-//   return (
-//     <>
-//       Hello
-//       <OrgChart
-//         tree={tree}
-//         downloadImageId="download-image"
-//         downloadPdfId="download-pdf"
-//         onConfigChange={(config: any) => {
-//           // Setting latest config to state
-//           // debugger;
-//           // this.setState({ config: config })
-//         }}
-//         loadConfig={(d: any) => {
-//           // Called from d3 to get latest version of the config.
-//           const config = handleLoadConfig(d);
-//           return config;
-//         }}
-//         loadParent={(personData: any) => {
-//           // getParentData(): To get the parent data from API
-//           const loadedParent = getParentData(personData);
-//           return Promise.resolve(loadedParent);
-//         }}
-//         loadChildren={(personData: any) => {
-//           // getChildrenData(): To get the children data from API
-//           const loadedChildren = getChildrenData(personData);
-//           return Promise.resolve(loadedChildren);
-//         }}
-//         loadImage={(personData: any) => {
-//           // getImage(): To get the image from API
-//           const image = getImage(personData.email);
-//           return Promise.resolve(image);
-//         }}
-//       />
-//     </>
-//   );
-// };
-
 const HeirarchyChart = ({
   partnerId,
   credentials,
@@ -99,85 +54,76 @@ const HeirarchyChart = ({
   relativeTo,
   showRaw,
 }: any) => {
-  //   constructor(props) {
-  //     super(props);
-
-  //     this.state = {
-  //       tree: tree,
-  //       downloadingChart: false,
-  //       config: {},
-  //       highlightPostNumbers: [1],
-  //     };
-  //   }
-  const [downloadingChart, setDownloadingChart] = useState();
-  const [config, setConfig] = useState();
+  
+  const [downloadingChart, setDownloadingChart] = useState<boolean>();
+  const [config, setConfig] = useState({ value: {} });
   const [tree, setTree] = useState(tree0);
-  const [highlightPostNumbers, sethHighlightPostNumbers] = useState([1]);
+  // const [highlightPostNumbers, sethHighlightPostNumbers] = useState([1]);
 
-  const getChild = (id) => {
-    switch (id) {
-      case 100:
-        return tree1;
-      case 36:
-        return tree2;
-      case 56:
-        return tree3;
-      case 25:
-        return tree4;
-      default:
-        return console.log("no children");
+  const fetchData = async (
+    requestedPartnerId: string,
+    type: string,
+    count: number | undefined,
+    _orderByRank: string
+  ) => {
+    const heirarchyResponse: any = await axios.post(
+      `${API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${requestedPartnerId}`,
+      {
+        ...credentials,
+        data: {
+          hierarchyType: type,
+          uptoPartner,
+          forLevel,
+          limit: count || limit,
+          skip,
+          orderByRank: _orderByRank,
+          orderByCount,
+          relativeTo,
+        },
+      }
+    );
+    if (heirarchyResponse.data) {
+      const childTreeData = heirarchyResponse.data.map((tc: any) => {
+        return partnerToCard(tc);
+      });
+      return childTreeData;
     }
+    return undefined;
   };
 
-  const getParent = (d) => {
-    if (d.id === 100) {
-      return {
-        id: 500,
-        person: {
-          id: 500,
-          avatar: avatarPersonnel,
-          department: "",
-          name: "Pascal ruth",
-          title: "Member",
-          totalReports: 1,
-        },
-        hasChild: false,
-        hasParent: true,
-        children: [d],
-      };
-    } else if (d.id === 500) {
-      return {
-        id: 1,
-        person: {
-          id: 1,
-          avatar: avatarPersonnel,
-          department: "",
-          name: "Bryce joe",
-          title: "Director",
-          totalReports: 1,
-        },
-        hasChild: false,
-        hasParent: false,
-        children: [d],
-      };
-    } else {
-      return d;
+  const getChild = async (id: string) => {
+    const heirarchyResponse = await fetchData(
+      id,
+      "CHILDREN",
+      undefined,
+      orderByRank
+    );
+    return heirarchyResponse;
+  };
+
+  const getParent = async (d:any) => {
+    const heirarchyResponse = await fetchData(d.id, "PARENT", 1, "ASC");
+    if (heirarchyResponse && heirarchyResponse.lengh > 0) {
+      const directParent = heirarchyResponse[0];
+      directParent.children = [d];
+      return directParent;
     }
   };
 
   const handleDownload = () => {
-    this.setState({ downloadingChart: false });
+    setDownloadingChart(false);
   };
 
   const handleOnChangeConfig = (_config: any) => {
-    // this.setState({ config: config });
-    debugger;
-    setConfig(_config);
+    setConfig((prev) => {
+        prev.value = _config;
+        return prev;
+      });
   };
 
-  const handleLoadConfig = useCallback(() => {
-    return config;
-  }, [config]);
+  const handleLoadConfig = () => {
+    return config.value;
+  };
 
   //  const { tree, downloadingChart } = this.state;
 
@@ -215,28 +161,18 @@ const HeirarchyChart = ({
         downloadImageId={downloadImageId}
         downloadPdfId={downloadPdfId}
         onConfigChange={handleOnChangeConfig}
-        loadConfig={
-          handleLoadConfig
-
-          //     (d) => {
-          //     // let configuration = handleLoadConfig(d).bind(this);
-          //     // if (configuration) {
-          //     //   return configuration;
-          //     // }
-          //     return config;
-          //   }
-        }
-        downlowdedOrgChart={(d) => {
+        loadConfig={handleLoadConfig}
+        downlowdedOrgChart={(d:any) => {
           handleDownload();
         }}
-        loadImage={(d) => {
+        loadImage={(d:any) => {
           return Promise.resolve(avatarPersonnel);
         }}
-        loadParent={(d) => {
+        loadParent={(d:any) => {
           const parentData = getParent(d);
           return parentData;
         }}
-        loadChildren={(d) => {
+        loadChildren={(d:any) => {
           const childrenData = getChild(d.id);
           return childrenData;
         }}
