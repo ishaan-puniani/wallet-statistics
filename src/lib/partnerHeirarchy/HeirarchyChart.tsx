@@ -4,8 +4,6 @@ import OrgChart from "@unicef/react-org-chart";
 // @ts-ignore
 import avatarPersonnel from "./assets/avatar-personnel.svg";
 import styled from "styled-components";
-
-import { tree0, tree1, tree2, tree3, tree4 } from "./Tree";
 import { API_HOST } from "../../constants";
 import axios from "axios";
 
@@ -57,7 +55,20 @@ const HeirarchyChart = ({
   
   const [downloadingChart, setDownloadingChart] = useState<boolean>();
   const [config, setConfig] = useState({ value: {} });
-  const [tree, setTree] = useState(tree0);
+  const [tree, setTree] = useState({
+    id: partnerId,
+    person: {
+      id: partnerId,
+      avatar: avatarPersonnel,
+      department: '',
+      name: 'Henry monger',
+      title: 'Manager',
+      totalReports: 3,
+    },
+    hasChild: true,
+    hasParent: true,
+    children: [],
+  });
   // const [highlightPostNumbers, sethHighlightPostNumbers] = useState([1]);
 
   const fetchData = async (
