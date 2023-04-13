@@ -126,13 +126,10 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                 ) {
                   continue;
                 }
-
                 let seriesOfTransactionType = series.find(
                   (s: any) => s.id === transactionType
                 );
-                if (!seriesOfTransactionType) {
-                  legends.push(transactionType);
-
+                if (!seriesOfTransactionType) {     
                   const transactionTypeTheme =
                     theme.transactionTypes[transactionType];
                   let colorForTransactionType;
@@ -145,11 +142,12 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                     colorForTransactionType = makeRandomColor();
                   }
 
+                  legends.push(transactionType);
                   seriesOfTransactionType = {
                     id: transactionType,
                     name: transactionType,
                     type: "line",
-                    data: allDate.length > 0 ? Array(allDate.length) : [],
+                    data: allDate.length > 1 ? Array(allDate.length) : [], // >1 because first dats is just added in the same loop
                     color: colorForTransactionType,
                   };
                   series.push(seriesOfTransactionType);
