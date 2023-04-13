@@ -100,7 +100,9 @@
     ]
   },
   "dependencies": {
+    "@unicef/react-org-chart": "^0.3.4",
     "axios": "^1.1.3",
+    "d3": "3",
     "moment": "^2.29.4",
     "multiselect-react-dropdown": "^2.0.25",
     "qs": "^6.11.1",

@@ -7,7 +7,7 @@ import styled from "styled-components";
 export interface IPartnerHeirarchy {
   credentials?: any;
   partnerId?: string;
-  hierarchyType?: "CHILDREN" | "PARENT";
+  hierarchyType?: "CHILDREN" | "PARENT" | "PARTNER";
   uptoPartner?: string;
   forLevel?: string;
   limit?: number;
