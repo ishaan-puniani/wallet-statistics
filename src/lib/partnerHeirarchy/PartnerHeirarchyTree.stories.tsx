@@ -4,6 +4,7 @@ import PartnerHeirarchyTree from "./PartnerHeirarchyTree";
 import { withKnobs, object } from "@storybook/addon-knobs";
 import { getMachineUserCredentials } from "../../utilities/storage";
 import PartnerHeirarchy from "./PartnerHeirarchy";
+import HeirarchyChart from "./HeirarchyChart";
 
 export default {
   title: "Example/PartnerHeirarchyTree",
@@ -22,6 +23,9 @@ const TemplateOne: ComponentStory<typeof PartnerHeirarchy> = (args) => (
   <PartnerHeirarchy {...args} />
 );
 
+const HeirarchyChartTemplate: ComponentStory<typeof HeirarchyChart> = (args) => (
+  <HeirarchyChart {...args} />
+);
 export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
@@ -34,3 +38,11 @@ Hierarchy.args = {
   hierarchyType: "CHILDREN",
   showRaw: false
 };
+
+export const HierarchyChart = HeirarchyChartTemplate.bind({});
+HierarchyChart.args = {
+  credentials: getMachineUserCredentials() || {},
+  hierarchyType: "CHILDREN",
+  showRaw: false
+};
+
