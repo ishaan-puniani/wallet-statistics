@@ -114,7 +114,7 @@ const HeirarchyChart = ({
 
   const getParent = async (d:any) => {
     const heirarchyResponse = await fetchData(d.id, "PARENT", 1, "ASC");
-    if (heirarchyResponse && heirarchyResponse.lengh > 0) {
+    if (heirarchyResponse && heirarchyResponse.length > 0) {
       const directParent = heirarchyResponse[0];
       directParent.children = [d];
       return directParent;
