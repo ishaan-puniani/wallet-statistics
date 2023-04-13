@@ -40,7 +40,7 @@ export interface BalanceReportChartFilterProps {
   currency: string;
   credentials: any;
   label: string;
-  amountType: "amount" | "virtual";
+  reportKey: string;
   showRaw: boolean;
   transactionTypes?: string[];
 }
@@ -107,14 +107,14 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
             date: string;
           }) => {
             allDate.push(item.date);
-            let amounts;
-            if (props.amountType === "amount") {
-              amounts = item.amounts;
-            }
-            if (props.amountType === "virtual") {
-              amounts = item.virtualValues;
-            }
-            
+            const amounts = item[props.reportKey];
+            // if (props.amountType === "amount") {
+            //   amounts = item.amounts;
+            // }
+            // if (props.amountType === "virtual") {
+            //   amounts = item.virtualValues;
+            // }
+
             if (amounts) {
               const xData = Object.keys(amounts);
 
@@ -129,7 +129,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                 let seriesOfTransactionType = series.find(
                   (s: any) => s.id === transactionType
                 );
-                if (!seriesOfTransactionType) {     
+                if (!seriesOfTransactionType) {
                   const transactionTypeTheme =
                     theme.transactionTypes[transactionType];
                   let colorForTransactionType;
@@ -172,7 +172,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     fetchData();
   }, [
     props.userId,
-    props.amountType,
+    props.reportKey,
     props.currency,
     props.startDate,
     props.endDate,
