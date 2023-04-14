@@ -100,7 +100,7 @@ const HeirarchyChart = ({
     if (partnerId) {
       dataFetcher();
     }
-  }, []);
+  }, [partnerId]);
 
   const getChild = async (id: string) => {
     const heirarchyResponse = await fetchData(

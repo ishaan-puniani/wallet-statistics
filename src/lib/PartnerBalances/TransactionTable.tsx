@@ -23,6 +23,7 @@ import {
 import { getTheme } from "../../utilities/theme";
 import ThemedSpan from "../components/ThemedSpan";
 import { _fetchTransactions } from "../services/transactions";
+import moment from "moment";
 
 const ColumnFilter = ({ column }: any) => {
   const { filterValue, setFilter } = column;
@@ -345,7 +346,16 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     {
       Header: "Date",
       accessor: "createdAt",
+      Cell: ({ value }: any) => {
+        return <>{moment(value).format("DD-MM-YYYY  HH:mm")}</>;
+      },
     },
+    {
+      Header: "Product Id",
+      accessor: "productId",
+    },
+    { Header: "Payee Name", accessor: "payeeName" },
+
     {
       Header: "Currency",
       accessor: "currency",
@@ -376,6 +386,14 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     {
       Header: "Virtual Value",
       accessor: "virtualValue",
+    },
+    {
+      Header: "Partner Level",
+      accessor: "partnerLevelTypeIdentifier",
+    },
+    {
+      Header: "Reference",
+      accessor: "reference",
     },
     {
       Header: "Actions",
