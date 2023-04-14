@@ -40,7 +40,7 @@ export interface BalanceReportChartFilterProps {
   currency: string;
   credentials: any;
   label: string;
-  amountType: "amount" | "virtual";
+  reportKey: string;
   showRaw: boolean;
   transactionTypes?: string[];
 }
@@ -107,14 +107,14 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
             date: string;
           }) => {
             allDate.push(item.date);
-            let amounts;
-            if (props.amountType === "amount") {
-              amounts = item.amounts;
-            }
-            if (props.amountType === "virtual") {
-              amounts = item.virtualValues;
-            }
-            
+            const amounts = item[props.reportKey];
+            // if (props.amountType === "amount") {
+            //   amounts = item.amounts;
+            // }
+            // if (props.amountType === "virtual") {
+            //   amounts = item.virtualValues;
+            // }
+
             if (amounts) {
               const xData = Object.keys(amounts);
 
@@ -126,13 +126,10 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                 ) {
                   continue;
                 }
-
                 let seriesOfTransactionType = series.find(
                   (s: any) => s.id === transactionType
                 );
                 if (!seriesOfTransactionType) {
-                  legends.push(transactionType);
-
                   const transactionTypeTheme =
                     theme.transactionTypes[transactionType];
                   let colorForTransactionType;
@@ -145,11 +142,12 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                     colorForTransactionType = makeRandomColor();
                   }
 
+                  legends.push(transactionType);
                   seriesOfTransactionType = {
                     id: transactionType,
                     name: transactionType,
                     type: "line",
-                    data: allDate.length > 0 ? Array(allDate.length) : [],
+                    data: allDate.length > 1 ? Array(allDate.length) : [], // >1 because first dats is just added in the same loop
                     color: colorForTransactionType,
                   };
                   series.push(seriesOfTransactionType);
@@ -174,7 +172,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     fetchData();
   }, [
     props.userId,
-    props.amountType,
+    props.reportKey,
     props.currency,
     props.startDate,
     props.endDate,
