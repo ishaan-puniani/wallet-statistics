@@ -1,45 +1,19 @@
-const THEME = {
-  amount: {
-    positive: { color: "green" },
-    negative: {
-      color: "red",
-    },
-  },
-  currencies: {
-    CUSDT: {
-      icon: "",
-      color: "green",
-    },
-    USD: {
-      icon: "",
-      color: "red",
-    },
-    COINS: {
-      labelStyle: { color: "#fff", backgroundColor: "blue" },
-    },
-  },
-  transactionTypes: {
-    MINT: {
-      chart: {
-        color: "red",
-      }
-    },
-    MINING_FEES: {
-      chart: {
-        color: "red",
-      },
-      icon: {
-        src: "https://i.ibb.co/T4bQsPv/download.png",
-        style: { width: "24px", height: "24px" },
-      },
-      iconStyle: { color: "#fff", backgroundColor: "green" },
-      labelStyle: { color: "#fff", backgroundColor: "green" },
-    },
-  },
-};
+const THEME_KEY = `wallet_theme`;
+let THEME: any;
 
 export const getTheme = () => {
+  if (THEME) {
+    return THEME;
+  }
+  const themeFromStorage = localStorage.getItem(THEME_KEY);
+  if (themeFromStorage && themeFromStorage.length > 5) {
+    THEME = JSON.parse(themeFromStorage);
+  }
   return THEME;
+};
+
+export const loadTheme = async (themeConfig: any) => {
+  localStorage.setItem(THEME_KEY, JSON.stringify(themeConfig));
 };
 
 export const makeRandomColor = () =>

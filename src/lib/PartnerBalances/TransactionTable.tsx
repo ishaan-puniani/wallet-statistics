@@ -20,7 +20,6 @@ import {
   getFilterQueryString,
   getFilterMapFromArray,
 } from "../../utilities/queryParams";
-import { getTheme } from "../../utilities/theme";
 import ThemedSpan from "../components/ThemedSpan";
 import { _fetchTransactions } from "../services/transactions";
 import moment from "moment";

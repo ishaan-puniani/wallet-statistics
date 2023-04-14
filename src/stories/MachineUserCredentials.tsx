@@ -1,11 +1,16 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { saveMachineUserCredentials } from "../utilities/storage";
+import { _initialize } from "../lib/services/settings";
 
-const MachineUserCredentials = (props: any) => {
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data) => {
+const MachineUserCredentials = ({credentials}:any) => {
+  const { register, handleSubmit } = useForm({
+    defaultValues: credentials
+  });
+  const onSubmit = async (data) => {
     saveMachineUserCredentials(data);
+    await _initialize(data);
+
   };
 
   return (

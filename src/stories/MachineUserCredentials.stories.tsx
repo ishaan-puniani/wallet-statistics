@@ -2,6 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import MachineUserCredentials from "./MachineUserCredentials";
+import { getMachineUserCredentials } from "../utilities/storage";
 
 export default {
   title: "Auth/MachineUserCredentials",
@@ -17,4 +18,6 @@ const Template: ComponentStory<typeof MachineUserCredentials> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  credentials: getMachineUserCredentials() || {},
+};

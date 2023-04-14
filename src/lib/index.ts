@@ -21,6 +21,9 @@ import {
   renderPartnerHeirarchyView,
 } from "./partnerHeirarchy";
 import { render, renderSimulatorAchievement } from "./simulator";
+import { _initialize } from "./services/settings";
+import { _fetchBalance, _fetchBalanceHistory } from "./services/balances";
+import { _fetchTransactions } from "./services/transactions";
 
 class WalletStatistics {
   constructor() {
@@ -34,6 +37,16 @@ class WalletStatistics {
   initSimulator = (container: any) => {
     render(container);
   };
+
+  services = {
+    initializeSettings: _initialize,
+    fetchBalance: _fetchBalance,
+    fetchBalanceHistory: _fetchBalanceHistory,
+    fetchTransactions: _fetchTransactions
+  }
+  initializeSettings = async (props:any)=>{
+    await _initialize(props.credentials);
+  }
   renderPartnerSimulatorAchievement = (container: any, props: any) => {
     renderSimulatorAchievement(container, props);
   };
