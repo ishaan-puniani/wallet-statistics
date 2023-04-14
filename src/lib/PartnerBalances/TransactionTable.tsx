@@ -22,6 +22,7 @@ import {
 } from "../../utilities/queryParams";
 import { getTheme } from "../../utilities/theme";
 import ThemedSpan from "../components/ThemedSpan";
+import { _fetchTransactions } from "../services/transactions";
 
 const ColumnFilter = ({ column }: any) => {
   const { filterValue, setFilter } = column;
@@ -313,19 +314,17 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
         const startRow = pageSize * pageIndex;
         //   const endRow = startRow + pageSize
         const filterMap = getFilterMapFromArray(filters);
-        const filterQuery = getFilterQueryString({ filter: filterMap });
-
-        const fetchTransactionTable = await axios.post(
-          `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?limit=${pageSize}&offset=${startRow}&${filterQuery}`,
-          {
-            ...props.credentials,
-          }
+        const transactionsData = await _fetchTransactions(
+          props.credentials,
+          pageSize,
+          startRow,
+          filterMap
         );
 
-        if (fetchTransactionTable.data) {
-          const items = fetchTransactionTable.data.rows;
+        if (transactionsData) {
+          const items = transactionsData.rows;
           setTransactionTable(items);
-          setPageCount(fetchTransactionTable.data.count);
+          setPageCount(transactionsData.count);
         }
 
         // Your server could send back total page count.
