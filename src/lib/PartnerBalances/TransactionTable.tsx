@@ -339,10 +339,10 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
   );
 
   const columns = [
-    // {
-    //   Header: "Id",
-    //   accessor: "id",
-    // },
+    {
+      Header: "Id",
+      accessor: "id",
+    },
     {
       Header: "Date",
       accessor: "createdAt",
