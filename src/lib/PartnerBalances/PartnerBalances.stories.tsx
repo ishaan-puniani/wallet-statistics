@@ -40,14 +40,14 @@ const TemplateTransaction: ComponentStory<typeof TransactionType> = (args) => (
 
 const TemplateCurrencyCard: ComponentStory<typeof CurrenciesCard> = (args) => (
   <CurrenciesCard {...args} />
-)
-const TemplateTransactionTable: ComponentStory<typeof TransactionTable> = (args) => (
-  <TransactionTable {...args} />
-)
+);
+const TemplateTransactionTable: ComponentStory<typeof TransactionTable> = (
+  args
+) => <TransactionTable {...args} />;
 export const Default = Template.bind({});
 Default.args = {
   credentials: getMachineUserCredentials() || {},
-  showRaw: false
+  showRaw: false,
 };
 export const PartnerBalanceChart = TemplateOne.bind({});
 PartnerBalanceChart.args = {
@@ -58,7 +58,7 @@ PartnerBalanceChart.args = {
 export const PartnerBalanceReport = TemplateTwo.bind({});
 PartnerBalanceReport.args = {
   credentials: getMachineUserCredentials() || {},
-  startDate: moment().add(-7,"days"),
+  startDate: moment().add(-7, "days"),
   endDate: moment(),
   showRaw: false,
   // transactionTypes: ["MINT", "MINT_BURN"]
@@ -66,23 +66,25 @@ PartnerBalanceReport.args = {
 export const TransactionProfile = TemplateThree.bind({});
 TransactionProfile.args = {
   credentials: getMachineUserCredentials() || {},
-  showRaw: false
+  showRaw: false,
 };
 export const Transaction = TemplateTransaction.bind({});
 Transaction.args = {
   credentials: getMachineUserCredentials() || {},
-  showRaw: false
+  showRaw: false,
 };
 
 export const CurrencyCard = TemplateCurrencyCard.bind({});
 CurrencyCard.args = {
   credentials: getMachineUserCredentials() || {},
-  showRaw: false
-}
+  showRaw: false,
+};
 export const TransactionsTable = TemplateTransactionTable.bind({});
 TransactionsTable.args = {
   credentials: getMachineUserCredentials() || {},
   showRaw: false,
   loadLinkedTransactions: false,
-  loadLinkedAchievements: false
-}
+  loadLinkedAchievements: false,
+  filtersPreset: {},
+  hiddenColumns:[]
+};

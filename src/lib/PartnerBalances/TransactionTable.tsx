@@ -16,10 +16,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Modal from "react-modal";
 import TransactionDetails from "../Transactions/TransactionDetails";
-import {
-  getFilterQueryString,
-  getFilterMapFromArray,
-} from "../../utilities/queryParams";
+import { getFilterMapFromArray } from "../../utilities/queryParams";
 import ThemedSpan from "../components/ThemedSpan";
 import { _fetchTransactions } from "../services/transactions";
 import moment from "moment";
@@ -70,6 +67,8 @@ export interface IPartnerTransactionTable {
   currency: string;
   credentials: any;
   showRaw: boolean;
+  filtersPreset: any;
+  hiddenColumns: Array<string>;
 }
 export interface IPartnerTable {
   columns: any;
@@ -83,6 +82,7 @@ function Table({
   fetchData,
   loading,
   pageCount: controlledPageCount,
+  hiddenColumns,
 }: any) {
   const {
     getTableProps,
@@ -107,7 +107,7 @@ function Table({
       columns,
       data,
       defaultColumn,
-      initialState: { pageIndex: 0 }, // Pass our hoisted table state
+      initialState: { pageIndex: 0, hiddenColumns: hiddenColumns }, // Pass our hoisted table state
       manualPagination: true, // Tell the usePagination
       // hook that we'll handle our own data fetching
       // This means we'll also have to provide our own
@@ -318,13 +318,14 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
           props.credentials,
           pageSize,
           startRow,
-          filterMap
+          { ...filterMap, ...props.filtersPreset }
         );
 
         if (transactionsData) {
           const items = transactionsData.rows;
           setTransactionTable(items);
-          setPageCount(transactionsData.count);
+          const numberOfPages = transactionsData.count / pageSize;
+          setPageCount(Math.ceil(numberOfPages));
         }
 
         // Your server could send back total page count.
@@ -364,9 +365,11 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
     },
     {
       Header: "Transaction Type",
-      accessor: "transactionTypeIdentifier",
+      accessor: "transactionType",
       Cell: ({ value }: any) => {
-        return <ThemedSpan type={"transactionTypes"} value={value} />;
+        return (
+          <ThemedSpan type={"transactionTypes"} value={value?.identifier} />
+        );
       },
     },
     {
@@ -461,6 +464,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
               loading={loading}
               pageCount={pageCount}
               defaultColumn={defaultColumn}
+              hiddenColumns={props.hiddenColumns}
             />
 
             <Modal
