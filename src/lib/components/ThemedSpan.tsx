@@ -6,17 +6,17 @@ const ThemedSpan = ({ type, value, valueType = "string" }: any) => {
   return (
     <span
       style={
-        theme[type] && theme[type][valueType]
+        theme && theme[type] && theme[type][valueType]
           ? theme[type][valueType]
           : {}
       }
     >
-      {theme[type] && theme[type][value] && theme[type][value]["icon"] && (
+      {theme && theme[type] && theme[type][value] && theme[type][value]["icon"] && (
         <img {...theme[type][value]["icon"]}></img>
       )}
       <span
         style={
-          theme[type] && theme[type][value] ? theme[type][value].labelStyle : {}
+          theme && theme[type] && theme[type][value] ? theme[type][value].labelStyle : {}
         }
       >
         {value}
