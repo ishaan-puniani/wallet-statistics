@@ -5,11 +5,11 @@ import { API_HOST } from "../../constants";
 import styled from "styled-components";
 export interface ISimulatorProps {
   credentials?: any;
-  transactionType?: "WALLET_REFUND" | "CP_WITHDRAWAL";
+  transactionType?: string;
   amount?: string;
-  currency?: "USD" | "COINS" | "CUSDT";
-  virtualValue?: 0;
-  isCredit?: "true" | "false";
+  currency?: string;
+  virtualValue?: string;
+  isCredit?: string;
   reference?: string;
   paymentMethod?: string;
   remark?: string;
@@ -43,7 +43,6 @@ const Simulator = (props: ISimulatorProps) => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
-    // debugger;
     const fetchBalance = await axios.post(
       `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
       {
