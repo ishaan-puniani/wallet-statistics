@@ -45,7 +45,7 @@ class WalletStatistics {
     fetchTransactions: _fetchTransactions
   }
   initializeSettings = async (props:any)=>{
-    await _initialize(props.credentials);
+    await _initialize(props.credentials, props.reset);
   }
   renderPartnerSimulatorAchievement = (container: any, props: any) => {
     renderSimulatorAchievement(container, props);

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { API_HOST } from "../../constants";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import ThemedSpan from "../components/ThemedSpan";
 
 export interface Payers {
   userId: string;
@@ -13,7 +14,7 @@ export interface Payers {
 }
 
 function roundToTwo(num: number) {
-  return +num.toFixed(2);
+  return Math.abs(num||0).toFixed(2);
 }
 
 console.log(roundToTwo(3.394792));
@@ -24,9 +25,7 @@ const PayerTransaction = (props: Payers) => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        // `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?dateRange[]='10-03-2023'`,
         `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-profile-by-identifier-for-currency/${props.userId}/${props.currency}`,
-        // `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-profile-by-identifier-for-currency/${props.userId}/${props.currency}`,
         {
           ...props.credentials,
         }
@@ -40,9 +39,9 @@ const PayerTransaction = (props: Payers) => {
     fetchData();
   }, [props.userId, props.currency]);
   // TransactionTypesAmount
-  const newObjectKeys = payerData?.transactionTypesAmount;
+  const transactionAmounts = payerData?.transactionTypesAmount;
   // TransactionTypesVirtualValues
-  const typesVirtualValues = payerData?.transactionTypesVirtualValue;
+  const transactionVirtualValues = payerData?.transactionTypesVirtualValue;
   // console.log(payerData)
   return (
     <>
@@ -85,18 +84,17 @@ const PayerTransaction = (props: Payers) => {
               </p> */}
               <p>
                 <strong>Transaction Types Amount</strong>
-                {newObjectKeys !== null && typeof newObjectKeys === "object"
-                  ? Object.keys(newObjectKeys).map((item) => (
+                {transactionAmounts !== null && typeof transactionAmounts === "object"
+                  ? Object.keys(transactionAmounts).map((amountKey) => (
                       <div className="transaction-container">
-                        {" "}
                         <img
                           className="transaction-image"
                           src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
                           alt=""
                         />{" "}
                         <p>
-                          <strong className="transaction-title">{item}</strong>:{" "}
-                          <span> {roundToTwo(newObjectKeys[item])}</span>
+                          <strong className="transaction-title">{amountKey}</strong>:{" "}
+                          <ThemedSpan type={"transactionTypes"} value={roundToTwo(transactionAmounts[amountKey])} />
                         </p>
                       </div>
                     ))
@@ -105,18 +103,18 @@ const PayerTransaction = (props: Payers) => {
 
               <p>
                 <strong>Transaction Virtual Values</strong>
-                {typesVirtualValues !== null &&
-                typeof typesVirtualValues === "object"
-                  ? Object.keys(typesVirtualValues).map((item) => (
+                {transactionVirtualValues !== null &&
+                typeof transactionVirtualValues === "object"
+                  ? Object.keys(transactionVirtualValues).map((virtualValueKey) => (
                       <div className="transaction-container">
                         <img
                           className="transaction-image"
                           src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
                           alt=""
-                        />{" "}
+                        />
                         <p>
-                          <strong className="transaction-title">{item}</strong>:{" "}
-                          <span>{roundToTwo(typesVirtualValues[item])}</span>
+                          <strong className="transaction-title">{virtualValueKey}</strong>:{" "}
+                          <ThemedSpan type={"transactionTypes"} value={roundToTwo(transactionVirtualValues[virtualValueKey])} />
                         </p>
                       </div>
                     ))

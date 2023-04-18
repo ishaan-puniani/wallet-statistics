@@ -15,6 +15,8 @@ export const getTheme = () => {
 export const loadTheme = async (themeConfig: any) => {
   localStorage.setItem(THEME_KEY, JSON.stringify(themeConfig));
 };
-
+export const resetTheme = async ()=>{
+  localStorage.removeItem(THEME_KEY);
+}
 export const makeRandomColor = () =>
   "#" + (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0");
