@@ -1,6 +1,7 @@
 import {
   _renderAvailableAchievements,
   _renderUserAchievements,
+  _renderUserAchievementsLogs,
 } from "./Achievement";
 import {
   renderDropdownAmountTypes,
@@ -42,11 +43,11 @@ class WalletStatistics {
     initializeSettings: _initialize,
     fetchBalance: _fetchBalance,
     fetchBalanceHistory: _fetchBalanceHistory,
-    fetchTransactions: _fetchTransactions
-  }
-  initializeSettings = async (props:any)=>{
+    fetchTransactions: _fetchTransactions,
+  };
+  initializeSettings = async (props: any) => {
     await _initialize(props.credentials, props.reset);
-  }
+  };
   renderPartnerSimulatorAchievement = (container: any, props: any) => {
     renderSimulatorAchievement(container, props);
   };
@@ -71,6 +72,9 @@ class WalletStatistics {
   };
   renderUserAchievements = (container: any, props: any) => {
     _renderUserAchievements(container, props);
+  };
+  renderUserAchievementsLogs = (container: any, props: any) => {
+    _renderUserAchievementsLogs(container, props);
   };
   renderPartnerHeirarchy = (container: any, props: any) => {
     renderPartnerHeirarchyView(container, props);
