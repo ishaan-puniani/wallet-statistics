@@ -1,7 +1,6 @@
 import {
   _renderAvailableAchievements,
   _renderUserAchievements,
-  _renderUserAchievementsLogs,
 } from "./Achievement";
 import {
   renderDropdownAmountTypes,
