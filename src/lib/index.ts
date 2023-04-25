@@ -1,6 +1,7 @@
 import {
   _renderAvailableAchievements,
   _renderUserAchievements,
+  _renderUserAchievementsLogs,
 } from "./Achievement";
 import {
   renderDropdownAmountTypes,
@@ -74,6 +75,9 @@ class WalletStatistics {
   };
   renderUserAchievements = (container: any, props: any) => {
     _renderUserAchievements(container, props);
+  };
+  renderUserAchievementsLogs = (container: any, props: any) => {
+    _renderUserAchievementsLogs(container, props);
   };
   renderPartnerHeirarchy = (container: any, props: any) => {
     renderPartnerHeirarchyView(container, props);
