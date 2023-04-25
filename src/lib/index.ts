@@ -24,6 +24,7 @@ import { render, renderSimulatorAchievement } from "./simulator";
 import { _initialize } from "./services/settings";
 import { _fetchBalance, _fetchBalanceHistory } from "./services/balances";
 import { _fetchTransactions } from "./services/transactions";
+import { _fetchAchievementsLogs } from "./services/achievementLogs";
 
 class WalletStatistics {
   constructor() {
@@ -42,11 +43,13 @@ class WalletStatistics {
     initializeSettings: _initialize,
     fetchBalance: _fetchBalance,
     fetchBalanceHistory: _fetchBalanceHistory,
-    fetchTransactions: _fetchTransactions
-  }
-  initializeSettings = async (props:any)=>{
+    fetchTransactions: _fetchTransactions,
+    fetchAchievementLogs:_fetchAchievementsLogs,
+  };
+  
+  initializeSettings = async (props: any) => {
     await _initialize(props.credentials, props.reset);
-  }
+  };
   renderPartnerSimulatorAchievement = (container: any, props: any) => {
     renderSimulatorAchievement(container, props);
   };
