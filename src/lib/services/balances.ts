@@ -31,3 +31,4 @@ export const _fetchBalanceHistory = async (
   );
   return balnceHistory.data;
 };
+

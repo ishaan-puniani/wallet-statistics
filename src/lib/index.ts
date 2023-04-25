@@ -25,6 +25,7 @@ import { render, renderSimulatorAchievement } from "./simulator";
 import { _initialize } from "./services/settings";
 import { _fetchBalance, _fetchBalanceHistory } from "./services/balances";
 import { _fetchTransactions } from "./services/transactions";
+import { _fetchAchievementsLogs } from "./services/achievementLogs";
 
 class WalletStatistics {
   constructor() {
@@ -44,7 +45,9 @@ class WalletStatistics {
     fetchBalance: _fetchBalance,
     fetchBalanceHistory: _fetchBalanceHistory,
     fetchTransactions: _fetchTransactions,
+    fetchAchievementLogs:_fetchAchievementsLogs,
   };
+  
   initializeSettings = async (props: any) => {
     await _initialize(props.credentials, props.reset);
   };
@@ -72,9 +75,6 @@ class WalletStatistics {
   };
   renderUserAchievements = (container: any, props: any) => {
     _renderUserAchievements(container, props);
-  };
-  renderUserAchievementsLogs = (container: any, props: any) => {
-    _renderUserAchievementsLogs(container, props);
   };
   renderPartnerHeirarchy = (container: any, props: any) => {
     renderPartnerHeirarchyView(container, props);
