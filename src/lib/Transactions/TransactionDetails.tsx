@@ -86,13 +86,32 @@ const TransactionDetails = (props: ITransactionDetails) => {
     }
   }, [props.transactionId]);
 
-  const handleStimulate = async () => {
+  const handleStimulateTransaction = async () => {
     const data = {
       ...transactionData,
       transactionType: transactionData.transactionType.identifier,
     };
+    // data.productId =  "SIMULATED_" + data.productId;
     const stimulateTransaction = await axios.post(
       `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+      {
+        data,
+      }
+    );
+    if (stimulateTransaction.data) {
+      const items = stimulateTransaction.data;
+      setStimulationData(items);
+      setStimulationDialog(true);
+    }
+  };
+  const handleStimulateMultiTransaction = async () => {
+    const data = {
+      ...transactionData,
+      transactionType: transactionData.transactionType.identifier,
+    };
+    // data.productId =  "SIMULATED_" + data.productId;
+    const stimulateTransaction = await axios.post(
+      `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction/multiple`,
       {
         data,
       }
@@ -157,7 +176,12 @@ const TransactionDetails = (props: ITransactionDetails) => {
         <>
           <TransactionDetailsWrapper>
             {transactionData?.id}
-            <button onClick={() => handleStimulate()}>stimulate</button>
+            <button onClick={() => handleStimulateTransaction()}>
+              Stimulate
+            </button>
+            <button onClick={() => handleStimulateMultiTransaction()}>
+              Stimulate Multi
+            </button>
           </TransactionDetailsWrapper>
           <Modal
             isOpen={stimulationDialog}
@@ -171,37 +195,40 @@ const TransactionDetails = (props: ITransactionDetails) => {
                 {JSON.stringify(transactionData, null, 2)}
               </SyntaxHighlighter>
               {props.loadLinkedTransactions && (
-            <>
-              <h1>Linked Transactions ({linkedTransactionData?.count || 0})</h1>
-              <table>
-                {linkedTransactionData?.rows?.map((trxn: any) => {
-                  return (
-                    <tr>
-                      <td>{trxn.transactionTypeIdentifier}</td>
-                      <td>{trxn.payer}</td>
-                      <td>{trxn.amount}</td>
-                    </tr>
-                  );
-                })}
-              </table>
-            </>
-          )}
-          {props.loadLinkedAchievements && (
-            <>
-              <h1>
-                Linked Achievements ({linkedUserAchievementsData?.count || 0})
-              </h1>
-              <table>
-                {linkedUserAchievementsData?.rows?.map((trxn: any) => {
-                  return (
-                    <tr>
-                      <td>{trxn.id}</td>
-                    </tr>
-                  );
-                })}
-              </table>
-            </>
-          )}
+                <>
+                  <h1>
+                    Linked Transactions ({linkedTransactionData?.count || 0})
+                  </h1>
+                  <table>
+                    {linkedTransactionData?.rows?.map((trxn: any) => {
+                      return (
+                        <tr>
+                          <td>{trxn.transactionTypeIdentifier}</td>
+                          <td>{trxn.payer}</td>
+                          <td>{trxn.amount}</td>
+                        </tr>
+                      );
+                    })}
+                  </table>
+                </>
+              )}
+              {props.loadLinkedAchievements && (
+                <>
+                  <h1>
+                    Linked Achievements (
+                    {linkedUserAchievementsData?.count || 0})
+                  </h1>
+                  <table>
+                    {linkedUserAchievementsData?.rows?.map((trxn: any) => {
+                      return (
+                        <tr>
+                          <td>{trxn.id}</td>
+                        </tr>
+                      );
+                    })}
+                  </table>
+                </>
+              )}
             </div>
           </Modal>
         </>
