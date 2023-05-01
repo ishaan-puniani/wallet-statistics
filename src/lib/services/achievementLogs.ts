@@ -24,7 +24,7 @@ export const _fetchUserAchievementsLogs = async (
   const achievements = await axios.post(
     `${API_HOST}/tenant/${credentials.application_id}/user-achievements/get-active/${achieverId}`,
     {
-      credentials,
+      ...credentials,
     }
   );
   return achievements.data;
