@@ -5,8 +5,8 @@ export const _fetchAchievementsLogs = async (
   credentials?: any,
   transaction?: string,
   userAchievement?: string,
-  limit?: string,
-  offset?: string
+  limit?: any,
+  offset?: any
 ) => {
   const achievementLogs = await axios.post(
     `${API_HOST}/tenant/${credentials.application_id}/get-user-achievement-logs?limit=${limit}&offset=${offset}&filter[transaction]=${transaction}&filter[userAchievement]=${userAchievement}`,
