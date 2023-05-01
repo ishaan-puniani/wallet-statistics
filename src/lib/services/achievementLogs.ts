@@ -16,3 +16,16 @@ export const _fetchAchievementsLogs = async (
   );
   return achievementLogs.data;
 };
+
+export const _fetchUserAchievementsLogs = async (
+  credentials?: any,
+  achieverId?: string
+) => {
+  const achievements = await axios.post(
+    `${API_HOST}/tenant/${credentials.application_id}/user-achievements/get-active/${achieverId}`,
+    {
+      credentials,
+    }
+  );
+  return achievements.data;
+};
