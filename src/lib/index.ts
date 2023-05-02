@@ -24,8 +24,14 @@ import { render, renderSimulatorAchievement } from "./simulator";
 import { _initialize } from "./services/settings";
 import { _fetchBalance, _fetchBalanceHistory } from "./services/balances";
 import { _fetchTransactions } from "./services/transactions";
-import { _fetchAchievementsLogs,_fetchUserAchievementsLogs } from "./services/achievementLogs";
-
+import {
+  _fetchAchievementsLogs,
+  _fetchUserAchievementsLogs,
+} from "./services/achievementLogs";
+import {
+  stimulateTransaction,
+  stimulateMultiTransactions,
+} from "./services/stimulator";
 class WalletStatistics {
   constructor() {
     console.log("Library constructor loaded");
@@ -44,11 +50,12 @@ class WalletStatistics {
     fetchBalance: _fetchBalance,
     fetchBalanceHistory: _fetchBalanceHistory,
     fetchTransactions: _fetchTransactions,
-    fetchAchievementLogs:_fetchAchievementsLogs,
-    fetchUserAchievementLogs:_fetchUserAchievementsLogs,
-
+    fetchAchievementLogs: _fetchAchievementsLogs,
+    fetchUserAchievementLogs: _fetchUserAchievementsLogs,
+    stimulateTransaction: stimulateTransaction,
+    stimulateMultiTransactions: stimulateMultiTransactions,
   };
-  
+
   initializeSettings = async (props: any) => {
     await _initialize(props.credentials, props.reset);
   };
