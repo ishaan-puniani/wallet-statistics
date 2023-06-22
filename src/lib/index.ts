@@ -23,7 +23,7 @@ import {
 import { render, renderSimulatorAchievement } from "./simulator";
 import { _initialize } from "./services/settings";
 import { _fetchBalance, _fetchBalanceHistory } from "./services/balances";
-import { _fetchTransactions } from "./services/transactions";
+import { _fetchTransactions,_fetchTransaction } from "./services/transactions";
 import {
   _fetchAchievementsLogs,
   _fetchUserAchievementsLogs,
@@ -50,6 +50,7 @@ class WalletStatistics {
     fetchBalance: _fetchBalance,
     fetchBalanceHistory: _fetchBalanceHistory,
     fetchTransactions: _fetchTransactions,
+    fetchTransaction:_fetchTransaction,
     fetchAchievementLogs: _fetchAchievementsLogs,
     fetchUserAchievementLogs: _fetchUserAchievementsLogs,
     stimulateTransaction: stimulateTransaction,
