@@ -3500,10 +3500,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-table@^7.7.14":
-  version "7.7.14"
-  resolved "https://registry.npmjs.org/@types/react-table/-/react-table-7.7.14.tgz"
-  integrity sha512-TYrv7onCiakaG1uAu/UpQ9FojNEt/4/ht87EgJQaEGFoWV606ZLWUZAcUHzMxgc3v1mywP1cDyz3qB4ho3hWOw==
+"@types/react-table@^7.7.16":
+  version "7.7.16"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.16.tgz#e143e2c0fa2dcac739fcc8055e58f5a7a9c0e5fb"
+  integrity sha512-khfVwkNkvFnQV+Dx5Z/4jeMWIi+qytR8/Hl89fMPQ3aGiIgVlnghwdnyrq45UVSU+9wTqQFL0kUmIk4MGaM20Q==
   dependencies:
     "@types/react" "*"
 
