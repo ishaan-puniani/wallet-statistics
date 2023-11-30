@@ -16,6 +16,9 @@ import {
   renderTransactionTableView,
 } from "./PartnerBalances";
 import {
+  _renderUsage
+} from './Usage'
+import {
   _renderPartnerHeirarchyChart,
   renderPartnerHeirarchyTreeView,
   renderPartnerHeirarchyView,
@@ -74,6 +77,9 @@ class WalletStatistics {
   };
   renderPartnerBalancesChart = (container: any, props: any) => {
     renderBalancesChart(container, props);
+  };
+  renderUsage = (container: any, props: any) => {
+    _renderUsage(container, props);
   };
   renderPartnerBalancesReportChart = (container: any, props: any) => {
     _renderBalancesReportChart(container, props);
