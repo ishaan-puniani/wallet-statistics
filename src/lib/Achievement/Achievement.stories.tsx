@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
-import { getMachineUserCredentials } from "../../utilities/storage";
+import { getServiceAccountCredentials } from "../../utilities/storage";
 import AvailableAchievement from "./AvailableAchievement";
 import UserAchievement from "./UserAchievements";
 
@@ -22,12 +22,12 @@ const TemplateTwo: ComponentStory<typeof AvailableAchievement> = (args) => (
 
 export const UserAchievements = Template.bind({});
 UserAchievements.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   achieverId: "",
   showRaw: false,
 };
 export const AvailableAchievements = TemplateTwo.bind({});
 AvailableAchievements.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
 };

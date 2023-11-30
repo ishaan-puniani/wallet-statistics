@@ -1,14 +1,14 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { saveMachineUserCredentials } from "../utilities/storage";
+import { saveServiceAccountCredentials } from "../utilities/storage";
 import { _initialize } from "../lib/services/settings";
 
-const MachineUserCredentials = ({credentials}:any) => {
+const ServiceAccountCredentials = ({credentials}:any) => {
   const { register, handleSubmit } = useForm({
     defaultValues: credentials
   });
   const onSubmit = async (data) => {
-    saveMachineUserCredentials(data);
+    saveServiceAccountCredentials(data);
     await _initialize(data);
 
   };
@@ -37,4 +37,4 @@ const MachineUserCredentials = ({credentials}:any) => {
   );
 };
 
-export default MachineUserCredentials;
+export default ServiceAccountCredentials;
