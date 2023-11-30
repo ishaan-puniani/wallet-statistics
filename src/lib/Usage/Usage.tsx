@@ -23,7 +23,7 @@ const Usage = () => {
         }, [])`,
     }
   }
-  function npmRC() {
+  function npmRCSnippet() {
     return {
       __html: `//npm.pkg.github.com/:_authToken=?
       @coderowersoftware:registry=https://npm.pkg.github.com
@@ -48,7 +48,7 @@ const Usage = () => {
         If above package not installed correctly then create file .npmrc
       </div>
       <pre>
-        <div dangerouslySetInnerHTML={npmRC()} />;
+        <div dangerouslySetInnerHTML={npmRCSnippet()} />;
       </pre>
       <hr />
       <div>
