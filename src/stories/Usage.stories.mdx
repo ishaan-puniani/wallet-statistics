@@ -1,0 +1,66 @@
+import { Meta } from "@storybook/addon-docs";
+import Usage from "./Usage";
+
+<Meta title="Example/Usage" />
+
+<style>
+  {`
+    .subheading {
+      --mediumdark: '#999999';
+      font-weight: 900;
+      font-size: 13px;
+      color: #999;
+      letter-spacing: 6px;
+      line-height: 24px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      margin-top: 40px;
+    }
+  
+    .tip {
+      display: inline-block;
+      border-radius: 1em;
+      font-size: 11px;
+      line-height: 12px;
+      font-weight: 700;
+      background: #E7FDD8;
+      color: #66BF3C;
+      padding: 4px 12px;
+      margin-right: 10px;
+      vertical-align: top;
+    }
+
+    .tip-wrapper {
+      font-size: 13px;
+      line-height: 20px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .tip-wrapper code {
+      font-size: 12px;
+      display: inline-block;
+    }
+  `}
+</style>
+
+# Welcome to Wallet Simulator
+
+# How to add transactions table on your React application
+
+<div className="subheading">Configure</div>
+<div>
+  npm install @ishaan-puniani/wallet-statistics@0.0.91 or &nbsp;
+  <a href="https://github.com/ishaan-puniani/wallet-statistics/pkgs/npm/wallet-statistics">
+    Click
+  </a>
+</div>
+
+<div>If above package not installed correctly then create file .npmrc</div>
+<div>
+  <Usage />
+</div>
+<div className="tip-wrapper">
+  <span className="tip">Tip</span>Edit the Markdown in
+  <code>stories/Usage.stories.mdx</code>
+</div>
