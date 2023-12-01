@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { getMachineUserCredentials } from "../../utilities/storage";
+import { getServiceAccountCredentials } from "../../utilities/storage";
 import { date } from "@storybook/addon-knobs";
 import TransactionDetails from "./TransactionDetails";
 
@@ -19,7 +19,7 @@ const Template: ComponentStory<typeof TransactionDetails> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
   transactionId:""
 };

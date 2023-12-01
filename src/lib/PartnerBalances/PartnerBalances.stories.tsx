@@ -2,7 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import PartnerBalances from "./PartnerBalances";
-import { getMachineUserCredentials } from "../../utilities/storage";
+import { getServiceAccountCredentials } from "../../utilities/storage";
 import BalancesChart from "./BalancesChart";
 import BalancesReportChart from "./BalancesReportChart";
 import { date } from "@storybook/addon-knobs";
@@ -46,18 +46,18 @@ const TemplateTransactionTable: ComponentStory<typeof TransactionTable> = (
 ) => <TransactionTable {...args} />;
 export const Default = Template.bind({});
 Default.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
 };
 export const PartnerBalanceChart = TemplateOne.bind({});
 PartnerBalanceChart.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
   // transactionTypes: ["MINT", "MINT_BURN"]
 };
 export const PartnerBalanceReport = TemplateTwo.bind({});
 PartnerBalanceReport.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   startDate: moment().add(-7, "days"),
   endDate: moment(),
   showRaw: false,
@@ -65,23 +65,23 @@ PartnerBalanceReport.args = {
 };
 export const TransactionProfile = TemplateThree.bind({});
 TransactionProfile.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
 };
 export const Transaction = TemplateTransaction.bind({});
 Transaction.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
 };
 
 export const CurrencyCard = TemplateCurrencyCard.bind({});
 CurrencyCard.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
 };
 export const TransactionsTable = TemplateTransactionTable.bind({});
 TransactionsTable.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   showRaw: false,
   loadLinkedTransactions: false,
   loadLinkedAchievements: false,

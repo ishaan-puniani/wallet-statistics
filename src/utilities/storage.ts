@@ -1,11 +1,11 @@
 import { credentials } from "../credentials";
-const key_saveMachineUserCredentials = "saveMachineUserCredentials";
-export const saveMachineUserCredentials = (object: any) => {
-  localStorage.setItem(key_saveMachineUserCredentials, JSON.stringify(object));
+const key_saveServiceAccountCredentials = "saveServiceAccountCredentials";
+export const saveServiceAccountCredentials = (object: any) => {
+  localStorage.setItem(key_saveServiceAccountCredentials, JSON.stringify(object));
 };
 
-export const getMachineUserCredentials = () => {
-  const val = localStorage.getItem(key_saveMachineUserCredentials);
+export const getServiceAccountCredentials = () => {
+  const val = localStorage.getItem(key_saveServiceAccountCredentials);
   if (val && val.length > 5) {
     return JSON.parse(val);
   }

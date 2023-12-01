@@ -1,7 +1,7 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { getMachineUserCredentials } from "../../utilities/storage";
+import { getServiceAccountCredentials } from "../../utilities/storage";
 import DropdownCurrencyTypes from "./DropdownCurrencyTypes";
 import DropdownTransactionTypes from "./DropdownTransactionTypes";
 import DropdownAmountTypes from "./DropdownAmountTypes";
@@ -20,7 +20,7 @@ const Template: ComponentStory<typeof DropdownCurrencyTypes> = (args) => (
 );
 export const currencyTypes = Template.bind({});
 currencyTypes.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
 };
 
 const TemplateTransactionTypes: ComponentStory<
@@ -28,7 +28,7 @@ const TemplateTransactionTypes: ComponentStory<
 > = (args) => <DropdownTransactionTypes {...args} />;
 export const TransactionTypes = TemplateTransactionTypes.bind({});
 TransactionTypes.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
 };
 
 const TemplateAmountTypes: ComponentStory<typeof DropdownAmountTypes> = (
@@ -36,5 +36,5 @@ const TemplateAmountTypes: ComponentStory<typeof DropdownAmountTypes> = (
 ) => <DropdownAmountTypes {...args} />;
 export const AmountTypes = TemplateAmountTypes.bind({});
 AmountTypes.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import Simulator from "./Simulator";
-import { getMachineUserCredentials } from "../../utilities/storage";
+import { getServiceAccountCredentials } from "../../utilities/storage";
 import Achievements from "./Achievements";
 
 export default {
@@ -22,6 +22,6 @@ const TemplateAchievements: ComponentStory<typeof Achievements> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = { credentials: getMachineUserCredentials() || {}};
+Default.args = { credentials: getServiceAccountCredentials() || {}};
 export const Achievement = TemplateAchievements.bind({});
-Achievement.args = { credentials: getMachineUserCredentials() || {}};
+Achievement.args = { credentials: getServiceAccountCredentials() || {}};
