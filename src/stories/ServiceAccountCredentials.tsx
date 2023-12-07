@@ -39,6 +39,11 @@ const ServiceAccountCredentials = ({ credentials }: any) => {
       </form>
       <hr />
       <div>Note : After Submitting, please do a Reload</div>
+
+      <div>
+        <h4>For More Info : go to Example/Introduction page</h4>
+      </div>
+
     </>
   );
 };
