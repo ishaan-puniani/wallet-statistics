@@ -2,7 +2,7 @@ import axios from "axios";
 import { API_HOST } from "../../constants";
 import { getTheme, loadTheme, resetTheme } from "../../utilities/theme";
 
-export const _initialize = async (credentials: any, reset: boolean) => {
+export const _initialize = async (credentials: any, reset?: boolean) => {
   if(reset){
     resetTheme();
   }
