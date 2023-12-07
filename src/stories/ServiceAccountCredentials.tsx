@@ -10,6 +10,9 @@ const ServiceAccountCredentials = ({ credentials }: any) => {
   const onSubmit = async (data) => {
     saveServiceAccountCredentials(data);
     await _initialize(data);
+    setTimeout(() => {
+      window?.location?.reload();
+    },3000)
   };
 
   return (
