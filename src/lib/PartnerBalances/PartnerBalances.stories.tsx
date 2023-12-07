@@ -53,6 +53,7 @@ export const PartnerBalanceChart = TemplateOne.bind({});
 PartnerBalanceChart.args = {
   credentials: getServiceAccountCredentials() || {},
   showRaw: false,
+  themeConfig: {},
   // transactionTypes: ["MINT", "MINT_BURN"]
 };
 export const PartnerBalanceReport = TemplateTwo.bind({});
@@ -86,5 +87,5 @@ TransactionsTable.args = {
   loadLinkedTransactions: false,
   loadLinkedAchievements: false,
   filtersPreset: {},
-  hiddenColumns:[]
+  hiddenColumns: [],
 };
