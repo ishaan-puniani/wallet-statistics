@@ -57,6 +57,11 @@ class WalletStatistics {
     stimulateMultiTransactions: stimulateMultiTransactions,
   };
 
+  // expose fetchTransactions for testing purpose
+  fetchTransactions = async (props: any) => {
+    await _fetchTransactions(props.credentials, props.pageSize, props.startRow, props.filterMap);
+  }
+
   initializeSettings = async (props: any) => {
     await _initialize(props.credentials, props.reset);
   };
