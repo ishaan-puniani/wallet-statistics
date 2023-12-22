@@ -23,7 +23,7 @@ import {
 import { render, renderSimulatorAchievement } from "./simulator";
 import { _initialize } from "./services/settings";
 import { _fetchBalance, _fetchBalanceHistory } from "./services/balances";
-import { _fetchTransactions,_fetchTransaction } from "./services/transactions";
+import { _fetchTransactions, _fetchTransaction } from "./services/transactions";
 import {
   _fetchAchievementsLogs,
   _fetchUserAchievementsLogs,
@@ -50,7 +50,7 @@ class WalletStatistics {
     fetchBalance: _fetchBalance,
     fetchBalanceHistory: _fetchBalanceHistory,
     fetchTransactions: _fetchTransactions,
-    fetchTransaction:_fetchTransaction,
+    fetchTransaction: _fetchTransaction,
     fetchAchievementLogs: _fetchAchievementsLogs,
     fetchUserAchievementLogs: _fetchUserAchievementsLogs,
     stimulateTransaction: stimulateTransaction,
@@ -59,8 +59,13 @@ class WalletStatistics {
 
   // expose fetchTransactions for testing purpose
   fetchTransactions = async (props: any) => {
-    await _fetchTransactions(props.credentials, props.pageSize, props.startRow, props.filterMap);
-  }
+    return _fetchTransactions(
+      props.credentials,
+      props.pageSize,
+      props.startRow,
+      props.filterMap
+    );
+  };
 
   initializeSettings = async (props: any) => {
     await _initialize(props.credentials, props.reset);
