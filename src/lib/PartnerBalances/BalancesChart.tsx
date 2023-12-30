@@ -119,7 +119,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         const chartData = [],
           chartColors = [];
 
-        const theme = getTheme();
+        const theme = getTheme() || {};
         theme.transactionTypes = props.themeConfig || theme.transactionTypes;
         console.log(theme, balances);
         for (let idx = 0; idx < balances.length; idx++) {
