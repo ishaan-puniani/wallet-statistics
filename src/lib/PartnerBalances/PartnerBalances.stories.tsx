@@ -54,6 +54,7 @@ PartnerBalanceChart.args = {
   credentials: getServiceAccountCredentials() || {},
   showRaw: false,
   themeConfig: {},
+  chartOptions: {},
   // transactionTypes: ["MINT", "MINT_BURN"]
 };
 export const PartnerBalanceReport = TemplateTwo.bind({});
