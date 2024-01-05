@@ -52,6 +52,7 @@ export interface IPartnerBalancesPieChartProps {
     
   */
   themeConfig: any;
+  chartOptions: any;
 }
 
 const option: any = {
@@ -121,6 +122,22 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
 
         const theme = getTheme() || {};
         theme.transactionTypes = props.themeConfig || theme.transactionTypes;
+        let chartOptions;
+        chartOptions = Object.keys(props.chartOptions).length
+          ? props.chartOptions
+          : option;
+        const activeTransactionType = Object.keys(props.themeConfig).reduce(
+          (acc, curr) => {
+            acc = {
+              ...acc,
+              [curr]: true,
+            };
+            return acc;
+          },
+          {}
+        );
+
+        console.log("activeTransactionType", activeTransactionType);
         console.log(theme, balances);
         for (let idx = 0; idx < balances.length; idx++) {
           const balnce = balances[idx];
@@ -144,7 +161,19 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
 
           chartColors.push(colorForTransactionType);
 
-          if (props.amountType === "amount") {
+          if (
+            props.amountType === "amount" &&
+            activeTransactionType[balnce.transactionType]
+          ) {
+            chartData.push({
+              value: Math.abs(balnce.amount),
+              name: balnce.transactionType,
+            });
+          }
+          if (
+            props.amountType === "amount" &&
+            Object.keys(props.chartOptions).length === 0
+          ) {
             chartData.push({
               value: Math.abs(balnce.amount),
               name: balnce.transactionType,
@@ -158,10 +187,10 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
           }
         }
 
-        option.series[0].data = chartData;
-        option.series[0].color = chartColors;
+        chartOptions.series[0].data = chartData;
+        chartOptions.series[0].color = chartColors;
 
-        setChartOption(option);
+        setChartOption(chartOptions);
       }
       setLoading(false);
     };
