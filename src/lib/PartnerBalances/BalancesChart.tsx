@@ -126,18 +126,6 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         chartOptions = Object.keys(props.chartOptions).length
           ? props.chartOptions
           : option;
-        const activeTransactionType = Object.keys(props.themeConfig).reduce(
-          (acc, curr) => {
-            acc = {
-              ...acc,
-              [curr]: true,
-            };
-            return acc;
-          },
-          {}
-        );
-
-        console.log("activeTransactionType", activeTransactionType);
         console.log(theme, balances);
         for (let idx = 0; idx < balances.length; idx++) {
           const balnce = balances[idx];
@@ -161,19 +149,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
 
           chartColors.push(colorForTransactionType);
 
-          if (
-            props.amountType === "amount" &&
-            activeTransactionType[balnce.transactionType]
-          ) {
-            chartData.push({
-              value: Math.abs(balnce.amount),
-              name: balnce.transactionType,
-            });
-          }
-          if (
-            props.amountType === "amount" &&
-            Object.keys(props.chartOptions).length === 0
-          ) {
+          if (props.amountType === "amount") {
             chartData.push({
               value: Math.abs(balnce.amount),
               name: balnce.transactionType,
