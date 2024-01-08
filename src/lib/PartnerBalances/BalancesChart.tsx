@@ -192,7 +192,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "20px" , height: "100%"  }}>
           {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}
