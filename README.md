@@ -1,4 +1,4 @@
- # To setup +7
+ # To setup +8
  
  ```
  npm i 
