@@ -15,6 +15,7 @@ import {
   renderTransactionProfileView,
   renderTransactionTableView,
 } from "./PartnerBalances";
+import { _renderReportChart } from "./Reports";
 import {
   _renderPartnerHeirarchyChart,
   renderPartnerHeirarchyTreeView,
@@ -113,6 +114,10 @@ class WalletStatistics {
 
   renderMetadataDropdownAmountType = (container: any, props: any) => {
     renderDropdownAmountTypes(container, props);
+  };
+
+  renderReportChart = (container: any, props: any) => {
+    _renderReportChart(container, props);
   };
 }
 
