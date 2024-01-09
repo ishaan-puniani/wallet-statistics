@@ -154,6 +154,10 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         data: data[dataType].data.map((row: any) => row.amount),
         itemStyle: { color: themeConfig[dataType] },
         smooth: true,
+        symbol: "none",
+        lineStyle: {
+          width: 3,
+        },
       };
     });
     setChartOption(chartOptions);
