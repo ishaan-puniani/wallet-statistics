@@ -66,11 +66,27 @@ const data = {
       { id: 12, amount: 2.3 },
     ],
   },
+  Balance: {
+    data: [
+      { id: 1, amount: 1000 },
+      { id: 2, amount: 1200 },
+      { id: 3, amount: 1500 },
+      { id: 4, amount: 2600 },
+      { id: 5, amount: 1700 },
+      { id: 6, amount: 5122 },
+      { id: 7, amount: 3210 },
+      { id: 8, amount: 500 },
+      { id: 9, amount: 300 },
+      { id: 10, amount: 200 },
+      { id: 11, amount: 100 },
+      { id: 12, amount: 50 },
+    ],
+  },
 };
 
 const chartThemeConfig = {
-  Income: "#87E05D",
-  Expense: "#F15555",
+  Income: "blue",
+  Expense: "red",
 };
 
 const transactionType = ["Income", "Expense"];
@@ -115,17 +131,23 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
 
-  const transactionTypes = props.transactionTypes || transactionType;
+  const transactionTypes =
+    props.transactionTypes.length > 0
+      ? props.transactionTypes
+      : transactionType;
 
   const themeConfig =
     Object.keys(props.themeConfig).length > 0
       ? props.themeConfig
       : chartThemeConfig;
   const chartType = props.chartType || "bar";
+  const chartOptions = Object.keys(props.chartOptions).length
+    ? props.chartOptions
+    : option;
 
   useEffect(() => {
     setRawData(data.Income.data);
-    option.series = transactionTypes?.map((dataType) => {
+    chartOptions.series = transactionTypes?.map((dataType) => {
       return {
         name: dataType,
         type: chartType,
@@ -134,7 +156,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         smooth: true,
       };
     });
-    setChartOption(option);
+    setChartOption(chartOptions);
   }, [props.chartType, props.themeConfig, props.transactionTypes]);
 
   return (
