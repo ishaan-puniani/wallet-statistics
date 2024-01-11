@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_HOST } from "../../constants";
+import { API_HOST, REPORTING_API_HOST } from "../../constants";
 
 export const _fetchBalance = async (
   credentials: any,
@@ -32,3 +32,18 @@ export const _fetchBalanceHistory = async (
   return balnceHistory.data;
 };
 
+export const _fetchGetBalances = async (
+  credentials: any,
+  userId: string,
+  currency: string,
+  startDate: string,
+  endDate: string
+) => {
+  const getbalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/getbalances?filter[PartnerId]=${userId}&filter[currency]=${currency}&filter[DateRange][]=${startDate}&filter[DateRange][]=${endDate}`,
+    {
+      ...credentials,
+    }
+  );
+  return getbalances.data;
+};
