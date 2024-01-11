@@ -20,7 +20,8 @@ import {
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { _fetchBalance } from "../services/balances";
+import { _fetchGetBalances } from "../services/balances";
+import moment from "moment";
 
 // Register the required components
 echarts.use([
@@ -100,6 +101,8 @@ export interface IPartnerBalancesPieChartProps {
   chartType?: string;
   themeConfig: any;
   chartOptions: any;
+  endDate: Date;
+  startDate: Date;
 }
 
 const option: any = {
@@ -130,6 +133,7 @@ const option: any = {
 const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const transactionTypes =
     props.transactionTypes.length > 0
@@ -144,6 +148,21 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const chartOptions = Object.keys(props.chartOptions).length
     ? props.chartOptions
     : option;
+
+    useEffect(() => {
+      const fetchData = async () => {
+        setLoading(true);
+        const balances = await _fetchGetBalances(
+          props.credentials,
+          props.userId,
+          props.currency,
+          moment(props.startDate).format("YYYY-MM-DD"),
+          moment(props.endDate).format("YYYY-MM-DD"),
+        );
+        console.log(balances);
+      }
+      fetchData();
+    },[props.userId, props.currency, props.startDate, props.endDate])
 
   useEffect(() => {
     setRawData(data.Income.data);

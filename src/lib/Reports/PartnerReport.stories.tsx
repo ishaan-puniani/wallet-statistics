@@ -2,6 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { getServiceAccountCredentials } from "../../utilities/storage";
 import ReportChart from "./ReportChart";
+import moment from "moment";
 
 export default {
   title: "Example/Reports",
@@ -23,4 +24,6 @@ PartnerReportChart.args = {
   chartOptions: {},
   transactionTypes: [],
   chartType: "",
+  startDate: moment(),
+  endDate: moment(),
 };
