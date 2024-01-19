@@ -23,7 +23,11 @@ import {
 } from "./partnerHeirarchy";
 import { render, renderSimulatorAchievement } from "./simulator";
 import { _initialize } from "./services/settings";
-import { _fetchBalance, _fetchBalanceHistory } from "./services/balances";
+import {
+  _fetchBalance,
+  _fetchBalanceHistory,
+  _fetchGetBalances,
+} from "./services/balances";
 import { _fetchTransactions, _fetchTransaction } from "./services/transactions";
 import {
   _fetchAchievementsLogs,
@@ -50,6 +54,7 @@ class WalletStatistics {
     initializeSettings: _initialize,
     fetchBalance: _fetchBalance,
     fetchBalanceHistory: _fetchBalanceHistory,
+    fetchGetBalances: _fetchGetBalances,
     fetchTransactions: _fetchTransactions,
     fetchTransaction: _fetchTransaction,
     fetchAchievementLogs: _fetchAchievementsLogs,
