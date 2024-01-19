@@ -34,60 +34,10 @@ echarts.use([
   LegendComponent,
 ]);
 
-const data = {
-  Income: {
-    data: [
-      { id: 1, amount: 2.0 },
-      { id: 2, amount: 4.9 },
-      { id: 3, amount: 7.0 },
-      { id: 4, amount: 23.2 },
-      { id: 5, amount: 25.6 },
-      { id: 6, amount: 76.7 },
-      { id: 7, amount: 135.6 },
-      { id: 8, amount: 162.2 },
-      { id: 9, amount: 32.6 },
-      { id: 10, amount: 20.0 },
-      { id: 11, amount: 6.4 },
-      { id: 12, amount: 3.3 },
-    ],
-  },
-  Expense: {
-    data: [
-      { id: 1, amount: 2.6 },
-      { id: 2, amount: 5.9 },
-      { id: 3, amount: 9.0 },
-      { id: 4, amount: 26.4 },
-      { id: 5, amount: 28.7 },
-      { id: 6, amount: 70.7 },
-      { id: 7, amount: 175.6 },
-      { id: 8, amount: 182.2 },
-      { id: 9, amount: 48.7 },
-      { id: 10, amount: 18.8 },
-      { id: 11, amount: 6.0 },
-      { id: 12, amount: 2.3 },
-    ],
-  },
-  Balance: {
-    data: [
-      { id: 1, amount: 1000 },
-      { id: 2, amount: 1200 },
-      { id: 3, amount: 1500 },
-      { id: 4, amount: 2600 },
-      { id: 5, amount: 1700 },
-      { id: 6, amount: 5122 },
-      { id: 7, amount: 3210 },
-      { id: 8, amount: 500 },
-      { id: 9, amount: 300 },
-      { id: 10, amount: 200 },
-      { id: 11, amount: 100 },
-      { id: 12, amount: 50 },
-    ],
-  },
-};
-
 const chartThemeConfig = {
   Income: "blue",
   Expense: "red",
+  Balance: "blue",
 };
 
 const transactionType = ["Income", "Expense"];
@@ -103,6 +53,7 @@ export interface IPartnerBalancesPieChartProps {
   chartOptions: any;
   endDate: Date;
   startDate: Date;
+  group: string;
 }
 
 const option: any = {
@@ -144,43 +95,68 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
     Object.keys(props.themeConfig).length > 0
       ? props.themeConfig
       : chartThemeConfig;
+
   const chartType = props.chartType || "bar";
+
+  const group = props.group || "monthly";
+
   const chartOptions = Object.keys(props.chartOptions).length
     ? props.chartOptions
     : option;
 
-    useEffect(() => {
-      const fetchData = async () => {
-        setLoading(true);
-        const balances = await _fetchGetBalances(
-          props.credentials,
-          props.userId,
-          props.currency,
-          moment(props.startDate).format("YYYY-MM-DD"),
-          moment(props.endDate).format("YYYY-MM-DD"),
-        );
-        console.log(balances);
-      }
-      fetchData();
-    },[props.userId, props.currency, props.startDate, props.endDate])
-
   useEffect(() => {
-    setRawData(data.Income.data);
-    chartOptions.series = transactionTypes?.map((dataType) => {
-      return {
-        name: dataType,
-        type: chartType,
-        data: data[dataType].data.map((row: any) => row.amount),
-        itemStyle: { color: themeConfig[dataType] },
-        smooth: true,
-        symbol: "none",
-        lineStyle: {
-          width: 3,
-        },
-      };
-    });
-    setChartOption(chartOptions);
-  }, [props.chartType, props.themeConfig, props.transactionTypes]);
+    const fetchData = async () => {
+      setLoading(true);
+
+      const balances = await _fetchGetBalances(
+        props.credentials,
+        props.userId,
+        props.currency,
+        moment(props.startDate).format("YYYY-MM-DD"),
+        moment(props.endDate).format("YYYY-MM-DD"),
+        group
+      );
+
+      setRawData(balances);
+
+      chartOptions.series = transactionTypes?.map((dataType) => {
+        return {
+          name: dataType,
+          type: chartType,
+          // need to rectify logic
+          data: balances.map((row: any) => {
+            if (dataType === "Income") {
+              return row.dailyCreditAmounts.AMOUNT ?? 0;
+            } else if (dataType === "Expense") {
+              return row.dailyDebitAmounts.AMOUNT ?? 0;
+            } else if (dataType === "Balance") {
+              return row.dailyAmounts.AMOUNT ?? 0;
+            }
+          }),
+          itemStyle: { color: themeConfig[dataType] },
+          smooth: true,
+          symbol: "none",
+          lineStyle: {
+            width: 3,
+          },
+        };
+      });
+
+      setChartOption(chartOptions);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [
+    props.userId,
+    props.currency,
+    props.startDate,
+    props.endDate,
+    props.chartType,
+    props.themeConfig,
+    props.transactionTypes,
+    props.group,
+  ]);
 
   return (
     <>
@@ -198,7 +174,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         </>
       ) : (
         <div style={{ marginTop: "20px" }}>
-          {chartOption && (
+          {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}
               option={chartOption}

@@ -37,10 +37,11 @@ export const _fetchGetBalances = async (
   userId: string,
   currency: string,
   startDate: string,
-  endDate: string
+  endDate: string,
+  group: string
 ) => {
   const getbalances = await axios.post(
-    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/getbalances?filter[PartnerId]=${userId}&filter[currency]=${currency}&filter[DateRange][]=${startDate}&filter[DateRange][]=${endDate}`,
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/getbalances?filter[PartnerId]=${userId}&filter[currency]=${currency}&filter[DateRange]=${startDate}&filter[DateRange]=${endDate}&group=${group}`,
     {
       ...credentials,
     }
