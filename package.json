@@ -61,7 +61,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-minify": "^0.5.2",
     "babel-preset-react-app": "10.0.1",
-    "css-loader": "^6.7.1",
+    "css-loader": "^6.9.1",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "echarts": "^5.4.0",
     "echarts-for-react": "^3.0.2",
