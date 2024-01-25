@@ -20,7 +20,8 @@ import {
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { _fetchGetBalances } from "../services/balances";
+import { _fetchBalance, _fetchGetBalances } from "../services/balances";
+import { getTheme, makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
 
 // Register the required components
@@ -34,87 +35,68 @@ echarts.use([
   LegendComponent,
 ]);
 
-const chartThemeConfig = {
-  Income: "blue",
-  Expense: "red",
-  Balance: "blue",
-};
-
-const transactionType = [
-  {
-    type: "debit",
-    label: "Expense",
-  },
-  {
-    type: "credit",
-    label: "Income",
-  },
-];
-
 export interface IPartnerBalancesPieChartProps {
   userId: string;
   currency: string;
   credentials: any;
   showRaw?: boolean;
   transactionTypes?: string[];
-  chartType?: string;
   themeConfig: any;
   chartOptions: any;
   endDate: Date;
   startDate: Date;
   group: string;
+  type: string;
   includePrevious: boolean;
 }
 
 const option: any = {
   tooltip: {
-    show: true,
-    trigger: "axis",
+    show: false,
+    trigger: "item",
   },
   legend: {
-    data: ["Income", "Expense"],
-    left: true,
-    icon: "circle",
+    show: false,
   },
-  xAxis: [
+  series: [
     {
-      type: "category",
-      // prettier-ignore
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      name: "",
+      type: "pie",
+      radius: "80%",
+      avoidLabelOverlap: true,
+      itemStyle: {
+        borderColor: "#fff",
+        borderWidth: 2,
+      },
+      label: {
+        formatter: (params: any) => {
+          return `{name|${params.data.name}}\n{value|${params.percent}} %`;
+        },
+        minMargin: 5,
+        edgeDistance: 5,
+        lineHeight: 15,
+        rich: {
+          name: {
+            fontSize: 15,
+            color: "inherit",
+          },
+        },
+      },
+      labelLine: {
+        show: true,
+      },
+      data: [],
     },
   ],
-  yAxis: [
-    {
-      type: "value",
-    },
-  ],
-  series: [],
 };
 
-const ReportChart = (props: IPartnerBalancesPieChartProps) => {
+const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
+  const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const transactionTypes =
-    props.transactionTypes.length > 0
-      ? props.transactionTypes
-      : transactionType;
-
-  const themeConfig =
-    Object.keys(props.themeConfig).length > 0
-      ? props.themeConfig
-      : chartThemeConfig;
-
-  const chartType = props.chartType || "bar";
-
   const group = props.group || "monthly";
-
   const includePrevious = props.includePrevious || false;
-
-  const chartOptions = Object.keys(props.chartOptions).length
-    ? props.chartOptions
-    : option;
+  const type = props.type || "debit";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -129,50 +111,63 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         group,
         includePrevious
       );
+      const chartData = [],
+        chartColors = [];
 
-      setRawData(balances);
+      const theme = getTheme() || {};
+      theme.transactionTypes = props.themeConfig || theme.transactionTypes;
+      let chartOptions;
+      chartOptions = Object.keys(props.chartOptions).length
+        ? props.chartOptions
+        : option;
 
-      chartOptions.series = transactionTypes?.map((dataType: any) => {
-        return {
-          name: dataType.label,
-          type: chartType,
-          data: balances.map((row: any) => {
-            if (dataType.type === "debit") {
-              return row.dailyCreditAmounts.AMOUNT ?? 0;
-              // group
-            } else if (dataType.type === "credit") {
-              return row.dailyDebitAmounts.AMOUNT ?? 0;
-            } else if (dataType.type === "balance") {
-              return row.dailyAmounts.AMOUNT ?? 0;
-            }
-          }),
-          itemStyle: { color: themeConfig[dataType] },
-          smooth: true,
-          symbol: "none",
-          lineStyle: {
-            width: 3,
-          },
-        };
-      });
+      const balance =
+        type === "debit"
+          ? balances[0]?.dailyDebitAmounts // need to rectify
+          : balances[0]?.dailyCreditAmounts;
+          
+      if (balance) {
+        setRawData(balances);
 
-      setChartOption(chartOptions);
+        for (let transactionTypes in balance) {
+          if (
+            props.transactionTypes &&
+            !props.transactionTypes.includes(transactionTypes)
+          ) {
+            continue;
+          }
+          const transactionTypeTheme = theme.transactionTypes[transactionTypes];
+          let colorForTransactionType;
+
+          if (transactionTypeTheme) {
+            colorForTransactionType = transactionTypeTheme.chart.color;
+          }
+
+          if (!colorForTransactionType) {
+            colorForTransactionType = makeRandomColor();
+          }
+
+          chartColors.push(colorForTransactionType);
+
+          chartData.push({
+            value: Math.abs(balance[transactionTypes]),
+            name: transactionTypes,
+          });
+        }
+        chartOptions.series[0].data = chartData;
+        chartOptions.series[0].color = chartColors;
+
+        setChartOption(chartOptions);
+      }
+
       setLoading(false);
     };
-
     fetchData();
-  }, [
-    props.userId,
-    props.currency,
-    props.startDate,
-    props.endDate,
-    props.chartType,
-    props.themeConfig,
-    props.transactionTypes,
-    props.group,
-  ]);
+  }, [props.userId, props.currency, props.themeConfig]);
 
   return (
     <>
+      {/* {loading && <h1>Loading</h1>} */}
       {props?.showRaw ? (
         <>
           {rawData?.map((item) => (
@@ -186,7 +181,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}
@@ -200,4 +195,4 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
     </>
   );
 };
-export default ReportChart;
+export default ReportBalanceChart;
