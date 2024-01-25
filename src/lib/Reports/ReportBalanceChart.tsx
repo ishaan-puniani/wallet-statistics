@@ -47,6 +47,7 @@ export interface IPartnerBalancesPieChartProps {
   startDate: Date;
   group: string;
   type: string;
+  includePrevious: boolean;
 }
 
 const option: any = {
@@ -94,6 +95,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const group = props.group || "monthly";
+  const includePrevious = props.includePrevious || false;
   const type = props.type || "debit";
 
   useEffect(() => {
@@ -106,9 +108,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         props.currency,
         moment(props.startDate).format("YYYY-MM-DD"),
         moment(props.endDate).format("YYYY-MM-DD"),
-        group
+        group,
+        includePrevious
       );
-      setRawData(balances);
       const chartData = [],
         chartColors = [];
 
@@ -121,38 +123,43 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
 
       const balance =
         type === "debit"
-          ? balances[1]?.dailyDebitAmounts // need to rectify
-          : balances[1]?.dailyCreditAmounts;
+          ? balances[0]?.dailyDebitAmounts // need to rectify
+          : balances[0]?.dailyCreditAmounts;
+          
+      if (balance) {
+        setRawData(balances);
 
-      for (let transactionTypes in balance) {
-        if (
-          props.transactionTypes &&
-          !props.transactionTypes.includes(transactionTypes)
-        ) {
-          continue;
+        for (let transactionTypes in balance) {
+          if (
+            props.transactionTypes &&
+            !props.transactionTypes.includes(transactionTypes)
+          ) {
+            continue;
+          }
+          const transactionTypeTheme = theme.transactionTypes[transactionTypes];
+          let colorForTransactionType;
+
+          if (transactionTypeTheme) {
+            colorForTransactionType = transactionTypeTheme.chart.color;
+          }
+
+          if (!colorForTransactionType) {
+            colorForTransactionType = makeRandomColor();
+          }
+
+          chartColors.push(colorForTransactionType);
+
+          chartData.push({
+            value: Math.abs(balance[transactionTypes]),
+            name: transactionTypes,
+          });
         }
-        const transactionTypeTheme = theme.transactionTypes[transactionTypes];
-        let colorForTransactionType;
+        chartOptions.series[0].data = chartData;
+        chartOptions.series[0].color = chartColors;
 
-        if (transactionTypeTheme) {
-          colorForTransactionType = transactionTypeTheme.chart.color;
-        }
-
-        if (!colorForTransactionType) {
-          colorForTransactionType = makeRandomColor();
-        }
-
-        chartColors.push(colorForTransactionType);
-
-        chartData.push({
-          value: Math.abs(balance[transactionTypes]),
-          name: transactionTypes,
-        });
+        setChartOption(chartOptions);
       }
-      chartOptions.series[0].data = chartData;
-      chartOptions.series[0].color = chartColors;
 
-      setChartOption(chartOptions);
       setLoading(false);
     };
     fetchData();
