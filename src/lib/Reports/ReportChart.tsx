@@ -138,12 +138,12 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
           type: chartType,
           data: balances.map((row: any) => {
             if (dataType.type === "debit") {
-              return row.dailyCreditAmounts.AMOUNT ?? 0;
+              return Math.abs(row.dailyCreditAmounts.AMOUNT) ?? 0;
               // group
             } else if (dataType.type === "credit") {
-              return row.dailyDebitAmounts.AMOUNT ?? 0;
+              return Math.abs(row.dailyDebitAmounts.AMOUNT) ?? 0;
             } else if (dataType.type === "balance") {
-              return row.dailyAmounts.AMOUNT ?? 0;
+              return Math.abs(row.dailyAmounts.AMOUNT) ?? 0;
             }
           }),
           itemStyle: { color: themeConfig[dataType] },

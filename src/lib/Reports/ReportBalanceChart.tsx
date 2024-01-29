@@ -125,7 +125,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         type === "debit"
           ? balances[0]?.dailyDebitAmounts // need to rectify
           : balances[0]?.dailyCreditAmounts;
-          
+
       if (balance) {
         setRawData(balances);
 
@@ -157,6 +157,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         chartOptions.series[0].data = chartData;
         chartOptions.series[0].color = chartColors;
 
+        setChartOption(chartOptions);
+      } else {
+        chartOptions.series[0].data = [];
         setChartOption(chartOptions);
       }
 
