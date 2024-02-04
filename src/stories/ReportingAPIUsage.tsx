@@ -27,12 +27,10 @@ const ReportingAPIUsage = () => {
     };
   }
   return (
-    <Wrapper>
-      <pre>
-        <div>How to call services in your application</div>
-        <div dangerouslySetInnerHTML={useEffectSnippet()} />;
-      </pre>
-    </Wrapper>
+    <pre>
+      <div>How to call services in your application</div>
+      <div dangerouslySetInnerHTML={useEffectSnippet()} />;
+    </pre>
   );
 };
 
@@ -45,12 +43,10 @@ export const EndPointDetails = () => {
     };
   }
   return (
-    <Wrapper>
-      <pre>
-        <div>API</div>
-        <div dangerouslySetInnerHTML={endpoint()} />;
-      </pre>
-    </Wrapper>
+    <pre>
+      <div>API</div>
+      <div dangerouslySetInnerHTML={endpoint()} />;
+    </pre>
   );
 };
 
@@ -107,12 +103,10 @@ export const BarLineChart = () => {
     };
   }
   return (
-    <Wrapper>
-      <pre>
-        <div>How to call services in your application</div>
-        <div dangerouslySetInnerHTML={useEffectSnippet()} />;
-      </pre>
-    </Wrapper>
+    <pre>
+      <div>How to call services in your application</div>
+      <div dangerouslySetInnerHTML={useEffectSnippet()} />;
+    </pre>
   );
 };
 export const PieChart = () => {
@@ -163,14 +157,11 @@ export const PieChart = () => {
     };
   }
   return (
-    <Wrapper>
-      <pre>
-        <div>How to call services in your application</div>
-        <div dangerouslySetInnerHTML={useEffectSnippet()} />;
-      </pre>
-    </Wrapper>
+    <pre>
+      <div>How to call services in your application</div>
+      <div dangerouslySetInnerHTML={useEffectSnippet()} />;
+    </pre>
   );
 };
-const Wrapper = styled.div``;
 
 export default ReportingAPIUsage;
