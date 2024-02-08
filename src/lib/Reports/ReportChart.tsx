@@ -58,8 +58,8 @@ export interface IPartnerBalancesPieChartProps {
   showRaw?: boolean;
   transactionTypes?: string[];
   chartType?: string;
+  chartOptions?: any;
   themeConfig: any;
-  chartOptions: any;
   endDate: Date;
   startDate: Date;
   group: string;

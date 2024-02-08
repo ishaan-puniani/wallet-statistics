@@ -51,8 +51,8 @@ export interface IPartnerBalancesPieChartProps {
     },
     
   */
+  chartOptions?: any;
   themeConfig: any;
-  chartOptions: any;
 }
 
 const option: any = {
@@ -192,7 +192,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px" , height: "100%"  }}>
+        <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}
