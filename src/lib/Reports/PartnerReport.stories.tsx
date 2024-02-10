@@ -4,6 +4,7 @@ import { getServiceAccountCredentials } from "../../utilities/storage";
 import ReportChart from "./ReportChart";
 import ReportBalanceChart from "./ReportBalanceChart";
 import moment from "moment";
+import MiniTransactionTypeCard from "./MiniTransactionTypeCard";
 
 export default {
   title: "Example/Reports",
@@ -18,6 +19,9 @@ const TemplateDemo: ComponentStory<typeof ReportChart> = (args) => (
 );
 const TemplateTwo: ComponentStory<typeof ReportBalanceChart> = (args) => (
   <ReportBalanceChart {...args} />
+);
+const TemplateThree: ComponentStory<typeof ReportBalanceChart> = (args) => (
+  <MiniTransactionTypeCard {...args} />
 );
 
 export const PartnerBalanceReportChart = TemplateTwo.bind({});
@@ -39,6 +43,16 @@ PartnerReportChart.args = {
   chartOptions: {},
   transactionTypes: [],
   chartType: "",
+  startDate: moment(),
+  endDate: moment(),
+};
+export const MiniTransactionCard = TemplateThree.bind({});
+MiniTransactionCard.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  includePrevious: false,
+  cardConfig: {},
+  group: "",
   startDate: moment(),
   endDate: moment(),
 };
