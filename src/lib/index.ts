@@ -15,7 +15,11 @@ import {
   renderTransactionProfileView,
   renderTransactionTableView,
 } from "./PartnerBalances";
-import { _renderReportChart, _renderReportBalanceChart } from "./Reports";
+import {
+  _renderReportChart,
+  _renderReportBalanceChart,
+  _renderMiniTransactionTypeCard,
+} from "./Reports";
 import {
   _renderPartnerHeirarchyChart,
   renderPartnerHeirarchyTreeView,
@@ -127,6 +131,9 @@ class WalletStatistics {
 
   renderReportBalanceChart = (container: any, props: any) => {
     _renderReportBalanceChart(container, props);
+  };
+  renderMiniTransactionTypeCard = (container: any, props: any) => {
+    _renderMiniTransactionTypeCard(container, props);
   };
 }
 
