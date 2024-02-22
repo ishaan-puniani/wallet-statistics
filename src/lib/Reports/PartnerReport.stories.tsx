@@ -20,9 +20,9 @@ const TemplateDemo: ComponentStory<typeof ReportChart> = (args) => (
 const TemplateTwo: ComponentStory<typeof ReportBalanceChart> = (args) => (
   <ReportBalanceChart {...args} />
 );
-const TemplateThree: ComponentStory<typeof ReportBalanceChart> = (args) => (
-  <MiniTransactionTypeCard {...args} />
-);
+const TemplateThree: ComponentStory<typeof MiniTransactionTypeCard> = (
+  args
+) => <MiniTransactionTypeCard {...args} />;
 
 export const PartnerBalanceReportChart = TemplateTwo.bind({});
 PartnerBalanceReportChart.args = {
@@ -55,4 +55,5 @@ MiniTransactionCard.args = {
   group: "",
   startDate: moment(),
   endDate: moment(),
+  transactionType: "",
 };
