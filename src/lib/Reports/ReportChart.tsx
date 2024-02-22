@@ -35,19 +35,21 @@ echarts.use([
 ]);
 
 const chartThemeConfig = {
-  Income: "blue",
-  Expense: "red",
+  WIN: "blue",
+  BET: "red",
   Balance: "blue",
 };
 
 const transactionType = [
   {
     type: "debit",
-    label: "Expense",
+    label: "BET",
+    transactionType: "BET",
   },
   {
     type: "credit",
-    label: "Income",
+    label: "WIN",
+    transactionType: "WIN",
   },
 ];
 
@@ -64,6 +66,7 @@ export interface IPartnerBalancesPieChartProps {
   startDate: Date;
   group: string;
   includePrevious: boolean;
+  amountType?: "amount" | "virtual";
 }
 
 const option: any = {
@@ -72,7 +75,7 @@ const option: any = {
     trigger: "axis",
   },
   legend: {
-    data: ["Income", "Expense"],
+    data: ["WIN", "BET"],
     left: true,
     icon: "circle",
   },
@@ -138,11 +141,41 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
           type: chartType,
           data: balances.map((row: any) => {
             if (dataType.type === "debit") {
-              return Math.abs(row.dailyDebitAmounts.AMOUNT) || 0;
+              if (props.amountType === "virtual") {
+                return (
+                  Math.abs(
+                    row.dailyDebitVirtualValues[dataType.transactionType]
+                  ) || 0
+                );
+              } else {
+                return (
+                  Math.abs(row.dailyDebitAmounts[dataType.transactionType]) || 0
+                );
+              }
             } else if (dataType.type === "credit") {
-              return Math.abs(row.dailyCreditAmounts.AMOUNT) || 0;
+              if (props.amountType === "virtual") {
+                return (
+                  Math.abs(
+                    row.dailyCrediVirtualValues[dataType.transactionType]
+                  ) || 0
+                );
+              } else {
+                return (
+                  Math.abs(row.dailyCreditAmounts[dataType.transactionType]) ||
+                  0
+                );
+              }
             } else if (dataType.type === "balance") {
-              return Math.abs(row.dailyAmounts.AMOUNT) || 0;
+              if (props.amountType === "virtual") {
+                return (
+                  Math.abs(row.dailyVirtualValues[dataType.transactionType]) ||
+                  0
+                );
+              } else {
+                return (
+                  Math.abs(row.dailyAmounts[dataType.transactionType]) || 0
+                );
+              }
             }
           }),
           itemStyle: { color: themeConfig[dataType.label] },
@@ -168,6 +201,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
     props.themeConfig,
     props.transactionTypes,
     props.group,
+    props.amountType,
   ]);
 
   return (
