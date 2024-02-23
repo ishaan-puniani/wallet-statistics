@@ -48,6 +48,7 @@ export interface IPartnerBalancesPieChartProps {
   group: string;
   type: string;
   includePrevious: boolean;
+  amountType?: "amount" | "virtual";
 }
 
 const option: any = {
@@ -121,10 +122,29 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         ? props.chartOptions
         : option;
 
-      const balance =
-        type === "debit"
-          ? balances[0]?.dailyDebitAmounts // need to rectify
-          : balances[0]?.dailyCreditAmounts;
+      const getBalance = () => {
+        if (type === "debit") {
+          if (props.amountType === "virtual") {
+            return balances[0]?.dailyDebitVirtualValues;
+          } else {
+            return balances[0]?.dailyDebitAmounts;
+          }
+        } else if (type === "credit") {
+          if (props.amountType === "virtual") {
+            return balances[0]?.dailyCrediVirtualValues;
+          } else {
+            return balances[0]?.dailyCreditAmounts;
+          }
+        } else if (type === "amount") {
+          if (props.amountType === "virtual") {
+            return balances[0]?.dailyVirtualValues;
+          } else {
+            return balances[0]?.dailyAmounts;
+          }
+        }
+      };
+
+      const balance = getBalance();
 
       if (balance) {
         setRawData(balances);
@@ -166,7 +186,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       setLoading(false);
     };
     fetchData();
-  }, [props.userId, props.currency, props.themeConfig]);
+  }, [props.userId, props.currency, props.themeConfig, props.amountType]);
 
   return (
     <>
