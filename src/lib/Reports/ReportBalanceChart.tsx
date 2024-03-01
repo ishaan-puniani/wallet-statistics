@@ -125,21 +125,21 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       const getBalance = () => {
         if (type === "debit") {
           if (props.amountType === "virtual") {
-            return balances[0]?.dailyDebitVirtualValues;
+            return balances[0]?.groupedDebitVirtualValues;
           } else {
-            return balances[0]?.dailyDebitAmounts;
+            return balances[0]?.groupedDebitAmounts;
           }
         } else if (type === "credit") {
           if (props.amountType === "virtual") {
-            return balances[0]?.dailyCrediVirtualValues;
+            return balances[0]?.groupedCrediVirtualValues;
           } else {
-            return balances[0]?.dailyCreditAmounts;
+            return balances[0]?.groupedCreditAmounts;
           }
         } else if (type === "amount") {
           if (props.amountType === "virtual") {
-            return balances[0]?.dailyVirtualValues;
+            return balances[0]?.groupedVirtualValues;
           } else {
-            return balances[0]?.dailyAmounts;
+            return balances[0]?.groupedAmounts;
           }
         }
       };

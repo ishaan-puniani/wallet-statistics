@@ -45,60 +45,66 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
             if (cardConfig.type === "amount") {
               props.amountType === "virtual"
                 ? setAmount(
-                    Math.abs(balance.dailyVirtualValues?.[transactionType]) || 0
+                    Math.abs(balance.groupedVirtualValues?.[transactionType]) ||
+                      0
                   )
                 : setAmount(
-                    Math.abs(balance.dailyAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedAmounts?.[transactionType]) || 0
                   );
             } else if (cardConfig.type === "credit") {
               props.amountType === "virtual"
                 ? setAmount(
                     Math.abs(
-                      balance.dailyCrediVirtualValues?.[transactionType]
+                      balance.groupedCrediVirtualValues?.[transactionType]
                     ) || 0
                   )
                 : setAmount(
-                    Math.abs(balance.dailyCreditAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedCreditAmounts?.[transactionType]) ||
+                      0
                   );
             } else if (cardConfig.type === "debit") {
               props.amountType === "virtual"
                 ? setAmount(
                     Math.abs(
-                      balance.dailyDebitVirtualValues?.[transactionType]
+                      balance.groupedDebitVirtualValues?.[transactionType]
                     ) || 0
                   )
                 : setAmount(
-                    Math.abs(balance.dailyDebitAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedDebitAmounts?.[transactionType]) ||
+                      0
                   );
             }
           } else {
             if (cardConfig.type === "amount") {
               props.amountType === "virtual"
                 ? setPreAmount(
-                    Math.abs(balance.dailyVirtualValues?.[transactionType]) || 0
+                    Math.abs(balance.groupedVirtualValues?.[transactionType]) ||
+                      0
                   )
                 : setPreAmount(
-                    Math.abs(balance.dailyAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedAmounts?.[transactionType]) || 0
                   );
             } else if (cardConfig.type === "credit") {
               props.amountType === "virtual"
                 ? setPreAmount(
                     Math.abs(
-                      balance.dailyCrediVirtualValues?.[transactionType]
+                      balance.groupedCrediVirtualValues?.[transactionType]
                     ) || 0
                   )
                 : setPreAmount(
-                    Math.abs(balance.dailyCreditAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedCreditAmounts?.[transactionType]) ||
+                      0
                   );
             } else if (cardConfig.type === "debit") {
               props.amountType === "virtual"
                 ? setPreAmount(
                     Math.abs(
-                      balance.dailyDebitVirtualValues?.[transactionType]
+                      balance.groupedDebitVirtualValues?.[transactionType]
                     ) || 0
                   )
                 : setPreAmount(
-                    Math.abs(balance.dailyDebitAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedDebitAmounts?.[transactionType]) ||
+                      0
                   );
             }
           }
@@ -108,32 +114,35 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
         if (cardConfig.type === "amount") {
           props.amountType === "virtual"
             ? setPreAmount(
-                Math.abs(balances[0]?.dailyVirtualValues?.[transactionType]) ||
-                  0
+                Math.abs(
+                  balances[0]?.groupedVirtualValues?.[transactionType]
+                ) || 0
               )
             : setPreAmount(
-                Math.abs(balances[0]?.dailyAmounts?.[transactionType]) || 0
+                Math.abs(balances[0]?.groupedAmounts?.[transactionType]) || 0
               );
         } else if (cardConfig.type === "credit") {
           props.amountType === "virtual"
             ? setPreAmount(
                 Math.abs(
-                  balances[0]?.dailyCrediVirtualValues?.[transactionType]
+                  balances[0]?.groupedCrediVirtualValues?.[transactionType]
                 ) || 0
               )
             : setPreAmount(
-                Math.abs(balances[0]?.dailyCreditAmounts?.[transactionType]) ||
-                  0
+                Math.abs(
+                  balances[0]?.groupedCreditAmounts?.[transactionType]
+                ) || 0
               );
         } else if (cardConfig.type === "debit") {
           props.amountType === "virtual"
             ? setPreAmount(
                 Math.abs(
-                  balances[0]?.dailyDebitVirtualValues?.[transactionType]
+                  balances[0]?.groupedDebitVirtualValues?.[transactionType]
                 ) || 0
               )
             : setPreAmount(
-                Math.abs(balances[0]?.dailyDebitAmounts?.[transactionType]) || 0
+                Math.abs(balances[0]?.groupedDebitAmounts?.[transactionType]) ||
+                  0
               );
         }
       } else {
