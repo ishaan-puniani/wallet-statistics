@@ -186,7 +186,14 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       setLoading(false);
     };
     fetchData();
-  }, [props.userId, props.currency, props.themeConfig, props.amountType]);
+  }, [
+    props.userId,
+    props.currency,
+    props.themeConfig,
+    props.amountType,
+    props.startDate,
+    props.endDate,
+  ]);
 
   return (
     <>
