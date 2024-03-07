@@ -193,6 +193,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     props.amountType,
     props.startDate,
     props.endDate,
+    props.transactionTypes,
   ]);
 
   return (
