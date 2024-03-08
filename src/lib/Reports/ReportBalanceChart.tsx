@@ -103,84 +103,87 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     const fetchData = async () => {
       setLoading(true);
 
-      const balances = await _fetchGetBalances(
-        props.credentials,
-        props.userId,
-        props.currency,
-        moment(props.startDate).format("YYYY-MM-DD"),
-        moment(props.endDate).format("YYYY-MM-DD"),
-        group,
-        includePrevious
-      );
-      const chartData = [],
-        chartColors = [];
+      if (props.transactionTypes.length) {
+        const balances = await _fetchGetBalances(
+          props.credentials,
+          props.userId,
+          props.currency,
+          moment(props.startDate).format("YYYY-MM-DD"),
+          moment(props.endDate).format("YYYY-MM-DD"),
+          group,
+          includePrevious
+        );
+        const chartData = [],
+          chartColors = [];
 
-      const theme = getTheme() || {};
-      theme.transactionTypes = props.themeConfig || theme.transactionTypes;
-      let chartOptions;
-      chartOptions = Object.keys(props.chartOptions).length
-        ? props.chartOptions
-        : option;
+        const theme = getTheme() || {};
+        theme.transactionTypes = props.themeConfig || theme.transactionTypes;
+        let chartOptions;
+        chartOptions = Object.keys(props.chartOptions).length
+          ? props.chartOptions
+          : option;
 
-      const getBalance = () => {
-        if (type === "debit") {
-          if (props.amountType === "virtual") {
-            return balances[0]?.groupedDebitVirtualValues;
-          } else {
-            return balances[0]?.groupedDebitAmounts;
+        const getBalance = () => {
+          if (type === "debit") {
+            if (props.amountType === "virtual") {
+              return balances[0]?.groupedDebitVirtualValues;
+            } else {
+              return balances[0]?.groupedDebitAmounts;
+            }
+          } else if (type === "credit") {
+            if (props.amountType === "virtual") {
+              return balances[0]?.groupedCrediVirtualValues;
+            } else {
+              return balances[0]?.groupedCreditAmounts;
+            }
+          } else if (type === "amount") {
+            if (props.amountType === "virtual") {
+              return balances[0]?.groupedVirtualValues;
+            } else {
+              return balances[0]?.groupedAmounts;
+            }
           }
-        } else if (type === "credit") {
-          if (props.amountType === "virtual") {
-            return balances[0]?.groupedCrediVirtualValues;
-          } else {
-            return balances[0]?.groupedCreditAmounts;
+        };
+
+        const balance = getBalance();
+
+        if (balance) {
+          setRawData(balances);
+
+          for (let transactionTypes in balance) {
+            if (
+              props.transactionTypes &&
+              !props.transactionTypes.includes(transactionTypes)
+            ) {
+              continue;
+            }
+            const transactionTypeTheme =
+              theme.transactionTypes[transactionTypes];
+            let colorForTransactionType;
+
+            if (transactionTypeTheme) {
+              colorForTransactionType = transactionTypeTheme.chart.color;
+            }
+
+            if (!colorForTransactionType) {
+              colorForTransactionType = makeRandomColor();
+            }
+
+            chartColors.push(colorForTransactionType);
+
+            chartData.push({
+              value: Math.abs(balance[transactionTypes]),
+              name: transactionTypes,
+            });
           }
-        } else if (type === "amount") {
-          if (props.amountType === "virtual") {
-            return balances[0]?.groupedVirtualValues;
-          } else {
-            return balances[0]?.groupedAmounts;
-          }
+          chartOptions.series[0].data = chartData;
+          chartOptions.series[0].color = chartColors;
+
+          setChartOption(chartOptions);
+        } else {
+          chartOptions.series[0].data = [];
+          setChartOption(chartOptions);
         }
-      };
-
-      const balance = getBalance();
-
-      if (balance) {
-        setRawData(balances);
-
-        for (let transactionTypes in balance) {
-          if (
-            props.transactionTypes &&
-            !props.transactionTypes.includes(transactionTypes)
-          ) {
-            continue;
-          }
-          const transactionTypeTheme = theme.transactionTypes[transactionTypes];
-          let colorForTransactionType;
-
-          if (transactionTypeTheme) {
-            colorForTransactionType = transactionTypeTheme.chart.color;
-          }
-
-          if (!colorForTransactionType) {
-            colorForTransactionType = makeRandomColor();
-          }
-
-          chartColors.push(colorForTransactionType);
-
-          chartData.push({
-            value: Math.abs(balance[transactionTypes]),
-            name: transactionTypes,
-          });
-        }
-        chartOptions.series[0].data = chartData;
-        chartOptions.series[0].color = chartColors;
-
-        setChartOption(chartOptions);
-      } else {
-        chartOptions.series[0].data = [];
-        setChartOption(chartOptions);
       }
 
       setLoading(false);
