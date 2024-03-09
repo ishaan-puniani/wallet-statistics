@@ -51,7 +51,6 @@ export interface IPartnerBalancesPieChartProps {
   type: string;
   includePrevious: boolean;
   amountType?: "amount" | "virtual";
-  loading?: boolean;
 }
 
 const option: any = {
@@ -96,7 +95,6 @@ const option: any = {
 
 const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
-  const loadingChart = props.loading ? props.loading : false;
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const group = props.group || "monthly";
@@ -206,39 +204,36 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
 
   return (
     <Wrapper>
-      {loadingChart || loading ? (
+      {loading && (
         <div className="loader-content">
           <div>
             <Loader />
           </div>
         </div>
-      ) : (
+      )}
+      {props?.showRaw ? (
         <>
-          {props?.showRaw ? (
+          {rawData?.map((item) => (
             <>
-              {rawData?.map((item) => (
-                <>
-                  <div className="card">
-                    <SyntaxHighlighter language="javascript" style={docco}>
-                      {JSON.stringify(item, null, 2)}
-                    </SyntaxHighlighter>
-                  </div>
-                </>
-              ))}
+              <div className="card">
+                <SyntaxHighlighter language="javascript" style={docco}>
+                  {JSON.stringify(item, null, 2)}
+                </SyntaxHighlighter>
+              </div>
             </>
-          ) : (
-            <div style={{ marginTop: "20px", height: "100%" }}>
-              {!loading && chartOption && (
-                <ReactEChartsCore
-                  echarts={echarts}
-                  option={chartOption}
-                  notMerge={true}
-                  lazyUpdate={true}
-                />
-              )}
-            </div>
-          )}
+          ))}
         </>
+      ) : (
+        <div style={{ marginTop: "20px", height: "100%" }}>
+          {!loading && chartOption && (
+            <ReactEChartsCore
+              echarts={echarts}
+              option={chartOption}
+              notMerge={true}
+              lazyUpdate={true}
+            />
+          )}
+        </div>
       )}
     </Wrapper>
   );
