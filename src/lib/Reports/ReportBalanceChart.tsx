@@ -23,8 +23,6 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchBalance, _fetchGetBalances } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
-import Loader from "./Loader";
-import styled from "styled-components";
 
 // Register the required components
 echarts.use([
@@ -151,7 +149,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       };
 
       const balance = getBalance();
-
+      console.log(props.transactionTypes);
       if (Object.keys(balance).length) {
         setRawData(balances);
         console.log(balance);
@@ -174,7 +172,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           }
 
           chartColors.push(colorForTransactionType);
-          const bal = (balance && balance[transactionTypes]) ?? 0;
+          console.log(transactionTypes);
+          const bal = balance[transactionTypes];
+          console.log(bal)
           chartData.push({
             value: Math.abs(bal),
             name: transactionTypes,
@@ -203,14 +203,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   ]);
 
   return (
-    <Wrapper>
-      {loading && (
-        <div className="loader-content">
-          <div>
-            <Loader />
-          </div>
-        </div>
-      )}
+    <>
       {props?.showRaw ? (
         <>
           {rawData?.map((item) => (
@@ -235,20 +228,8 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           )}
         </div>
       )}
-    </Wrapper>
+    </>
   );
 };
 
-const Wrapper = styled.div`
-  .loader-content {
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    .loader {
-      width: 20px;
-      height: 20px;
-    }
-  }
-`;
 export default ReportBalanceChart;
