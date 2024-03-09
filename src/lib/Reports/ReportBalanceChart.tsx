@@ -146,9 +146,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
 
       const balance = getBalance();
 
-      if (balance) {
+      if (balance.length) {
         setRawData(balances);
-
+        console.log(balance);
         for (let transactionTypes in balance) {
           if (
             props.transactionTypes &&
