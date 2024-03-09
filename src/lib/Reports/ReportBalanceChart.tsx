@@ -146,7 +146,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
 
       const balance = getBalance();
 
-      if (balance.length) {
+      if (Object.keys(balance).length) {
         setRawData(balances);
         console.log(balance);
         for (let transactionTypes in balance) {
@@ -168,9 +168,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           }
 
           chartColors.push(colorForTransactionType);
-
+          const bal = balance[transactionTypes] ?? 0;
           chartData.push({
-            value: Math.abs(balance[transactionTypes]),
+            value: Math.abs(bal),
             name: transactionTypes,
           });
         }
