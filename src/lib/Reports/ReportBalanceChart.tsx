@@ -23,6 +23,8 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchBalance, _fetchGetBalances } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
+import Loader from "./Loader";
+import styled from "styled-components";
 
 // Register the required components
 echarts.use([
@@ -49,6 +51,7 @@ export interface IPartnerBalancesPieChartProps {
   type: string;
   includePrevious: boolean;
   amountType?: "amount" | "virtual";
+  loading?: boolean;
 }
 
 const option: any = {
@@ -93,6 +96,7 @@ const option: any = {
 
 const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
+  const loadingChart = props.loading ? props.loading : false;
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const group = props.group || "monthly";
@@ -102,16 +106,20 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-
-      const balances = await _fetchGetBalances(
-        props.credentials,
-        props.userId,
-        props.currency,
-        moment(props.startDate).format("YYYY-MM-DD"),
-        moment(props.endDate).format("YYYY-MM-DD"),
-        group,
-        includePrevious
-      );
+      let balances: any;
+      if (props.transactionTypes.length) {
+        balances = await _fetchGetBalances(
+          props.credentials,
+          props.userId,
+          props.currency,
+          moment(props.startDate).format("YYYY-MM-DD"),
+          moment(props.endDate).format("YYYY-MM-DD"),
+          group,
+          includePrevious
+        );
+      } else {
+        balances = [];
+      }
       const chartData = [],
         chartColors = [];
 
@@ -125,23 +133,23 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       const getBalance = () => {
         if (type === "debit") {
           if (props.amountType === "virtual") {
-            return balances[0]?.groupedDebitVirtualValues;
+            return balances[0]?.groupedDebitVirtualValues ?? {};
           } else {
-            return balances[0]?.groupedDebitAmounts;
+            return balances[0]?.groupedDebitAmounts ?? {};
           }
         } else if (type === "credit") {
           if (props.amountType === "virtual") {
-            return balances[0]?.groupedCrediVirtualValues;
+            return balances[0]?.groupedCrediVirtualValues ?? {};
           } else {
-            return balances[0]?.groupedCreditAmounts;
+            return balances[0]?.groupedCreditAmounts ?? {};
           }
         } else if (type === "amount") {
           if (props.amountType === "virtual") {
-            return balances[0]?.groupedVirtualValues;
+            return balances[0]?.groupedVirtualValues ?? {};
           } else {
-            return balances[0]?.groupedAmounts;
+            return balances[0]?.groupedAmounts ?? {};
           }
-        }
+        } else return {};
       };
 
       const balance = getBalance();
@@ -168,7 +176,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           }
 
           chartColors.push(colorForTransactionType);
-          const bal = balance[transactionTypes] ?? 0;
+          const bal = (balance && balance[transactionTypes]) ?? 0;
           chartData.push({
             value: Math.abs(bal),
             name: transactionTypes,
@@ -176,12 +184,12 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         }
         chartOptions.series[0].data = chartData;
         chartOptions.series[0].color = chartColors;
-
-        setChartOption(chartOptions);
       } else {
         chartOptions.series[0].data = [];
-        setChartOption(chartOptions);
+        chartOptions.series[0].color = [];
       }
+      console.log(props.transactionTypes);
+      setChartOption(chartOptions);
 
       setLoading(false);
     };
@@ -197,33 +205,55 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   ]);
 
   return (
-    <>
-      {/* {loading && <h1>Loading</h1>} */}
-      {props?.showRaw ? (
-        <>
-          {rawData?.map((item) => (
-            <>
-              <div className="card">
-                <SyntaxHighlighter language="javascript" style={docco}>
-                  {JSON.stringify(item, null, 2)}
-                </SyntaxHighlighter>
-              </div>
-            </>
-          ))}
-        </>
-      ) : (
-        <div style={{ marginTop: "20px", height: "100%" }}>
-          {!loading && chartOption && (
-            <ReactEChartsCore
-              echarts={echarts}
-              option={chartOption}
-              notMerge={true}
-              lazyUpdate={true}
-            />
-          )}
+    <Wrapper>
+      {loadingChart || loading ? (
+        <div className="loader-content">
+          <div>
+            <Loader />
+          </div>
         </div>
+      ) : (
+        <>
+          {props?.showRaw ? (
+            <>
+              {rawData?.map((item) => (
+                <>
+                  <div className="card">
+                    <SyntaxHighlighter language="javascript" style={docco}>
+                      {JSON.stringify(item, null, 2)}
+                    </SyntaxHighlighter>
+                  </div>
+                </>
+              ))}
+            </>
+          ) : (
+            <div style={{ marginTop: "20px", height: "100%" }}>
+              {!loading && chartOption && (
+                <ReactEChartsCore
+                  echarts={echarts}
+                  option={chartOption}
+                  notMerge={true}
+                  lazyUpdate={true}
+                />
+              )}
+            </div>
+          )}
+        </>
       )}
-    </>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  .loader-content {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    .loader {
+      width: 20px;
+      height: 20px;
+    }
+  }
+`;
 export default ReportBalanceChart;
