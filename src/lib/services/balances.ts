@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_HOST, REPORTING_API_HOST } from "../../constants";
+import { getFilterQueryString } from "../../utilities/queryParams";
 
 export const _fetchBalance = async (
   credentials: any,
@@ -52,30 +53,16 @@ export const _fetchGetBalances = async (
 
 export const _fetchTransactionGroupedBalances = async (
   credentials: any,
-  userId: string,
-  transactionTypes: string,
-  isCredit: boolean,
-  reference: string,
-  paymentMethod: string,
-  remark: string,
-  description: string,
-  productId: string,
-  productName: string,
-  sku: string,
-  onBehalfOfId: string,
-  baseTransaction: string,
-  startDate: string,
-  endDate: string,
-  currency: string,
-  metadata: any,
-  includeSubPartners: boolean,
-  orderBy: string
+  orderBy: string,
+  filterMap: any,
+  includeSubPartners?: boolean
 ) => {
-  const getbalances = await axios.post(
-    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances?filter[PartnerId]=${userId}&filer[TransactionTypes]=${transactionTypes}&filter[IsCredit]=${isCredit}&filter[Reference]=${reference}&filter[PaymentMethod]=${paymentMethod}&filter[Remark]=${remark}&filter[Description]=${description}&filter[ProductId]=${productId}&filter[ProductName]=${productName}&filter[Sku]=${sku}&filter[OnBehalfOfId]=${onBehalfOfId}&filter[BaseTransaction]=${baseTransaction}&filter[CreatedAtRange]=${startDate}&filter[CreatedAtRange]=${endDate}&filter[currency]=${currency}&filter[Metadata]=${metadata}&filter[IncludeSubPartners]=${includeSubPartners}&filter[OrderBy]=${orderBy}`,
+  const filterQuery = getFilterQueryString({ filter: filterMap });
+  const getGroupedBalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances/?OrderBy=${orderBy}&IncludeSubPartners=${includeSubPartners}&${filterQuery}`,
     {
       ...credentials,
     }
   );
-  return getbalances.data;
+  return getGroupedBalances.data;
 };
