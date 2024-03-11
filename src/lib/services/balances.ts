@@ -54,12 +54,11 @@ export const _fetchGetBalances = async (
 export const _fetchTransactionGroupedBalances = async (
   credentials: any,
   orderBy: string,
-  filterMap: any,
-  includeSubPartners?: boolean
+  filterMap: any
 ) => {
   const filterQuery = getFilterQueryString({ filter: filterMap });
   const getGroupedBalances = await axios.post(
-    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances/?OrderBy=${orderBy}&IncludeSubPartners=${includeSubPartners}&${filterQuery}`,
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances?${filterQuery}&OrderBy=${orderBy}`,
     {
       ...credentials,
     }
