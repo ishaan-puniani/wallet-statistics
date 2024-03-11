@@ -49,3 +49,33 @@ export const _fetchGetBalances = async (
   );
   return getbalances.data;
 };
+
+export const _fetchTransactionGroupedBalances = async (
+  credentials: any,
+  userId: string,
+  transactionTypes: string,
+  isCredit: boolean,
+  reference: string,
+  paymentMethod: string,
+  remark: string,
+  description: string,
+  productId: string,
+  productName: string,
+  sku: string,
+  onBehalfOfId: string,
+  baseTransaction: string,
+  startDate: string,
+  endDate: string,
+  currency: string,
+  metadata: any,
+  includeSubPartners: boolean,
+  orderBy: string
+) => {
+  const getbalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances?filter[PartnerId]=${userId}&filer[TransactionTypes]=${transactionTypes}&filter[IsCredit]=${isCredit}&filter[Reference]=${reference}&filter[PaymentMethod]=${paymentMethod}&filter[Remark]=${remark}&filter[Description]=${description}&filter[ProductId]=${productId}&filter[ProductName]=${productName}&filter[Sku]=${sku}&filter[OnBehalfOfId]=${onBehalfOfId}&filter[BaseTransaction]=${baseTransaction}&filter[CreatedAtRange]=${startDate}&filter[CreatedAtRange]=${endDate}&filter[currency]=${currency}&filter[Metadata]=${metadata}&filter[IncludeSubPartners]=${includeSubPartners}&filter[OrderBy]=${orderBy}`,
+    {
+      ...credentials,
+    }
+  );
+  return getbalances.data;
+};
