@@ -155,8 +155,8 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         console.log(balance);
         for (let transactionTypes in balance) {
           if (
-            props.transactionTypes &&
-            !props.transactionTypes.includes(transactionTypes) &&
+            (props.transactionTypes &&
+              !props.transactionTypes.includes(transactionTypes)) ||
             balance[transactionTypes] === 0
           ) {
             continue;
