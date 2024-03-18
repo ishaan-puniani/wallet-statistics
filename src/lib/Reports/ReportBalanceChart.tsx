@@ -48,6 +48,7 @@ export interface IPartnerBalancesPieChartProps {
   group: string;
   type: string;
   includePrevious: boolean;
+  includeToday: boolean;
   amountType?: "amount" | "virtual";
 }
 
@@ -97,6 +98,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   const [rawData, setRawData] = useState([]);
   const group = props.group || "monthly";
   const includePrevious = props.includePrevious || false;
+  const includeToday = props.includeToday || false;
   const type = props.type || "debit";
 
   useEffect(() => {
@@ -111,7 +113,8 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           moment(props.startDate).format("YYYY-MM-DD"),
           moment(props.endDate).format("YYYY-MM-DD"),
           group,
-          includePrevious
+          includePrevious,
+          includeToday
         );
       } else {
         balances = [];
