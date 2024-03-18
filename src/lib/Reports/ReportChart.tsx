@@ -66,6 +66,7 @@ export interface IPartnerBalancesPieChartProps {
   startDate: Date;
   group: string;
   includePrevious: boolean;
+  includeToday: boolean;
   amountType?: "amount" | "virtual";
 }
 
@@ -114,6 +115,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const group = props.group || "monthly";
 
   const includePrevious = props.includePrevious || false;
+  const includeToday = props.includeToday || false;
 
   const chartOptions = Object.keys(props.chartOptions).length
     ? props.chartOptions
@@ -130,7 +132,8 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         moment(props.startDate).format("YYYY-MM-DD"),
         moment(props.endDate).format("YYYY-MM-DD"),
         group,
-        includePrevious
+        includePrevious,
+        includeToday
       );
 
       setRawData(balances);

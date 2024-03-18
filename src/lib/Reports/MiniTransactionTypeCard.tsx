@@ -14,6 +14,7 @@ export interface IMiniTransactionTypeCard {
   startDate: Date;
   group: string;
   includePrevious: boolean;
+  includeToday: boolean;
   transactionType?: string;
   amountType?: "amount" | "virtual";
 }
@@ -24,6 +25,7 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
   const [loading, setLoading] = useState(false);
   const transactionType = props.transactionType || "AMOUNT";
   const group = props.group || "monthly";
+  const includeToday = props.includeToday || false;
   const cardConfig = Object.keys(props.cardConfig).length
     ? props.cardConfig
     : { label: "Credit", type: "credit" };
@@ -37,7 +39,8 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
         moment(props.startDate).format("YYYY-MM-DD"),
         moment(props.endDate).format("YYYY-MM-DD"),
         group,
-        props.includePrevious
+        props.includePrevious,
+        includeToday
       );
       if (balances.length === 2) {
         balances.forEach((balance: any) => {

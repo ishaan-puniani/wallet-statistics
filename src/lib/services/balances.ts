@@ -40,10 +40,11 @@ export const _fetchGetBalances = async (
   startDate: string,
   endDate: string,
   group: string,
-  includePrevious: boolean
+  includePrevious: boolean,
+  includeToday: boolean
 ) => {
   const getbalances = await axios.post(
-    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/getbalances?filter[PartnerId]=${userId}&filter[currency]=${currency}&filter[DateRange]=${startDate}&filter[DateRange]=${endDate}&group=${group}&includePrevious=${includePrevious}`,
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/getbalances?filter[PartnerId]=${userId}&filter[currency]=${currency}&filter[DateRange]=${startDate}&filter[DateRange]=${endDate}&group=${group}&includePrevious=${includePrevious}&includeToday=${includeToday}`,
     {
       ...credentials,
     }
