@@ -50,6 +50,7 @@ export interface IPartnerBalancesPieChartProps {
   includePrevious: boolean;
   includeToday: boolean;
   amountType?: "amount" | "virtual";
+  identifierMapper?: any;
 }
 
 const option: any = {
@@ -153,6 +154,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
 
       const balance = getBalance();
       console.log(props.transactionTypes);
+      console.log("identifierMapper", props.identifierMapper);
       if (Object.keys(balance).length) {
         setRawData(balances);
         console.log(balance);
@@ -181,7 +183,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           console.log(bal);
           chartData.push({
             value: Math.abs(bal),
-            name: transactionTypes,
+            name: props.identifierMapper[transactionTypes],
           });
         }
         chartOptions.series[0].data = chartData;
