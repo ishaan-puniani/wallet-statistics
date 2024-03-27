@@ -57,11 +57,16 @@ export const _fetchTransactionGroupedBalances = async (
   orderBy: string,
   filterMap: any,
   startDate: string,
-  endDate: string
+  endDate: string,
+  bookmark: boolean,
+  flag: boolean
 ) => {
   const filterQuery = getFilterQueryString({ filter: filterMap });
+  const bookmarked = bookmark ? `&bookmark=${bookmark}` : null;
+  const flaged = flag ? `&flag=${flag}` : null;
+  
   const getGroupedBalances = await axios.post(
-    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances?${filterQuery}&filter[CreatedAtRange]=${startDate}&filter[CreatedAtRange]=${endDate}&OrderBy=${orderBy}`,
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances?${filterQuery}&filter[CreatedAtRange]=${startDate}&filter[CreatedAtRange]=${endDate}&OrderBy=${orderBy}${bookmarked}${flaged}`,
     {
       ...credentials,
     }
