@@ -168,6 +168,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           ),
           name: props.identifierMapper[props.parentTransactionTypeIdentifier],
         });
+        chartColors.push(makeRandomColor());
       }
       console.log(props.transactionTypes);
       console.log("identifierMapper", props.identifierMapper);
