@@ -51,6 +51,7 @@ export interface IPartnerBalancesPieChartProps {
   includeToday: boolean;
   amountType?: "amount" | "virtual";
   identifierMapper?: any;
+  parentTransactionTypeIdentifier?: string;
 }
 
 const option: any = {
@@ -153,6 +154,21 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       };
 
       const balance = getBalance();
+
+      if (
+        props.parentTransactionTypeIdentifier &&
+        props.parentTransactionTypeIdentifier !== ""
+      ) {
+        const total = props.transactionTypes?.reduce((acc, curr) => {
+          return balance[curr] ?? 0 + acc;
+        }, 0);
+        chartData.push({
+          value: Math.abs(
+            total - balance[props.parentTransactionTypeIdentifier]
+          ),
+          name: props.identifierMapper[props.parentTransactionTypeIdentifier],
+        });
+      }
       console.log(props.transactionTypes);
       console.log("identifierMapper", props.identifierMapper);
       if (Object.keys(balance).length) {
