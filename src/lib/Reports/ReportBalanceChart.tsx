@@ -223,6 +223,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     props.startDate,
     props.endDate,
     props.transactionTypes,
+    props?.parentTransactionTypeIdentifier
   ]);
 
   return (
