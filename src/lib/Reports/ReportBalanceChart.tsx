@@ -107,7 +107,10 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     const fetchData = async () => {
       setLoading(true);
       let balances: any;
-      if (props.transactionTypes.length) {
+      if (
+        props.transactionTypes.length ||
+        props?.parentTransactionTypeIdentifier !== ""
+      ) {
         balances = await _fetchGetBalances(
           props.credentials,
           props.userId,
@@ -223,7 +226,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     props.startDate,
     props.endDate,
     props.transactionTypes,
-    props?.parentTransactionTypeIdentifier
+    props?.parentTransactionTypeIdentifier,
   ]);
 
   return (
