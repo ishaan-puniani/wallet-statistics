@@ -73,3 +73,15 @@ export const _fetchTransactionGroupedBalances = async (
   );
   return getGroupedBalances.data;
 };
+
+export const _fetchReportTransactions = async (credentials: any, filterMap: any) => {
+  const filterQuery = getFilterQueryString({ filter: filterMap });
+
+  const getGroupedBalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/transactions/?${filterQuery}`,
+    {
+      ...credentials,
+    }
+  );
+  return getGroupedBalances.data;
+};

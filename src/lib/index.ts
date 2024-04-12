@@ -32,6 +32,7 @@ import {
   _fetchBalanceHistory,
   _fetchGetBalances,
   _fetchTransactionGroupedBalances,
+  _fetchReportTransactions,
 } from "./services/balances";
 import { _fetchTransactions, _fetchTransaction } from "./services/transactions";
 import {
@@ -67,6 +68,7 @@ class WalletStatistics {
     stimulateTransaction: stimulateTransaction,
     stimulateMultiTransactions: stimulateMultiTransactions,
     fetchTransactionGroupedBalances: _fetchTransactionGroupedBalances,
+    fetchReportTransactions: _fetchReportTransactions,
   };
 
   // expose fetchTransactions for testing purpose
