@@ -74,11 +74,16 @@ export const _fetchTransactionGroupedBalances = async (
   return getGroupedBalances.data;
 };
 
-export const _fetchReportTransactions = async (credentials: any, filterMap: any) => {
+export const _fetchReportTransactions = async (
+  credentials: any,
+  filterMap: any,
+  suspense?: boolean
+) => {
   const filterQuery = getFilterQueryString({ filter: filterMap });
+  const suspensed = suspense ? `&suspense=${suspense}` : `&`;
 
   const getGroupedBalances = await axios.post(
-    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/transactions/?${filterQuery}`,
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/transactions/?${filterQuery}${suspensed}`,
     {
       ...credentials,
     }
