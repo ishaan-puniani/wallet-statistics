@@ -25,7 +25,7 @@ import {
   renderPartnerHeirarchyTreeView,
   renderPartnerHeirarchyView,
 } from "./partnerHeirarchy";
-import { render, renderSimulatorAchievement } from "./simulator";
+import { render, renderSimulatorAchievement, renderStimulator } from "./simulator";
 import { _initialize } from "./services/settings";
 import {
   _fetchBalance,
@@ -54,6 +54,7 @@ class WalletStatistics {
   };
   initSimulator = (container: any,props:any) => {
     render(container,props);
+    renderStimulator(container,props)
   };
 
   services = {
