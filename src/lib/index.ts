@@ -52,8 +52,8 @@ class WalletStatistics {
     console.log("Library method fired");
     return true;
   };
-  initSimulator = (container: any) => {
-    render(container);
+  initSimulator = (container: any,props:any) => {
+    render(container,props);
   };
 
   services = {
