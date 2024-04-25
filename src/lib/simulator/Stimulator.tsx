@@ -221,7 +221,6 @@ const Stimulator = (props: IStimulatorProps) => {
           )}
           {view && (
             <div>
-              {JSON.stringify(record)}
               <table>
                 <tr>
                   <th>Is Credit</th>
