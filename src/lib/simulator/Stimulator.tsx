@@ -44,7 +44,6 @@ const Stimulator = (props: IStimulatorProps) => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
-    // debugger;
     try {
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
@@ -53,17 +52,18 @@ const Stimulator = (props: IStimulatorProps) => {
         }
       );
 
-      setRecord(fetchBalance.data[0]);
+      setRecord(fetchBalance.data);
       setView(!view);
     } catch (err: any) {
       console.log(err?.response?.data);
+      alert(err?.response?.data);
     }
   };
 
   return (
     <>
       <StimulatorWrapper>
-        <h1>Transaction Stimulator</h1>
+        <h1>Transaction Simulator</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           {!view && (
             <div className="container">
@@ -223,25 +223,31 @@ const Stimulator = (props: IStimulatorProps) => {
             <div>
               <table>
                 <tr>
+                  <th>Partner Id</th>
                   <th>Is Credit</th>
                   <th>Transaction Type</th>
                   <th>Currency </th>
                   <th>Amount </th>
                 </tr>
-                <tr>
-                  <td>
-                    <p>{record?.isCredit ? "true" : "false"}</p>
-                  </td>
-                  <td>
-                    <p>{record?.transactionTypeIdentifier}</p>
-                  </td>
-                  <td>
-                    <p>{record?.currency}</p>
-                  </td>
-                  <td>
-                    <p>{record?.amount}</p>
-                  </td>
-                </tr>
+                {record.map((transaction: any) => (
+                  <tr>
+                    <td>
+                      <p>{transaction?.payerId}</p>
+                    </td>
+                    <td>
+                      <p>{transaction?.isCredit ? "true" : "false"}</p>
+                    </td>
+                    <td>
+                      <p>{transaction?.transactionTypeIdentifier}</p>
+                    </td>
+                    <td>
+                      <p>{transaction?.currency}</p>
+                    </td>
+                    <td>
+                      <p>{transaction?.amount}</p>
+                    </td>
+                  </tr>
+                ))}
               </table>
             </div>
           )}
@@ -280,7 +286,9 @@ export const StimulatorWrapper = styled.div`
       margin: 5px;
     }
   }
-
+  .formError {
+    color: #ff0000;
+  }
   .formStyle li {
     padding: 0;
     display: flex;
