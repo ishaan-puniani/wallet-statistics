@@ -307,8 +307,8 @@ const Stimulator = (props: IStimulatorProps) => {
                     <td>
                       <p>
                         {transaction?.isCredit
-                          ? transaction?.payerId
-                          : transaction?.payeeId}
+                          ? transaction?.payeeId
+                          : transaction?.payerId}
                       </p>
                     </td>
                     <td>
