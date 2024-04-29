@@ -305,7 +305,11 @@ const Stimulator = (props: IStimulatorProps) => {
                 {record.map((transaction: any) => (
                   <tr>
                     <td>
-                      <p>{transaction?.payerId}</p>
+                      <p>
+                        {transaction?.isCredit
+                          ? transaction?.payerId
+                          : transaction?.payeeId}
+                      </p>
                     </td>
                     <td>
                       <p>{transaction?.isCredit ? "true" : "false"}</p>
