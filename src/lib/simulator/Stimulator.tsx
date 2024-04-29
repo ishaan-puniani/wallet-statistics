@@ -59,7 +59,21 @@ const Stimulator = (props: IStimulatorProps) => {
       alert(err?.response?.data);
     }
   };
-
+  const handleDotransaction = async (data: any) => {
+    try {
+      const response = await axios.post(
+        `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
+        {
+          data,
+        }
+      );
+      setRecord(response.data);
+      setView(!view);
+    } catch (err: any) {
+      console.log(err?.response?.data);
+      alert(err?.response?.data);
+    }
+  };
   return (
     <>
       <StimulatorWrapper>
@@ -69,19 +83,34 @@ const Stimulator = (props: IStimulatorProps) => {
             <div className="container">
               <div className="formStyle">
                 <li>
-                  <label>Transaction Type:</label>
+                  <label>
+                    Transaction Type <sup className="requiredStar">*</sup> :
+                  </label>
                   <input
                     value={props.transactionType}
                     {...register("transactionType")}
+                    required
                   />
                 </li>
                 <li>
-                  <label>Amount : </label>
-                  <input value={props.amount} {...register("amount")} />
+                  <label>
+                    Amount <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.amount}
+                    {...register("amount")}
+                    required
+                  />
                 </li>
                 <li>
-                  <label>Currency :</label>
-                  <input value={props.currency} {...register("currency")} />
+                  <label>
+                    Currency <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.currency}
+                    {...register("currency")}
+                    required
+                  />
                 </li>
                 <li>
                   <label>Virtual Value :</label>
@@ -91,12 +120,24 @@ const Stimulator = (props: IStimulatorProps) => {
                   />
                 </li>
                 <li>
-                  <label>Is Credit :</label>
-                  <input value={props.isCredit} {...register("isCredit")} />
+                  <label>
+                    Is Credit <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.isCredit}
+                    {...register("isCredit")}
+                    required
+                  />
                 </li>
                 <li>
-                  <label>Reference :</label>
-                  <input value={props.reference} {...register("reference")} />
+                  <label>
+                    Reference <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.reference}
+                    {...register("reference")}
+                    required
+                  />
                 </li>
                 <li>
                   <label>Payment Method :</label>
@@ -134,8 +175,14 @@ const Stimulator = (props: IStimulatorProps) => {
                 </li>
 
                 <li>
-                  <label>Payer Id :</label>
-                  <input value={props.payerId} {...register("payerId")} />
+                  <label>
+                    Payer Id <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.payerId}
+                    {...register("payerId")}
+                    required
+                  />
                 </li>
                 <li>
                   <label>Payer Name :</label>
@@ -144,11 +191,13 @@ const Stimulator = (props: IStimulatorProps) => {
               </div>
               <div className="formStyle">
                 <li>
-                  <label>Payee Id :</label>
+                  <label>
+                    Payee Id <sup className="requiredStar">*</sup> :
+                  </label>
                   <input value={props.payeeId} {...register("payeeId")} />
                 </li>
                 <li>
-                  <label>payeeName :</label>
+                  <label>Payee Name :</label>
                   <input value={props.payeeName} {...register("payeeName")} />
                 </li>
                 <li>
@@ -159,7 +208,7 @@ const Stimulator = (props: IStimulatorProps) => {
                   />
                 </li>
                 <li>
-                  <label>onBehalfOfName :</label>
+                  <label>On Behalf Of Name :</label>
                   <input
                     value={props.onBehalfOfName}
                     {...register("onBehalfOfName")}
@@ -181,40 +230,64 @@ const Stimulator = (props: IStimulatorProps) => {
                 </li>
 
                 <li>
-                  <label>service :</label>
-                  <input value={props.service} {...register("service")} />
+                  <label>
+                    Service <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.service}
+                    {...register("service")}
+                    required
+                  />
                 </li>
 
                 <li>
-                  <label>provider :</label>
-                  <input value={props.provider} {...register("provider")} />
+                  <label>
+                    Provider <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.provider}
+                    {...register("provider")}
+                    required
+                  />
                 </li>
                 <li>
-                  <label>vendor :</label>
-                  <input value={props.vendor} {...register("vendor")} />
+                  <label>
+                    Vendor <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.vendor}
+                    {...register("vendor")}
+                    required
+                  />
                 </li>
                 <li>
-                  <label>executeCommissionFor :</label>
+                  <label>Execute Commission For:</label>
                   <input
                     value={props.executeCommissionFor}
                     {...register("executeCommissionFor")}
                   />
                 </li>
                 <li>
-                  <label>executeCommissionAmount :</label>
+                  <label>Execute Commission Amount:</label>
                   <input
                     value={props.executeCommissionAmount}
                     {...register("executeCommissionAmount")}
                   />
                 </li>
                 <li>
-                  <label>metadata :</label>
+                  <label>Metadata :</label>
                   <input value={props.metadata} {...register("metadata")} />
                 </li>
 
                 <li>
-                  <label>fromWallet :</label>
-                  <input value={props.fromWallet} {...register("fromWallet")} />
+                  <label>
+                    From Wallet <sup className="requiredStar">*</sup> :
+                  </label>
+                  <input
+                    value={props.fromWallet}
+                    {...register("fromWallet")}
+                    required
+                  />
                 </li>
               </div>
             </div>
@@ -255,7 +328,19 @@ const Stimulator = (props: IStimulatorProps) => {
             className="formStyle formBtn"
             style={{ display: "flex", justifyContent: "center", margin: "5px" }}
           >
-            {!view && <input type="submit" id="submitBtn" />}
+            {!view && (
+              <div className="formLayout">
+                <button className="submitBtn" type="submit">
+                  Simulate
+                </button>
+                <button
+                  className="submitBtn"
+                  onClick={handleSubmit(handleDotransaction)}
+                >
+                  Commit Transaction
+                </button>
+              </div>
+            )}
             {view && (
               <button id="cancelBtn" onClick={() => setView(!view)}>
                 Change Stimulate
@@ -286,13 +371,18 @@ export const StimulatorWrapper = styled.div`
       margin: 5px;
     }
   }
+  .formLayout {
+    display: flex;
+  }
+  .requiredStar,
   .formError {
     color: #ff0000;
   }
   .formStyle li {
     padding: 0;
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
+    align-items: baseline;
     width: auto;
     list-style: none;
     margin: 10px 0 0 0;
@@ -334,13 +424,14 @@ export const StimulatorWrapper = styled.div`
     }
   }
 
-  .formStyle input[type="submit"] {
-    width: 100px;
+  .submitBtn {
+    width: 150px;
+    color: #fff;
     background: #4691a4;
     padding: 8px 15px 8px 15px;
     border: none;
   }
-  .formStyle input[type="submit"]:hover {
+  .submitBtn:hover {
     cursor: pointer;
     background: #4691a4;
     box-shadow: none;
