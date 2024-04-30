@@ -146,41 +146,24 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
             if (dataType.type === "debit") {
               if (props.amountType === "virtual") {
                 return (
-                  Math.abs(
-                    row.groupedDebitVirtualValues[dataType.transactionType]
-                  ) || 0
+                  row?.groupedDebitVirtualValues[dataType.transactionType] || 0
                 );
               } else {
-                return (
-                  Math.abs(row.groupedDebitAmounts[dataType.transactionType]) ||
-                  0
-                );
+                return row?.groupedDebitAmounts[dataType.transactionType] || 0;
               }
             } else if (dataType.type === "credit") {
               if (props.amountType === "virtual") {
                 return (
-                  Math.abs(
-                    row.groupedCrediVirtualValues[dataType.transactionType]
-                  ) || 0
+                  row?.groupedCrediVirtualValues[dataType.transactionType] || 0
                 );
               } else {
-                return (
-                  Math.abs(
-                    row.groupedCreditAmounts[dataType.transactionType]
-                  ) || 0
-                );
+                return row?.groupedCreditAmounts[dataType.transactionType] || 0;
               }
             } else if (dataType.type === "balance") {
               if (props.amountType === "virtual") {
-                return (
-                  Math.abs(
-                    row.groupedVirtualValues[dataType.transactionType]
-                  ) || 0
-                );
+                return row?.groupedVirtualValues[dataType.transactionType] || 0;
               } else {
-                return (
-                  Math.abs(row.groupedAmounts[dataType.transactionType]) || 0
-                );
+                return row?.groupedAmounts[dataType.transactionType] || 0;
               }
             }
           }),
