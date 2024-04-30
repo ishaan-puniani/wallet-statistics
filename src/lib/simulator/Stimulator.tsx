@@ -68,7 +68,10 @@ const Stimulator = (props: IStimulatorProps) => {
           ...props.credentials,
         }
       );
-      setRecord(response.data);
+      if(response.status === 200){
+        alert('Transaction Excuted Successfully')
+      }
+      // setRecord(response.data);
       // setView(!view);
     } catch (err: any) {
       console.log(err?.response?.data);
