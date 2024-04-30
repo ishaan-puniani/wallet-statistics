@@ -65,10 +65,11 @@ const Stimulator = (props: IStimulatorProps) => {
         `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
         {
           data,
+          ...props.credentials,
         }
       );
       setRecord(response.data);
-      setView(!view);
+      // setView(!view);
     } catch (err: any) {
       console.log(err?.response?.data);
       alert(err?.response?.data);
@@ -337,6 +338,13 @@ const Stimulator = (props: IStimulatorProps) => {
                 <button className="submitBtn" type="submit">
                   Simulate
                 </button>
+              </div>
+            )}
+            {view && (
+              <div className="formLayout">
+                <button id="cancelBtn" onClick={() => setView(!view)}>
+                  Change Stimulate
+                </button>
                 <button
                   className="submitBtn"
                   onClick={handleSubmit(handleDotransaction)}
@@ -344,11 +352,6 @@ const Stimulator = (props: IStimulatorProps) => {
                   Commit Transaction
                 </button>
               </div>
-            )}
-            {view && (
-              <button id="cancelBtn" onClick={() => setView(!view)}>
-                Change Stimulate
-              </button>
             )}
           </div>
         </form>
