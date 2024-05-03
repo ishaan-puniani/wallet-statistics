@@ -52,6 +52,8 @@ export interface IPartnerBalancesPieChartProps {
   amountType?: "amount" | "virtual";
   identifierMapper?: any;
   parentTransactionTypeIdentifier?: string;
+  updateParentTransactionTypeId?: any;
+  pieSliceClickable?: boolean;
 }
 
 const option: any = {
@@ -203,7 +205,10 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           console.log(bal);
           chartData.push({
             value: Math.abs(bal),
-            name: props.identifierMapper[transactionTypes],
+            name: props.identifierMapper
+              ? props.identifierMapper[transactionTypes]
+              : transactionTypes,
+            transactionTypes,
           });
         }
         chartOptions.series[0].data = chartData;
@@ -229,6 +234,16 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     props?.parentTransactionTypeIdentifier,
   ]);
 
+  const onChartClick = (params: any) => {
+    if (props?.parentTransactionTypeIdentifier === "") {
+      props.updateParentTransactionTypeId(params?.data?.transactionTypes);
+    }
+  };
+
+  const onEvents = {
+    click: props.pieSliceClickable ? onChartClick : null,
+  };
+
   return (
     <>
       {props?.showRaw ? (
@@ -251,6 +266,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
               option={chartOption}
               notMerge={true}
               lazyUpdate={true}
+              onEvents={onEvents}
             />
           )}
         </div>
