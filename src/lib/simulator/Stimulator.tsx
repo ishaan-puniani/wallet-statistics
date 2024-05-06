@@ -420,8 +420,7 @@ const Stimulator = (props: IStimulatorProps) => {
               className=" formBtn"
               style={{
                 display: "flex",
-                justifyContent: "center",
-                margin: "5px",
+                margin: "5px 45px",
               }}
             >
               {!view && (
@@ -480,8 +479,6 @@ export const StimulatorWrapper = styled.div`
   .formStyle {
     margin: 24px;
     height: 240px;
-    display: grid;
-    justify-content: center;
   }
   .formBtn {
     input {
