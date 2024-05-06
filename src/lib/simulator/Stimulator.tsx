@@ -122,261 +122,284 @@ const Stimulator = (props: IStimulatorProps) => {
   return (
     <>
       <StimulatorWrapper>
-        <h1>Transaction Simulator</h1>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
+            <h1>Transaction Simulator</h1>
             {!view && (
-              <div className="container">
-                <div className="formStyle">
-                  {step === 1 && (
-                    <>
-                      <li>
-                        <label>
-                          Transaction Type <sup className="requiredStar">*</sup>{" "}
-                          :
-                        </label>
-                        <input
-                          name="transactionType"
-                          value={props.transactionType}
-                          {...form.register("transactionType", {
-                            required: true,
-                          })}
-                        />
-                      </li>
-                      <li>
-                        <label>
-                          Amount <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          name="amount"
-                          value={props.amount}
-                          {...form.register("amount")}
-                          required
-                        />
-                      </li>
-                      <li>
-                        <label>
-                          Currency <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          name="currency"
-                          value={props.currency}
-                          {...form.register("currency")}
-                          required
-                        />
-                      </li>
-                      <li>
-                        <label>Virtual Value :</label>
-                        <input
-                          value={props.virtualValue}
-                          {...form.register("virtualValue")}
-                        />
-                      </li>
-                      <li>
-                        <label>
-                          Is Credit <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.isCredit}
-                          {...form.register("isCredit")}
-                          required
-                        />
-                      </li>
-                    </>
-                  )}
+              <div className="flex_container">
+                <div className="steps_list">
+                  <ul>
+                    <li className={`${step === 1 ? "activeStep" : ""}`}>
+                      {" "}
+                      Basic Transaction Info
+                    </li>
+                    <li className={`${step === 2 ? "activeStep" : ""}`}>
+                      {" "}
+                      Transaction Details
+                    </li>
+                    <li className={`${step === 3 ? "activeStep" : ""}`}>
+                      Payer and Payee Information
+                    </li>
+                    <li className={`${step === 4 ? "activeStep" : ""}`}>
+                      Service Provide Info
+                    </li>
+                    <li className={`${step === 5 ? "activeStep" : ""}`}>
+                      Commission and Metadata
+                    </li>
+                  </ul>
+                </div>
+                <div className="container">
+                  <div className="formStyle">
+                    {step === 1 && (
+                      <>
+                        <li>
+                          <label>
+                            Transaction Type{" "}
+                            <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            name="transactionType"
+                            value={props.transactionType}
+                            {...form.register("transactionType", {
+                              required: true,
+                            })}
+                          />
+                        </li>
+                        <li>
+                          <label>
+                            Amount <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            name="amount"
+                            value={props.amount}
+                            {...form.register("amount")}
+                            required
+                          />
+                        </li>
+                        <li>
+                          <label>
+                            Currency <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            name="currency"
+                            value={props.currency}
+                            {...form.register("currency")}
+                            required
+                          />
+                        </li>
+                        <li>
+                          <label>Virtual Value :</label>
+                          <input
+                            value={props.virtualValue}
+                            {...form.register("virtualValue")}
+                          />
+                        </li>
+                        <li>
+                          <label>
+                            Is Credit <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.isCredit}
+                            {...form.register("isCredit")}
+                            required
+                          />
+                        </li>
+                      </>
+                    )}
 
-                  {step === 2 && (
-                    <>
-                      <li>
-                        <label>
-                          Reference <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.reference}
-                          {...form.register("reference")}
-                          required
-                        />
-                      </li>
-                      <li>
-                        <label>Payment Method :</label>
-                        <input
-                          value={props.paymentMethod}
-                          {...form.register("paymentMethod")}
-                        />
-                      </li>
+                    {step === 2 && (
+                      <>
+                        <li>
+                          <label>
+                            Reference <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.reference}
+                            {...form.register("reference")}
+                            required
+                          />
+                        </li>
+                        <li>
+                          <label>Payment Method :</label>
+                          <input
+                            value={props.paymentMethod}
+                            {...form.register("paymentMethod")}
+                          />
+                        </li>
 
-                      <li>
-                        <label>SKU :</label>
-                        <input value={props.sku} {...form.register("sku")} />
-                      </li>
-                      <li>
-                        <label>Remark:</label>
-                        <input
-                          value={props.remark}
-                          {...form.register("remark")}
-                        />
-                      </li>
-                      <li>
-                        <label>Description :</label>
-                        <input
-                          value={props.description}
-                          {...form.register("description")}
-                        />
-                      </li>
-                      <li>
-                        <label>Product Id :</label>
-                        <input
-                          value={props.productId}
-                          {...form.register("productId")}
-                        />
-                      </li>
-                      <li>
-                        <label>Product Name :</label>
-                        <input
-                          value={props.productName}
-                          {...form.register("productName")}
-                        />
-                      </li>
-                    </>
-                  )}
-                  {step === 3 && (
-                    <>
-                      <li>
-                        <label>
-                          Payer Id <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.payerId}
-                          {...form.register("payerId")}
-                          required
-                        />
-                      </li>
-                      <li>
-                        <label>Payer Name :</label>
-                        <input
-                          value={props.payerName}
-                          {...form.register("payerName")}
-                        />
-                      </li>
+                        <li>
+                          <label>SKU :</label>
+                          <input value={props.sku} {...form.register("sku")} />
+                        </li>
+                        <li>
+                          <label>Remark:</label>
+                          <input
+                            value={props.remark}
+                            {...form.register("remark")}
+                          />
+                        </li>
+                        <li>
+                          <label>Description :</label>
+                          <input
+                            value={props.description}
+                            {...form.register("description")}
+                          />
+                        </li>
+                        <li>
+                          <label>Product Id :</label>
+                          <input
+                            value={props.productId}
+                            {...form.register("productId")}
+                          />
+                        </li>
+                        <li>
+                          <label>Product Name :</label>
+                          <input
+                            value={props.productName}
+                            {...form.register("productName")}
+                          />
+                        </li>
+                      </>
+                    )}
+                    {step === 3 && (
+                      <>
+                        <li>
+                          <label>
+                            Payer Id <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.payerId}
+                            {...form.register("payerId")}
+                            required
+                          />
+                        </li>
+                        <li>
+                          <label>Payer Name :</label>
+                          <input
+                            value={props.payerName}
+                            {...form.register("payerName")}
+                          />
+                        </li>
 
-                      <li>
-                        <label>
-                          Payee Id <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.payeeId}
-                          {...form.register("payeeId")}
-                        />
-                      </li>
-                      <li>
-                        <label>Payee Name :</label>
-                        <input
-                          value={props.payeeName}
-                          {...form.register("payeeName")}
-                        />
-                      </li>
-                      <li>
-                        <label>On Behalf Of Id :</label>
-                        <input
-                          value={props.onBehalfOfId}
-                          {...form.register("onBehalfOfId")}
-                        />
-                      </li>
-                      <li>
-                        <label>On Behalf Of Name :</label>
-                        <input
-                          value={props.onBehalfOfName}
-                          {...form.register("onBehalfOfName")}
-                        />
-                      </li>
-                    </>
-                  )}
-                  {step === 4 && (
-                    <>
-                      <li>
-                        <label>Additional Data :</label>
-                        <input
-                          value={props.additionalData}
-                          {...form.register("additionalData")}
-                        />
-                      </li>
-                      <li>
-                        <label>Base Transaction :</label>
-                        <input
-                          value={props.baseTransaction}
-                          {...form.register("baseTransaction")}
-                        />
-                      </li>
+                        <li>
+                          <label>
+                            Payee Id <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.payeeId}
+                            {...form.register("payeeId")}
+                          />
+                        </li>
+                        <li>
+                          <label>Payee Name :</label>
+                          <input
+                            value={props.payeeName}
+                            {...form.register("payeeName")}
+                          />
+                        </li>
+                        <li>
+                          <label>On Behalf Of Id :</label>
+                          <input
+                            value={props.onBehalfOfId}
+                            {...form.register("onBehalfOfId")}
+                          />
+                        </li>
+                        <li>
+                          <label>On Behalf Of Name :</label>
+                          <input
+                            value={props.onBehalfOfName}
+                            {...form.register("onBehalfOfName")}
+                          />
+                        </li>
+                      </>
+                    )}
+                    {step === 4 && (
+                      <>
+                        <li>
+                          <label>Additional Data :</label>
+                          <input
+                            value={props.additionalData}
+                            {...form.register("additionalData")}
+                          />
+                        </li>
+                        <li>
+                          <label>Base Transaction :</label>
+                          <input
+                            value={props.baseTransaction}
+                            {...form.register("baseTransaction")}
+                          />
+                        </li>
 
-                      <li>
-                        <label>
-                          Service <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.service}
-                          {...form.register("service")}
-                          required
-                        />
-                      </li>
+                        <li>
+                          <label>
+                            Service <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.service}
+                            {...form.register("service")}
+                            required
+                          />
+                        </li>
 
-                      <li>
-                        <label>
-                          Provider <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.provider}
-                          {...form.register("provider")}
-                          required
-                        />
-                      </li>
-                      <li>
-                        <label>
-                          Vendor <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.vendor}
-                          {...form.register("vendor")}
-                          required
-                        />
-                      </li>
-                    </>
-                  )}
-                  {step === 5 && (
-                    <>
-                      <li>
-                        <label>Execute Commission For:</label>
-                        <input
-                          value={props.executeCommissionFor}
-                          {...form.register("executeCommissionFor")}
-                        />
-                      </li>
-                      <li>
-                        <label>Execute Commission Amount:</label>
-                        <input
-                          value={props.executeCommissionAmount}
-                          {...form.register("executeCommissionAmount")}
-                        />
-                      </li>
-                      <li>
-                        <label>Metadata :</label>
-                        <input
-                          value={props.metadata}
-                          {...form.register("metadata")}
-                        />
-                      </li>
+                        <li>
+                          <label>
+                            Provider <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.provider}
+                            {...form.register("provider")}
+                            required
+                          />
+                        </li>
+                        <li>
+                          <label>
+                            Vendor <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.vendor}
+                            {...form.register("vendor")}
+                            required
+                          />
+                        </li>
+                      </>
+                    )}
+                    {step === 5 && (
+                      <>
+                        <li>
+                          <label>Execute Commission For:</label>
+                          <input
+                            value={props.executeCommissionFor}
+                            {...form.register("executeCommissionFor")}
+                          />
+                        </li>
+                        <li>
+                          <label>Execute Commission Amount:</label>
+                          <input
+                            value={props.executeCommissionAmount}
+                            {...form.register("executeCommissionAmount")}
+                          />
+                        </li>
+                        <li>
+                          <label>Metadata :</label>
+                          <input
+                            value={props.metadata}
+                            {...form.register("metadata")}
+                          />
+                        </li>
 
-                      <li>
-                        <label>
-                          From Wallet <sup className="requiredStar">*</sup> :
-                        </label>
-                        <input
-                          value={props.fromWallet}
-                          {...form.register("fromWallet")}
-                          required
-                        />
-                      </li>
-                    </>
-                  )}
+                        <li>
+                          <label>
+                            From Wallet <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            value={props.fromWallet}
+                            {...form.register("fromWallet")}
+                            required
+                          />
+                        </li>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -420,7 +443,8 @@ const Stimulator = (props: IStimulatorProps) => {
               className=" formBtn"
               style={{
                 display: "flex",
-                margin: "5px 45px",
+                justifyContent: "center",
+                margin: "5px",
               }}
             >
               {!view && (
@@ -476,6 +500,8 @@ const Stimulator = (props: IStimulatorProps) => {
   );
 };
 export const StimulatorWrapper = styled.div`
+  border: 1px solid #cfc5cc;
+  margin: 10px 24px;
   .formStyle {
     margin: 24px;
     height: 240px;
@@ -577,6 +603,25 @@ export const StimulatorWrapper = styled.div`
 
   td {
     text-align: center;
+  }
+  .flex_container {
+    display: flex;
+    margin: 0px 24px;
+  }
+  .steps_list {
+    padding: 10px 24px;
+    border-right: 0.5px solid #cfc5cc;
+    ul {
+      padding: 0px;
+    }
+    li {
+      list-style: none;
+      padding: 10px 0px;
+    }
+  }
+  .activeStep {
+    // background: blue;
+    color: #1677ff;
   }
 `;
 export default Stimulator;
