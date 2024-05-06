@@ -477,11 +477,11 @@ const Stimulator = (props: IStimulatorProps) => {
   );
 };
 export const StimulatorWrapper = styled.div`
-  display: grid;
-  justify-content: center;
   .formStyle {
     margin: 24px;
-    height: 220px;
+    height: 240px;
+    display: grid;
+    justify-content: center;
   }
   .formBtn {
     input {
