@@ -5,6 +5,7 @@ import { API_HOST } from "../../constants";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Modal from "react-modal";
+import { useForm } from "react-hook-form";
 
 export interface ITransactionDetails {
   credentials: any;
@@ -90,8 +91,8 @@ const TransactionDetails = (props: ITransactionDetails) => {
     const data = {
       ...transactionData,
       transactionType: transactionData.transactionType.identifier,
+      productId:  "SIMULATED_" + transactionData.productId,
     };
-    // data.productId =  "SIMULATED_" + data.productId;
     const stimulateTransaction = await axios.post(
       `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
       {
@@ -128,7 +129,23 @@ const TransactionDetails = (props: ITransactionDetails) => {
     setStimulationData(undefined);
     setStimulationDialog(false);
   };
+  const { register, handleSubmit } = useForm();
 
+  const onSubmit = async (data: any) => {
+    setLoading(true);
+    const fetchBalance = await axios.post(
+      `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction/${data.transactionId}`,
+      {
+        ...props.credentials,
+      }
+    );
+
+    if (fetchBalance.data) {
+      const items = fetchBalance.data;
+      setTransactionData(items);
+    }
+    setLoading(false);
+  };
   return (
     <>
       {loading && <>Loading</>}
@@ -175,13 +192,24 @@ const TransactionDetails = (props: ITransactionDetails) => {
       ) : (
         <>
           <TransactionDetailsWrapper>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <label>Transaction Id :</label>
+              <input name="transactionId" {...register("transactionId")} />
+
+              <button type="submit">Submit</button>
+            </form>
             {transactionData?.id}
+            <br />
             <button onClick={() => handleStimulateTransaction()}>
               Stimulate
             </button>
+            <br />
             <button onClick={() => handleStimulateMultiTransaction()}>
               Stimulate Multi
             </button>
+            <SyntaxHighlighter language="javascript" style={docco}>
+              { transactionData && JSON.stringify(transactionData, null, 2)}
+            </SyntaxHighlighter>
           </TransactionDetailsWrapper>
           <Modal
             isOpen={stimulationDialog}

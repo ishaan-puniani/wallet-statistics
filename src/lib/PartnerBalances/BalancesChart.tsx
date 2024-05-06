@@ -41,6 +41,18 @@ export interface IPartnerBalancesPieChartProps {
   amountType: "amount" | "virtual";
   showRaw?: boolean;
   transactionTypes?: string[];
+  /*
+  {
+"FOOD": {
+        "chart": {
+            "color": "green"
+        }
+    },
+    },
+    
+  */
+  chartOptions?: any;
+  themeConfig: any;
 }
 
 const option: any = {
@@ -108,12 +120,20 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         const chartData = [],
           chartColors = [];
 
-        const theme = getTheme();
-
+        const theme = getTheme() || {};
+        theme.transactionTypes = props.themeConfig || theme.transactionTypes;
+        let chartOptions;
+        chartOptions = Object.keys(props.chartOptions).length
+          ? props.chartOptions
+          : option;
+        console.log(theme, balances);
         for (let idx = 0; idx < balances.length; idx++) {
           const balnce = balances[idx];
-          if (props.transactionTypes && !props.transactionTypes.includes(balnce.transactionType)) {
-              continue;
+          if (
+            props.transactionTypes &&
+            !props.transactionTypes.includes(balnce.transactionType)
+          ) {
+            continue;
           }
           const transactionTypeTheme =
             theme.transactionTypes[balnce.transactionType];
@@ -128,7 +148,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
           }
 
           chartColors.push(colorForTransactionType);
-          
+
           if (props.amountType === "amount") {
             chartData.push({
               value: Math.abs(balnce.amount),
@@ -143,17 +163,17 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
           }
         }
 
-        option.series[0].data = chartData;
-        option.series[0].color = chartColors;
+        chartOptions.series[0].data = chartData;
+        chartOptions.series[0].color = chartColors;
 
-        setChartOption(option);
+        setChartOption(chartOptions);
       }
       setLoading(false);
     };
     if ((props.userId, props.currency, props.amountType)) {
       fetchData();
     }
-  }, [props.userId, props.currency, props.amountType]);
+  }, [props.userId, props.currency, props.amountType, props.themeConfig]);
 
   // console.log(balance)
   return (
@@ -172,7 +192,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}

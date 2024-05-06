@@ -15,7 +15,6 @@ export const getFilterQueryString = (filters: any) => {
       if (moment.isMoment(value) || value instanceof Date) {
         return value.toISOString();
       }
-
       return value;
     },
   });

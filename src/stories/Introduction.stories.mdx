@@ -1,12 +1,12 @@
-import { Meta } from '@storybook/addon-docs';
-import Code from './assets/code-brackets.svg';
-import Colors from './assets/colors.svg';
-import Comments from './assets/comments.svg';
-import Direction from './assets/direction.svg';
-import Flow from './assets/flow.svg';
-import Plugin from './assets/plugin.svg';
-import Repo from './assets/repo.svg';
-import StackAlt from './assets/stackalt.svg';
+import { Meta } from "@storybook/addon-docs";
+import Code from "./assets/code-brackets.svg";
+import Colors from "./assets/colors.svg";
+import Comments from "./assets/comments.svg";
+import Direction from "./assets/direction.svg";
+import Flow from "./assets/flow.svg";
+import Plugin from "./assets/plugin.svg";
+import Repo from "./assets/repo.svg";
+import StackAlt from "./assets/stackalt.svg";
 
 <Meta title="Example/Introduction" />
 
@@ -121,6 +121,22 @@ That makes it easy to simulate and try out wallet offerings.
 
 If you are already a user and want to see your own configuration in action please set your service account details in the Machine User Credential story under `Auth` section from left menu .
 
+## First step to use this storybook, need to set Auth/ServiceAccountCredentials
+
+<div>Application Id: appId********</div>
+<div>Client Id:: clientId********</div>
+<div>Client Secret: clientSecret********</div>
+<div>version:</div>
+
+Above infomation you will get from wallet admin user -
+
+<div>
+  *Go to wallet admin and create service account and provide admin role and if
+  you view that user you will get ServiceAccountCredentials.*
+</div>
+<hr />
+<h3 style={{color:'red'}}>After Submitting Auth/ServiceAccountCredentials, please do a Reload</h3>
+
 <div className="subheading">Configure</div>
 
 <div className="link-list">
@@ -180,14 +196,22 @@ If you are already a user and want to see your own configuration in action pleas
       Configure, customize, and extend
     </span>
   </a>
-  <a className="link-item" href="https://storybook.js.org/tutorials/" target="_blank">
+  <a
+    className="link-item"
+    href="https://storybook.js.org/tutorials/"
+    target="_blank"
+  >
     <img src={Direction} alt="direction" />
     <span>
       <strong>In-depth guides</strong>
       Best practices from leading teams
     </span>
   </a>
-  <a className="link-item" href="https://github.com/storybookjs/storybook" target="_blank">
+  <a
+    className="link-item"
+    href="https://github.com/storybookjs/storybook"
+    target="_blank"
+  >
     <img src={Code} alt="code" />
     <span>
       <strong>GitHub project</strong>
@@ -204,6 +228,6 @@ If you are already a user and want to see your own configuration in action pleas
 </div>
 
 <div className="tip-wrapper">
-  <span className="tip">Tip</span>Edit the Markdown in{' '}
+  <span className="tip">Tip</span>Edit the Markdown in{" "}
   <code>stories/Introduction.stories.mdx</code>
 </div>

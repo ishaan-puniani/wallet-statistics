@@ -19,3 +19,14 @@ export const _fetchTransactions = async (
 
   return transactions.data;
 };
+
+export const _fetchTransaction = async (credentials: any, data: any) => {
+  const transactions = await axios.post(
+    `${API_HOST}/tenant/${credentials.application_id}/get-transaction/${data.id}`,
+    {
+      ...credentials,
+    }
+  );
+
+  return transactions.data;
+};

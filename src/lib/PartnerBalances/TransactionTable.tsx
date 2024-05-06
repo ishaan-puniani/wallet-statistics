@@ -464,7 +464,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
               loading={loading}
               pageCount={pageCount}
               defaultColumn={defaultColumn}
-              hiddenColumns={props.hiddenColumns}
+              hiddenColumns={props.hiddenColumns || []}
             />
 
             <Modal

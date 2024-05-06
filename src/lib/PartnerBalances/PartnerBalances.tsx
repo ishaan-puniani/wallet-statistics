@@ -8,7 +8,7 @@ import { API_HOST } from "../../constants";
 export interface IPartnerBalancesProps {
   credentials?: any;
   userId?: string;
-  currency?: "COINS" | "USD";
+  currency?: string;
   amountType?: "amount" | "virtual";
   showRaw?: boolean
 }

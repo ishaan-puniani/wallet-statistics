@@ -2,7 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import PartnerHeirarchyTree from "./PartnerHeirarchyTree";
 import { withKnobs } from "@storybook/addon-knobs";
-import { getMachineUserCredentials } from "../../utilities/storage";
+import { getServiceAccountCredentials } from "../../utilities/storage";
 import PartnerHeirarchy from "./PartnerHeirarchy";
 import HeirarchyChart from "./HeirarchyChart";
 
@@ -28,20 +28,20 @@ const HeirarchyChartTemplate: ComponentStory<typeof HeirarchyChart> = (args) => 
 );
 export const Default = Template.bind({});
 Default.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   hierarchyType: "CHILDREN",
 };
 
 export const Hierarchy = TemplateOne.bind({});
 Hierarchy.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   hierarchyType: "CHILDREN",
   showRaw: false
 };
 
 export const HierarchyChart = HeirarchyChartTemplate.bind({});
 HierarchyChart.args = {
-  credentials: getMachineUserCredentials() || {},
+  credentials: getServiceAccountCredentials() || {},
   hierarchyType: "PARTNER",
   showRaw: false
 };
