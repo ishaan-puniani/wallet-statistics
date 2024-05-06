@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { API_HOST } from "../../constants";
 import styled from "styled-components";
 export interface IStimulatorProps {
@@ -41,7 +41,8 @@ const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
   const [view, setView] = useState(false);
   const [record, setRecord] = useState<any>({});
-  const { register, handleSubmit } = useForm();
+  const [step, setStep] = useState(1);
+  const form = useForm();
 
   const onSubmit = async (data: any) => {
     try {
@@ -68,8 +69,8 @@ const Stimulator = (props: IStimulatorProps) => {
           ...props.credentials,
         }
       );
-      if(response.status === 200){
-        alert('Transaction Excuted Successfully')
+      if (response.status === 200) {
+        alert("Transaction Excuted Successfully");
       }
       // setRecord(response.data);
       // setView(!view);
@@ -78,300 +79,409 @@ const Stimulator = (props: IStimulatorProps) => {
       alert(err?.response?.data);
     }
   };
+
+  const nextStep = () => {
+    form.trigger();
+    setStep(step + 1);
+  };
+
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  const {
+    transactionType,
+    amount,
+    currency,
+    isCredit,
+    reference,
+    payerId,
+    service,
+    provider,
+    vendor,
+    fromWallet,
+  } = form.watch();
+
+  const handleDisable = () => {
+    switch (step) {
+      case 1:
+        return transactionType && amount && currency && isCredit;
+      case 2:
+        return reference;
+      case 3:
+        return payerId;
+      case 4:
+        return service && provider && vendor;
+      case 5:
+        return fromWallet;
+      default:
+        return false;
+    }
+  };
+
   return (
     <>
       <StimulatorWrapper>
         <h1>Transaction Simulator</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {!view && (
-            <div className="container">
-              <div className="formStyle">
-                <li>
-                  <label>
-                    Transaction Type <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.transactionType}
-                    {...register("transactionType")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>
-                    Amount <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.amount}
-                    {...register("amount")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>
-                    Currency <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.currency}
-                    {...register("currency")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Virtual Value :</label>
-                  <input
-                    value={props.virtualValue}
-                    {...register("virtual_Value")}
-                  />
-                </li>
-                <li>
-                  <label>
-                    Is Credit <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.isCredit}
-                    {...register("isCredit")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>
-                    Reference <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.reference}
-                    {...register("reference")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Payment Method :</label>
-                  <input
-                    value={props.paymentMethod}
-                    {...register("paymentMethod")}
-                  />
-                </li>
-
-                <li>
-                  <label>SKU :</label>
-                  <input value={props.sku} {...register("sku")} />
-                </li>
-                <li>
-                  <label>Remark:</label>
-                  <input value={props.remark} {...register("remark")} />
-                </li>
-                <li>
-                  <label>Description :</label>
-                  <input
-                    value={props.description}
-                    {...register("description")}
-                  />
-                </li>
-                <li>
-                  <label>Product Id :</label>
-                  <input value={props.productId} {...register("productId")} />
-                </li>
-                <li>
-                  <label>Product Name :</label>
-                  <input
-                    value={props.productName}
-                    {...register("productName")}
-                  />
-                </li>
-
-                <li>
-                  <label>
-                    Payer Id <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.payerId}
-                    {...register("payerId")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Payer Name :</label>
-                  <input value={props.payerName} {...register("payerName")} />
-                </li>
-              </div>
-              <div className="formStyle">
-                <li>
-                  <label>
-                    Payee Id <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input value={props.payeeId} {...register("payeeId")} />
-                </li>
-                <li>
-                  <label>Payee Name :</label>
-                  <input value={props.payeeName} {...register("payeeName")} />
-                </li>
-                <li>
-                  <label>On Behalf Of Id :</label>
-                  <input
-                    value={props.onBehalfOfId}
-                    {...register("onBehalfOfId")}
-                  />
-                </li>
-                <li>
-                  <label>On Behalf Of Name :</label>
-                  <input
-                    value={props.onBehalfOfName}
-                    {...register("onBehalfOfName")}
-                  />
-                </li>
-                <li>
-                  <label>Additional Data :</label>
-                  <input
-                    value={props.additionalData}
-                    {...register("additionalData")}
-                  />
-                </li>
-                <li>
-                  <label>Base Transaction :</label>
-                  <input
-                    value={props.baseTransaction}
-                    {...register("baseTransaction")}
-                  />
-                </li>
-
-                <li>
-                  <label>
-                    Service <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.service}
-                    {...register("service")}
-                    required
-                  />
-                </li>
-
-                <li>
-                  <label>
-                    Provider <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.provider}
-                    {...register("provider")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>
-                    Vendor <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.vendor}
-                    {...register("vendor")}
-                    required
-                  />
-                </li>
-                <li>
-                  <label>Execute Commission For:</label>
-                  <input
-                    value={props.executeCommissionFor}
-                    {...register("executeCommissionFor")}
-                  />
-                </li>
-                <li>
-                  <label>Execute Commission Amount:</label>
-                  <input
-                    value={props.executeCommissionAmount}
-                    {...register("executeCommissionAmount")}
-                  />
-                </li>
-                <li>
-                  <label>Metadata :</label>
-                  <input value={props.metadata} {...register("metadata")} />
-                </li>
-
-                <li>
-                  <label>
-                    From Wallet <sup className="requiredStar">*</sup> :
-                  </label>
-                  <input
-                    value={props.fromWallet}
-                    {...register("fromWallet")}
-                    required
-                  />
-                </li>
-              </div>
-            </div>
-          )}
-          {view && (
-            <div>
-              <table>
-                <tr>
-                  <th>Partner Id</th>
-                  <th>Is Credit</th>
-                  <th>Transaction Type</th>
-                  <th>Currency </th>
-                  <th>Amount </th>
-                </tr>
-                {record.map((transaction: any) => (
-                  <tr>
-                    <td>
-                      <p>
-                        {transaction?.isCredit
-                          ? transaction?.payeeId
-                          : transaction?.payerId}
-                      </p>
-                    </td>
-                    <td>
-                      <p>{transaction?.isCredit ? "true" : "false"}</p>
-                    </td>
-                    <td>
-                      <p>{transaction?.transactionTypeIdentifier}</p>
-                    </td>
-                    <td>
-                      <p>{transaction?.currency}</p>
-                    </td>
-                    <td>
-                      <p>{transaction?.amount}</p>
-                    </td>
-                  </tr>
-                ))}
-              </table>
-            </div>
-          )}
-          <div
-            className="formStyle formBtn"
-            style={{ display: "flex", justifyContent: "center", margin: "5px" }}
-          >
+        <FormProvider {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             {!view && (
-              <div className="formLayout">
-                <button className="submitBtn" type="submit">
-                  Simulate
-                </button>
+              <div className="container">
+                <div className="formStyle">
+                  {step === 1 && (
+                    <>
+                      <li>
+                        <label>
+                          Transaction Type <sup className="requiredStar">*</sup>{" "}
+                          :
+                        </label>
+                        <input
+                          name="transactionType"
+                          value={props.transactionType}
+                          {...form.register("transactionType", {
+                            required: true,
+                          })}
+                        />
+                      </li>
+                      <li>
+                        <label>
+                          Amount <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          name="amount"
+                          value={props.amount}
+                          {...form.register("amount")}
+                          required
+                        />
+                      </li>
+                      <li>
+                        <label>
+                          Currency <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          name="currency"
+                          value={props.currency}
+                          {...form.register("currency")}
+                          required
+                        />
+                      </li>
+                      <li>
+                        <label>Virtual Value :</label>
+                        <input
+                          value={props.virtualValue}
+                          {...form.register("virtualValue")}
+                        />
+                      </li>
+                      <li>
+                        <label>
+                          Is Credit <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.isCredit}
+                          {...form.register("isCredit")}
+                          required
+                        />
+                      </li>
+                    </>
+                  )}
+
+                  {step === 2 && (
+                    <>
+                      <li>
+                        <label>
+                          Reference <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.reference}
+                          {...form.register("reference")}
+                          required
+                        />
+                      </li>
+                      <li>
+                        <label>Payment Method :</label>
+                        <input
+                          value={props.paymentMethod}
+                          {...form.register("paymentMethod")}
+                        />
+                      </li>
+
+                      <li>
+                        <label>SKU :</label>
+                        <input value={props.sku} {...form.register("sku")} />
+                      </li>
+                      <li>
+                        <label>Remark:</label>
+                        <input
+                          value={props.remark}
+                          {...form.register("remark")}
+                        />
+                      </li>
+                      <li>
+                        <label>Description :</label>
+                        <input
+                          value={props.description}
+                          {...form.register("description")}
+                        />
+                      </li>
+                      <li>
+                        <label>Product Id :</label>
+                        <input
+                          value={props.productId}
+                          {...form.register("productId")}
+                        />
+                      </li>
+                      <li>
+                        <label>Product Name :</label>
+                        <input
+                          value={props.productName}
+                          {...form.register("productName")}
+                        />
+                      </li>
+                    </>
+                  )}
+                  {step === 3 && (
+                    <>
+                      <li>
+                        <label>
+                          Payer Id <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.payerId}
+                          {...form.register("payerId")}
+                          required
+                        />
+                      </li>
+                      <li>
+                        <label>Payer Name :</label>
+                        <input
+                          value={props.payerName}
+                          {...form.register("payerName")}
+                        />
+                      </li>
+
+                      <li>
+                        <label>
+                          Payee Id <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.payeeId}
+                          {...form.register("payeeId")}
+                        />
+                      </li>
+                      <li>
+                        <label>Payee Name :</label>
+                        <input
+                          value={props.payeeName}
+                          {...form.register("payeeName")}
+                        />
+                      </li>
+                      <li>
+                        <label>On Behalf Of Id :</label>
+                        <input
+                          value={props.onBehalfOfId}
+                          {...form.register("onBehalfOfId")}
+                        />
+                      </li>
+                      <li>
+                        <label>On Behalf Of Name :</label>
+                        <input
+                          value={props.onBehalfOfName}
+                          {...form.register("onBehalfOfName")}
+                        />
+                      </li>
+                    </>
+                  )}
+                  {step === 4 && (
+                    <>
+                      <li>
+                        <label>Additional Data :</label>
+                        <input
+                          value={props.additionalData}
+                          {...form.register("additionalData")}
+                        />
+                      </li>
+                      <li>
+                        <label>Base Transaction :</label>
+                        <input
+                          value={props.baseTransaction}
+                          {...form.register("baseTransaction")}
+                        />
+                      </li>
+
+                      <li>
+                        <label>
+                          Service <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.service}
+                          {...form.register("service")}
+                          required
+                        />
+                      </li>
+
+                      <li>
+                        <label>
+                          Provider <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.provider}
+                          {...form.register("provider")}
+                          required
+                        />
+                      </li>
+                      <li>
+                        <label>
+                          Vendor <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.vendor}
+                          {...form.register("vendor")}
+                          required
+                        />
+                      </li>
+                    </>
+                  )}
+                  {step === 5 && (
+                    <>
+                      <li>
+                        <label>Execute Commission For:</label>
+                        <input
+                          value={props.executeCommissionFor}
+                          {...form.register("executeCommissionFor")}
+                        />
+                      </li>
+                      <li>
+                        <label>Execute Commission Amount:</label>
+                        <input
+                          value={props.executeCommissionAmount}
+                          {...form.register("executeCommissionAmount")}
+                        />
+                      </li>
+                      <li>
+                        <label>Metadata :</label>
+                        <input
+                          value={props.metadata}
+                          {...form.register("metadata")}
+                        />
+                      </li>
+
+                      <li>
+                        <label>
+                          From Wallet <sup className="requiredStar">*</sup> :
+                        </label>
+                        <input
+                          value={props.fromWallet}
+                          {...form.register("fromWallet")}
+                          required
+                        />
+                      </li>
+                    </>
+                  )}
+                </div>
               </div>
             )}
             {view && (
-              <div className="formLayout">
-                <button id="cancelBtn" onClick={() => setView(!view)}>
-                  Change Stimulate
-                </button>
-                <button
-                  className="submitBtn"
-                  onClick={handleSubmit(handleDotransaction)}
-                >
-                  Commit Transaction
-                </button>
+              <div>
+                <table>
+                  <tr>
+                    <th>Partner Id</th>
+                    <th>Is Credit</th>
+                    <th>Transaction Type</th>
+                    <th>Currency </th>
+                    <th>Amount </th>
+                  </tr>
+                  {record.map((transaction: any) => (
+                    <tr>
+                      <td>
+                        <p>
+                          {transaction?.isCredit
+                            ? transaction?.payeeId
+                            : transaction?.payerId}
+                        </p>
+                      </td>
+                      <td>
+                        <p>{transaction?.isCredit ? "true" : "false"}</p>
+                      </td>
+                      <td>
+                        <p>{transaction?.transactionTypeIdentifier}</p>
+                      </td>
+                      <td>
+                        <p>{transaction?.currency}</p>
+                      </td>
+                      <td>
+                        <p>{transaction?.amount}</p>
+                      </td>
+                    </tr>
+                  ))}
+                </table>
               </div>
             )}
-          </div>
-        </form>
+            <div
+              className=" formBtn"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "5px",
+              }}
+            >
+              {!view && (
+                <div className="formLayout">
+                  {step > 1 && (
+                    <button
+                      className="submitBtn"
+                      type="button"
+                      onClick={prevStep}
+                    >
+                      Previous
+                    </button>
+                  )}
+                  {step !== 5 && (
+                    <button
+                      className="submitBtn"
+                      type="button"
+                      disabled={!handleDisable()}
+                      onClick={nextStep}
+                    >
+                      Next
+                    </button>
+                  )}{" "}
+                  {step === 5 && (
+                    <button
+                      className="submitBtn"
+                      type="submit"
+                      disabled={!handleDisable()}
+                    >
+                      Simulate
+                    </button>
+                  )}
+                </div>
+              )}
+              {view && (
+                <div className="formLayout">
+                  <button id="cancelBtn" onClick={() => setView(!view)}>
+                    Change Stimulate
+                  </button>
+                  <button
+                    className="submitBtn"
+                    onClick={form.handleSubmit(handleDotransaction)}
+                  >
+                    Commit Transaction
+                  </button>
+                </div>
+              )}
+            </div>
+          </form>
+        </FormProvider>
       </StimulatorWrapper>
     </>
   );
 };
 export const StimulatorWrapper = styled.div`
-  .container {
-    display: grid;
-    grid-template-columns: auto auto;
-    @media only screen and (max-width: 2560px) and (min-width: 1700px) {
-      display: block;
-    }
-  }
+  display: grid;
+  justify-content: center;
   .formStyle {
     margin: 24px;
+    height: 220px;
   }
   .formBtn {
     input {
@@ -417,6 +527,7 @@ export const StimulatorWrapper = styled.div`
   }
   .formStyle li input {
     width: 330px;
+    height: 22px;
     @media screen and (max-width: 845px) {
       width: 315px;
     }
@@ -447,6 +558,15 @@ export const StimulatorWrapper = styled.div`
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
+  }
+
+  button:disabled {
+    background: grey;
+    cursor: disabled;
+  }
+  button:disabled:hover {
+    background: grey;
+    cursor: disabled;
   }
   table,
   td,
