@@ -443,7 +443,7 @@ const Stimulator = (props: IStimulatorProps) => {
               className=" formBtn"
               style={{
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "flex-end",
                 margin: "5px",
               }}
             >
@@ -500,8 +500,6 @@ const Stimulator = (props: IStimulatorProps) => {
   );
 };
 export const StimulatorWrapper = styled.div`
-  border: 1px solid #cfc5cc;
-  margin: 10px 24px;
   .formStyle {
     margin: 24px;
     height: 240px;
