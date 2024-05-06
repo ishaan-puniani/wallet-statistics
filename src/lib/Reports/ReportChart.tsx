@@ -21,6 +21,7 @@ import {
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchGetBalances } from "../services/balances";
+import { makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
 
 // Register the required components
@@ -34,22 +35,15 @@ echarts.use([
   LegendComponent,
 ]);
 
-const chartThemeConfig = {
-  WIN: "blue",
-  BET: "red",
-  Balance: "blue",
-};
+// const chartThemeConfig = {
+//   AMOUNT: "blue",
+// };
 
 const transactionType = [
   {
     type: "debit",
-    label: "BET",
-    transactionType: "BET",
-  },
-  {
-    type: "credit",
-    label: "WIN",
-    transactionType: "WIN",
+    label: "Amount",
+    transactionType: "AMOUNT",
   },
 ];
 
@@ -76,7 +70,7 @@ const option: any = {
     trigger: "axis",
   },
   legend: {
-    data: ["WIN", "BET"],
+    data: ["Amount"],
     left: true,
     icon: "circle",
   },
@@ -108,7 +102,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const themeConfig =
     Object.keys(props.themeConfig).length > 0
       ? props.themeConfig
-      : chartThemeConfig;
+      : null;
 
   const chartType = props.chartType || "bar";
 
@@ -138,43 +132,55 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
 
       setRawData(balances);
 
-      chartOptions.series = transactionTypes?.map((dataType: any) => {
-        return {
-          name: dataType.label,
-          type: chartType,
-          data: balances.map((row: any) => {
-            if (dataType.type === "debit") {
-              if (props.amountType === "virtual") {
-                return (
-                  row?.groupedDebitVirtualValues[dataType.transactionType] || 0
-                );
-              } else {
-                return row?.groupedDebitAmounts[dataType.transactionType] || 0;
+      if (transactionTypes.length) {
+        chartOptions.series = transactionTypes?.map((dataType: any) => {
+          return {
+            name: dataType.label,
+            type: chartType,
+            data: balances.map((row: any) => {
+              if (dataType.type === "debit") {
+                if (props.amountType === "virtual") {
+                  return (
+                    row?.groupedDebitVirtualValues[dataType?.transactionType] ||
+                    0
+                  );
+                } else {
+                  return (
+                    row?.groupedDebitAmounts[dataType?.transactionType] || 0
+                  );
+                }
+              } else if (dataType.type === "credit") {
+                if (props.amountType === "virtual") {
+                  return (
+                    row?.groupedCrediVirtualValues[dataType?.transactionType] ||
+                    0
+                  );
+                } else {
+                  return (
+                    row?.groupedCreditAmounts[dataType?.transactionType] || 0
+                  );
+                }
+              } else if (dataType.type === "balance") {
+                if (props.amountType === "virtual") {
+                  return (
+                    row?.groupedVirtualValues[dataType?.transactionType] || 0
+                  );
+                } else {
+                  return row?.groupedAmounts[dataType?.transactionType] || 0;
+                }
               }
-            } else if (dataType.type === "credit") {
-              if (props.amountType === "virtual") {
-                return (
-                  row?.groupedCrediVirtualValues[dataType.transactionType] || 0
-                );
-              } else {
-                return row?.groupedCreditAmounts[dataType.transactionType] || 0;
-              }
-            } else if (dataType.type === "balance") {
-              if (props.amountType === "virtual") {
-                return row?.groupedVirtualValues[dataType.transactionType] || 0;
-              } else {
-                return row?.groupedAmounts[dataType.transactionType] || 0;
-              }
-            }
-          }),
-          itemStyle: { color: themeConfig[dataType.label] },
-          smooth: true,
-          symbol: "none",
-          lineStyle: {
-            width: 3,
-          },
-        };
-      });
+            }),
+            itemStyle: {
+              color: themeConfig && themeConfig[dataType?.label] || makeRandomColor(),
+            },
+            smooth: true,
+            symbol: "none",
+            lineStyle: {
+              width: 3,
+            },
+          };
+        });
+      }
 
       setChartOption(chartOptions);
       setLoading(false);
