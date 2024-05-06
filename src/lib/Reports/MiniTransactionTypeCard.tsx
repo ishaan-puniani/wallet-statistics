@@ -28,7 +28,7 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
   const includeToday = props.includeToday || false;
   const cardConfig = Object.keys(props.cardConfig).length
     ? props.cardConfig
-    : { label: "Credit", type: "credit" };
+    : { label: "Debit", type: "debit" };
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
