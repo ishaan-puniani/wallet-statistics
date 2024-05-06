@@ -1,8 +1,8 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { getServiceAccountCredentials } from "../../utilities/storage";
-import { date } from "@storybook/addon-knobs";
 import TransactionDetails from "./TransactionDetails";
+import TransactionRuleValidation from "./TransactionRuleValidation";
 
 export default {
   title: "Example/Transactions",
@@ -17,9 +17,18 @@ const Template: ComponentStory<typeof TransactionDetails> = (args) => (
   <TransactionDetails {...args} />
 );
 
+const TemplateTwo: ComponentStory<typeof TransactionRuleValidation> = (
+  args
+) => <TransactionRuleValidation {...args} />;
 export const Default = Template.bind({});
 Default.args = {
   credentials: getServiceAccountCredentials() || {},
   showRaw: false,
-  transactionId:""
+  transactionId: "",
+};
+
+export const TransactionRule = TemplateTwo.bind({});
+TransactionRule.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
 };
