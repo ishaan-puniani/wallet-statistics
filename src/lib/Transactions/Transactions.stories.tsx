@@ -3,6 +3,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { getServiceAccountCredentials } from "../../utilities/storage";
 import TransactionDetails from "./TransactionDetails";
 import TransactionRuleValidation from "./TransactionRuleValidation";
+import CouponValidation from "./CouponValidation";
 
 export default {
   title: "Example/Transactions",
@@ -20,6 +21,10 @@ const Template: ComponentStory<typeof TransactionDetails> = (args) => (
 const TemplateTwo: ComponentStory<typeof TransactionRuleValidation> = (
   args
 ) => <TransactionRuleValidation {...args} />;
+
+const TemplateThree :ComponentStory<typeof CouponValidation> =(args)=>(
+  <CouponValidation {...args}/>
+)
 export const Default = Template.bind({});
 Default.args = {
   credentials: getServiceAccountCredentials() || {},
@@ -30,5 +35,9 @@ Default.args = {
 export const TransactionRule = TemplateTwo.bind({});
 TransactionRule.args = {
   credentials: getServiceAccountCredentials() || {},
-  showRaw: false,
+};
+
+export const Coupon = TemplateThree.bind({});
+Coupon.args = {
+  credentials: getServiceAccountCredentials() || {},
 };

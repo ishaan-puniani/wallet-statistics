@@ -118,8 +118,12 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
             <input type="submit" />
           </div>
         </form>
-        <p>Transaction Valid - {JSON.stringify(response?.isValid)}</p>
-        <p>Transaction Rule - {JSON.stringify(response, null, 4)}</p>
+        <p id="validTransaction">
+          Transaction Valid - {JSON.stringify(response?.isValid)}
+        </p>
+        <p id="transactionRule">
+          Transaction Rule - {JSON.stringify(response, null, 4)}
+        </p>
       </Wrapper>
     </SimulatorWrapper>
   );
