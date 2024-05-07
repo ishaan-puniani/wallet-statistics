@@ -47,6 +47,7 @@ import {
   stimulateTransaction,
   stimulateMultiTransactions,
 } from "./services/stimulator";
+import { renderTransactionRule } from "./Transactions";
 class WalletStatistics {
   constructor() {
     console.log("Library constructor loaded");
@@ -145,6 +146,9 @@ class WalletStatistics {
   };
   renderMiniTransactionTypeCard = (container: any, props: any) => {
     _renderMiniTransactionTypeCard(container, props);
+  };
+  renderValidateTransactionRUle = (container: any, props: any) => {
+    renderTransactionRule(container, props);
   };
 }
 
