@@ -401,6 +401,17 @@ export const SimulatorWrapper = styled.div`
   }
   .formStyle li input {
     width: 330px;
+    height: 22px @media screen and (max-width: 845px) {
+      width: 315px;
+    }
+    @media screen and (max-width: 425px) {
+      width: 220px;
+    }
+  }
+  .formStyle li select {
+    width: 330px;
+    height: 22px;
+
     @media screen and (max-width: 845px) {
       width: 315px;
     }
