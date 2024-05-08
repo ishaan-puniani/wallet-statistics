@@ -96,7 +96,9 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [group, setGroup] = useState("monthly");
+  const [group, setGroup] = useState("daily");
+  const [startDate, setStartDate] = useState<any>(props.startDate);
+  const [endDate, setEndDate] = useState<any>(props.endDate);
 
   const transactionTypes =
     props.transactionTypes.length > 0
@@ -107,9 +109,6 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
     Object.keys(props.themeConfig).length > 0 ? props.themeConfig : null;
 
   const chartType = props.chartType || "bar";
-
-  //   const group = props.group || "monthly";
-
   const includePrevious = props.includePrevious || false;
   const includeToday = props.includeToday || false;
 
@@ -129,21 +128,6 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
       setEndDate(props.endDate);
     }
   };
-
-  const [startDate, setStartDate] = useState<any>();
-  const [endDate, setEndDate] = useState<any>();
-
-  useEffect(() => {
-    if (group === "monthly") {
-      const start = moment(props.startDate).startOf("year").startOf("month");
-      const end = moment(props.startDate).endOf("year").endOf("month");
-      setStartDate(start);
-      setEndDate(end);
-    } else {
-      setStartDate(props.startDate);
-      setEndDate(props.endDate);
-    }
-  }, [props.startDate, props.endDate]);
 
   useEffect(() => {
     const fetchData = async () => {
