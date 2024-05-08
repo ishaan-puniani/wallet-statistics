@@ -247,7 +247,7 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "10px" }}>
+        <div>
           {!loading && chartOption && (
             <Wrapper>
               <div className="grouping-btn">
