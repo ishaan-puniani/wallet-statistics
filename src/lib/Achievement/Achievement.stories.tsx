@@ -3,31 +3,67 @@ import React from "react";
 import { getServiceAccountCredentials } from "../../utilities/storage";
 import AvailableAchievement from "./AvailableAchievement";
 import UserAchievement from "./UserAchievements";
+import AcknowledgeAchievement from "./AcknowledgeAchievement";
+import GetUserAchievement from "./GetUserAchievement";
+import UnacknowledgedAchievement from "./UnacknowledgedAchievement";
 
 export default {
-  title: "Example/UserAchievement",
-  component: UserAchievement,
+  title: "Example/Achievement",
+  component: AvailableAchievement,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: "fullscreen",
   },
-} as ComponentMeta<typeof UserAchievement>;
+} as ComponentMeta<typeof AvailableAchievement>;
 
-const Template: ComponentStory<typeof UserAchievement> = (args) => (
-  <UserAchievement {...args} />
-);
-const TemplateTwo: ComponentStory<typeof AvailableAchievement> = (args) => (
+const TemplateOne: ComponentStory<typeof AvailableAchievement> = (args) => (
   <AvailableAchievement {...args} />
 );
 
-export const UserAchievements = Template.bind({});
+const TemplateTwo: ComponentStory<typeof UserAchievement> = (args) => (
+  <UserAchievement {...args} />
+);
+
+const TemplateThree: ComponentStory<typeof AcknowledgeAchievement> = (args) => (
+  <AcknowledgeAchievement {...args} />
+);
+
+const TemplateFour: ComponentStory<typeof GetUserAchievement> = (args) => (
+  <GetUserAchievement {...args} />
+);
+
+const TemplateFive: ComponentStory<typeof UnacknowledgedAchievement> = (args) => (
+  <UnacknowledgedAchievement {...args} />
+);
+
+export const AvailableAchievements = TemplateOne.bind({});
+AvailableAchievements.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+};
+
+export const UserAchievements = TemplateTwo.bind({});
 UserAchievements.args = {
   credentials: getServiceAccountCredentials() || {},
   achieverId: "",
   showRaw: false,
 };
-export const AvailableAchievements = TemplateTwo.bind({});
-AvailableAchievements.args = {
+
+export const AcknowledgeAchievements = TemplateThree.bind({});
+AcknowledgeAchievements.args = {
   credentials: getServiceAccountCredentials() || {},
-  showRaw: false,
+  achieverId: "",
+  achievementId: "",
+};
+
+export const GetUserAchievements = TemplateFour.bind({});
+GetUserAchievements.args = {
+  credentials: getServiceAccountCredentials() || {},
+  achieverId: "",
+};
+
+export const UnacknowledgedAchievements = TemplateFive.bind({});
+UnacknowledgedAchievements.args = {
+  credentials: getServiceAccountCredentials() || {},
+  achieverId: "",
 };
