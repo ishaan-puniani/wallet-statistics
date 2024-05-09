@@ -122,19 +122,14 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
       const end = moment(props.startDate).endOf("year").endOf("month");
       setStartDate(start);
       setEndDate(end);
-    } else {
+    } else if (group === "daily" || group === "weekly") {
       setStartDate(props.startDate);
       setEndDate(props.endDate);
     }
   };
-
-  useEffect(
-    () => {
-      setDateRange(group);
-    },
-    // eslint-disable-next-line
-    [props.startDate, props.endDate]
-  );
+  useEffect(() => {
+    setDateRange(group);
+  }, [props.startDate, props.endDate]);
 
   const groupHandler = (group: string) => {
     setGroup(group);
