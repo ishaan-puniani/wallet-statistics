@@ -74,12 +74,12 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
               <tr className="table-data">
                 <td>{moment(row?.createdAt).format("DD-MM-YYYY HH:MM")}</td>
                 <td
-                  className={row?.IsCredit > 0 ? "amount-plus" : "amount-minus"}
+                  className={row?.isCredit > 0 ? "amount-plus" : "amount-minus"}
                 >
-                  {row?.IsCredit > 0 ? `+ ${row?.amount}` : `- ${row?.amount}`}
+                  {row?.isCredit > 0 ? `+ ${row?.amount}` : `- ${row?.amount}`}
                 </td>
                 <td>{row?.currency}</td>
-                <td>{row?.IsCredit ? "Yes" : "No"}</td>
+                <td>{row?.isCredit ? "Yes" : "No"}</td>
                 <td
                   className="table-data__transactionType"
                   onClick={() =>
