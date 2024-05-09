@@ -6,6 +6,7 @@ import ReportBalanceChart from "./ReportBalanceChart";
 import moment from "moment";
 import MiniTransactionTypeCard from "./MiniTransactionTypeCard";
 import GroupReportChart from "./GroupReportChart";
+import RecentTransactionTable from "./RecentTransactionTable";
 
 export default {
   title: "Example/Reports",
@@ -27,6 +28,10 @@ const TemplateThree: ComponentStory<typeof MiniTransactionTypeCard> = (
 
 const TemplateFour: ComponentStory<typeof ReportChart> = (args) => (
   <GroupReportChart {...args} />
+);
+
+const TemplateFive: ComponentStory<typeof RecentTransactionTable> = (args) => (
+  <RecentTransactionTable {...args} />
 );
 
 export const PartnerBalanceReportChart = TemplateTwo.bind({});
@@ -63,6 +68,17 @@ PartnerGroupReportChart.args = {
   chartType: "",
   startDate: moment(),
   endDate: moment(),
+};
+
+export const RecentTransactionTableView = TemplateFive.bind({});
+RecentTransactionTableView.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  startDate: moment(),
+  endDate: moment(),
+  userId: "",
+  currency: "",
+  limit: "10",
 };
 
 export const MiniTransactionCard = TemplateThree.bind({});
