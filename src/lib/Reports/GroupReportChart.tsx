@@ -116,8 +116,7 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
     ? props.chartOptions
     : option;
 
-  const groupHandler = (group: string) => {
-    setGroup(group);
+  const setDateRange = (group: any) => {
     if (group === "monthly") {
       const start = moment(props.startDate).startOf("year").startOf("month");
       const end = moment(props.startDate).endOf("year").endOf("month");
@@ -127,6 +126,19 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
       setStartDate(props.startDate);
       setEndDate(props.endDate);
     }
+  };
+
+  useEffect(
+    () => {
+      setDateRange(group);
+    },
+    // eslint-disable-next-line
+    [props.startDate, props.endDate]
+  );
+
+  const groupHandler = (group: string) => {
+    setGroup(group);
+    setDateRange(group);
   };
 
   useEffect(() => {
