@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { _fetchReportTransactions } from "../services/balances";
 import styled from "styled-components";
 import moment from "moment";
