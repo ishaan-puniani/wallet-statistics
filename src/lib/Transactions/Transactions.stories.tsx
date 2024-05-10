@@ -4,6 +4,7 @@ import { getServiceAccountCredentials } from "../../utilities/storage";
 import TransactionDetails from "./TransactionDetails";
 import TransactionRuleValidation from "./TransactionRuleValidation";
 import CouponValidation from "./CouponValidation";
+import PartnerLevel from "./PartnerLevel";
 
 export default {
   title: "Example/Transactions",
@@ -25,6 +26,11 @@ const TemplateTwo: ComponentStory<typeof TransactionRuleValidation> = (
 const TemplateThree :ComponentStory<typeof CouponValidation> =(args)=>(
   <CouponValidation {...args}/>
 )
+
+const TemplateFour :ComponentStory<typeof PartnerLevel> =(args)=>(
+  <PartnerLevel {...args}/>
+)
+
 export const Default = Template.bind({});
 Default.args = {
   credentials: getServiceAccountCredentials() || {},
@@ -39,5 +45,10 @@ TransactionRule.args = {
 
 export const Coupon = TemplateThree.bind({});
 Coupon.args = {
+  credentials: getServiceAccountCredentials() || {},
+};
+
+export const PartnerLevels = TemplateFour.bind({});
+PartnerLevels.args = {
   credentials: getServiceAccountCredentials() || {},
 };

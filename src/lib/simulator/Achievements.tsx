@@ -13,12 +13,17 @@ export interface IAchievements {
 const Achievements = (props: IAchievements) => {
   const { register, handleSubmit } = useForm();
   const onSubmit = async (data: any) => {
-    const simulateUserAchievement = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/sim-user-achievements`,
-      {
-        data,
-      }
-    );
+    try {
+      const simulateUserAchievement = await axios.post(
+        `${API_HOST}/tenant/${props.credentials.application_id}/simulate-user-achievements`,
+        {
+          data,
+        }
+      );
+      console.log(simulateUserAchievement);
+    } catch (err: any) {
+      console.log(err?.response?.data);
+    }
   };
 
   return (
@@ -42,10 +47,7 @@ const Achievements = (props: IAchievements) => {
               </li>
             </div>
           </ul>
-          <div
-          
-            className="formStyle formStyle-btn"
-          >
+          <div className="formStyle formStyle-btn">
             <input type="submit" />
           </div>
         </form>
