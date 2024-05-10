@@ -5,6 +5,7 @@ import ReportBalanceChart from "./ReportBalanceChart";
 import MiniTransactionTypeCard from "./MiniTransactionTypeCard";
 import GroupReportChart from "./GroupReportChart";
 import RecentTransactionTable from "./RecentTransactionTable";
+import MiniCard from "./MiniCard";
 
 export const _renderReportChart = (container: any, props: any) => {
   ReactDOM.render(<ReportChart {...props} />, container);
@@ -24,4 +25,8 @@ export const _renderGroupReportChart = (container: any, props: any) => {
 
 export const _renderRecentTransactionTable = (container: any, props: any) => {
   ReactDOM.render(<RecentTransactionTable {...props} />, container);
+};
+
+export const _renderMiniCard = (container: any, props: any) => {
+  ReactDOM.render(<MiniCard {...props} />, container);
 };
