@@ -97,8 +97,6 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState("daily");
-  const [startDate, setStartDate] = useState<any>(props.startDate);
-  const [endDate, setEndDate] = useState<any>(props.endDate);
 
   const transactionTypes =
     props.transactionTypes.length > 0
@@ -116,24 +114,24 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
     ? props.chartOptions
     : option;
 
-  const setDateRange = (group: any) => {
+  const getDateRange = (group: any) => {
     if (group === "monthly") {
       const start = moment(props.startDate).startOf("year").startOf("month");
       const end = moment(props.startDate).endOf("year").endOf("month");
-      setStartDate(start);
-      setEndDate(end);
+      return {
+        startDate: start.format("YYYY-MM-DD"),
+        endDate: end.format("YYYY-MM-DD"),
+      };
     } else if (group === "daily" || group === "weekly") {
-      setStartDate(props.startDate);
-      setEndDate(props.endDate);
+      return {
+        startDate: moment(props.startDate).format("YYYY-MM-DD"),
+        endDate: moment(props.endDate).format("YYYY-MM-DD"),
+      };
     }
   };
-  useEffect(() => {
-    setDateRange(group);
-  }, [props.startDate, props.endDate]);
 
   const groupHandler = (group: string) => {
     setGroup(group);
-    setDateRange(group);
   };
 
   useEffect(() => {
@@ -144,8 +142,8 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
         props.credentials,
         props.userId,
         props.currency,
-        moment(startDate).format("YYYY-MM-DD"),
-        moment(endDate).format("YYYY-MM-DD"),
+        getDateRange(group).startDate,
+        getDateRange(group).endDate,
         group,
         includePrevious,
         includeToday
@@ -220,8 +218,8 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
   }, [
     props.userId,
     props.currency,
-    startDate,
-    endDate,
+    props.startDate,
+    props.endDate,
     props.chartType,
     props.themeConfig,
     props.transactionTypes,
