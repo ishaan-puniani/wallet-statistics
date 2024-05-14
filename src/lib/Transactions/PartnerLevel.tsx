@@ -15,21 +15,23 @@ const PartnerLevel = (props: PartnerLevelProps) => {
 
   const fetchHeirarchy = async (forLevel: any) => {
     const children = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/partner-level-type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ?filter%5BpartnerLevelTypeIdentifier%5D=${forLevel}&orderBy=rank_ASC`,
-      { ...props.credentials }
+      `${API_HOST}/tenant/${props.credentials.application_id}/get-partner-level-type?filter[partnerLevelTypeIdentifier]=${forLevel}`,
+      {
+        ...props.credentials,
+      }
     );
-    setLevel(children.rows);
+    setLevel(children.data.rows);
   };
 
   const fethPartners = async () => {
     try {
       const partners = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/partners?orderBy=partnerId_ASC`,
+        `${API_HOST}/tenant/${props.credentials.application_id}/get-partners?orderBy=partnerId_ASC`,
         { ...props.credentials }
       );
 
-      if (partners.count > 0) {
-        setDownLine(partners.rows);
+      if (partners.data.count > 0) {
+        setDownLine(partners.data.rows);
       }
     } catch (err: any) {
       console.error(err?.response?.data);
@@ -42,8 +44,14 @@ const PartnerLevel = (props: PartnerLevelProps) => {
   }, [selectedLevel]);
   return (
     <div>
+      {JSON.stringify("--------------LEVEL-----------------")}
+      <br />
       {JSON.stringify(level)}
+      <br />
+      {JSON.stringify("--------------Downline-----------------")}
+      <br />
       {JSON.stringify(downLine)}
+      <br />
     </div>
   );
 };
