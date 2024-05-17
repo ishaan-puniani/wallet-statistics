@@ -18,6 +18,7 @@ const Achievements = (props: IAchievements) => {
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-user-achievements`,
         {
           data,
+          ...props.credentials,
         }
       );
       console.log(simulateUserAchievement);
