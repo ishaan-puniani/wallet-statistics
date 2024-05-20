@@ -448,5 +448,36 @@ export const SimulatorWrapper = styled.div`
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
   }
+  table,
+  td,
+  th {
+    border: 1px solid black;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  td {
+    text-align: center;
+  }
+
+
+  .submitBtn {
+    width: 160px;
+    margin-left: auto;
+    background: #4691a4;
+    padding: 8px 15px 8px 15px;
+    border: none;
+    margin:10px;
+  }
+  .cancelBtn {
+    width: 150px;
+    margin-left: auto;
+    padding: 8px 15px 8px 15px;
+    border: none;
+    margin:10px;
+
+  }
 `;
 export default Simulator;
