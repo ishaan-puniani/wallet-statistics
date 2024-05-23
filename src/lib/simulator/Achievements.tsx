@@ -67,7 +67,7 @@ const Achievements = (props: IAchievements) => {
             <div>
               <table>
                 <tr>
-                  <th>Identifier</th>
+                  <th>Achievement Identifier</th>
                   <th>Amount</th>
                   <th>Currency</th>
                   <th>Reward Type </th>
