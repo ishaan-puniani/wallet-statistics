@@ -11,7 +11,7 @@ export interface IAchievements {
 }
 
 const Achievements = (props: IAchievements) => {
-  const { register, handleSubmit,  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const [view, setView] = useState(false);
   const [simualteRecord, setSimulateRecord] = useState<any>();
@@ -24,16 +24,16 @@ const Achievements = (props: IAchievements) => {
           ...props.credentials,
         }
       );
-      setSimulateRecord(simulateUserAchievement.data);
-      setView(true);
+      if (simulateUserAchievement.data.length > 0) {
+        setSimulateRecord(simulateUserAchievement.data);
+        setView(true);
+      }
       console.log(simulateUserAchievement);
     } catch (err: any) {
-      alert(err?.response?.data)
+      alert(err?.response?.data);
       console.log(err?.response?.data);
     }
   };
-
-
 
   return (
     <>
@@ -48,16 +48,17 @@ const Achievements = (props: IAchievements) => {
                     <label>Achiever Id :</label>
                     <input
                       value={props.achieverId}
+                      required
                       {...register("achieverId")}
                     />
                   </li>
                   <li>
                     <label>Achievement Identifier : </label>
-                    <input value={props.action} {...register("action")} />
+                    <input required value={props.action} {...register("action")} />
                   </li>
                   <li>
                     <label>Value :</label>
-                    <input value={props.value} {...register("value")} />
+                    <input required value={props.value} {...register("value")} />
                   </li>
                 </div>
               </ul>
@@ -79,18 +80,34 @@ const Achievements = (props: IAchievements) => {
                       <p>{transaction.achievementIdentifier}</p>
                     </td>
                     <td>
-                      <p>{transaction.achievements?.transactionRewardDetail?.amount}</p>
-                    </td>
-                    <td>
-                      <p>{transaction.achievements?.transactionRewardDetail?.currency}</p>
-                    </td>
-                    <td>
-                      <p>{transaction.achievements?.transactionRewardDetail?.rewardType}</p>
+                      <p>
+                        {
+                          transaction.achievements?.transactionRewardDetail
+                            ?.amount
+                        }
+                      </p>
                     </td>
                     <td>
                       <p>
                         {
-                          transaction.achievements?.transactionRewardDetail?.transactionTypeIdentifier
+                          transaction.achievements?.transactionRewardDetail
+                            ?.currency
+                        }
+                      </p>
+                    </td>
+                    <td>
+                      <p>
+                        {
+                          transaction.achievements?.transactionRewardDetail
+                            ?.rewardType
+                        }
+                      </p>
+                    </td>
+                    <td>
+                      <p>
+                        {
+                          transaction.achievements?.transactionRewardDetail
+                            ?.transactionTypeIdentifier
                         }
                       </p>
                     </td>
@@ -99,7 +116,7 @@ const Achievements = (props: IAchievements) => {
               </table>
             </div>
           )}
-         
+
           <div
             className=" formBtn"
             style={{
@@ -110,10 +127,7 @@ const Achievements = (props: IAchievements) => {
           >
             {!view && (
               <div className="formLayout">
-                <button
-                  className="submitBtn"
-                  type="submit"
-                >
+                <button className="submitBtn" type="submit">
                   Simulate
                 </button>
               </div>
@@ -125,7 +139,7 @@ const Achievements = (props: IAchievements) => {
                 </button>
 
                 {/* TODO INTEGRATE */}
-                
+
                 {/* <button
                   className="submitBtn"
                   onClick={(values)=>console.log(values)}
