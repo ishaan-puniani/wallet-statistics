@@ -38,7 +38,7 @@ const Achievements = (props: IAchievements) => {
   return (
     <>
       <SimulatorWrapper>
-        <h1>Achievement Stimulator</h1>
+        <h1>Achievement Simulator</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           {!view && (
             <>
@@ -52,7 +52,7 @@ const Achievements = (props: IAchievements) => {
                     />
                   </li>
                   <li>
-                    <label>Action : </label>
+                    <label>Achievement Identifier : </label>
                     <input value={props.action} {...register("action")} />
                   </li>
                   <li>

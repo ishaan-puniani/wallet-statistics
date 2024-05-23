@@ -376,7 +376,7 @@ export const SimulatorWrapper = styled.div`
   .formStyle li {
     padding: 0;
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
     width: auto;
     list-style: none;
     margin: 10px 0 0 0;
@@ -420,7 +420,7 @@ export const SimulatorWrapper = styled.div`
     }
   }
   .formStyle .achievement > li {
-    width: 480px;
+    width: 500px;
     @media screen and (max-width: 845px) {
       width: 275px;
     }
