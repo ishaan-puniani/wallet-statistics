@@ -1,6 +1,6 @@
 {
   "name": "@ishaan-puniani/wallet-statistics",
-  "version": "0.0.184",
+  "version": "0.0.185",
   "description": "",
   "main": "build/index.js",
   "types": "build/types/index.d.ts",
