@@ -35,6 +35,7 @@ export interface IStimulatorProps {
   achieverId?: string;
   action?: string;
   value?: number;
+  achievementIdentifier?:string;
 }
 
 const Stimulator = (props: IStimulatorProps) => {
@@ -145,6 +146,9 @@ const Stimulator = (props: IStimulatorProps) => {
                     </li>
                     <li className={`${step === 5 ? "activeStep" : ""}`}>
                       Commission and Metadata
+                    </li>
+                    <li className={`${step === 6 ? "activeStep" : ""}`}>
+                      Achievement Rewards
                     </li>
                   </ul>
                 </div>
@@ -399,6 +403,31 @@ const Stimulator = (props: IStimulatorProps) => {
                         </li>
                       </>
                     )}
+                     {step === 6 && (
+                      <>
+                        <li>
+                          <label>Achiever Id :</label>
+                          <input
+                            value={props.achieverId}
+                            {...form.register("achieverId")}
+                          />
+                        </li>
+                        <li>
+                          <label>Achievement Identifier :</label>
+                          <input
+                            value={props.achievementIdentifier}
+                            {...form.register("achievementIdentifier")}
+                          />
+                        </li>
+                        <li>
+                          <label>Value :</label>
+                          <input
+                            value={props.value}
+                            {...form.register("value")}
+                          />
+                        </li>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -458,7 +487,7 @@ const Stimulator = (props: IStimulatorProps) => {
                       Previous
                     </button>
                   )}
-                  {step !== 5 && (
+                  {step !== 6 && (
                     <button
                       className="submitBtn"
                       type="button"
@@ -468,7 +497,7 @@ const Stimulator = (props: IStimulatorProps) => {
                       Next
                     </button>
                   )}{" "}
-                  {step === 5 && (
+                  {step === 6 && (
                     <button
                       className="submitBtn"
                       type="submit"

@@ -18,7 +18,7 @@ export default {
 const Template: ComponentStory<typeof Simulator> = (args) => (
   <Simulator {...args} />
 );
-const TemplateStimulator: ComponentStory<typeof Stimulator> = (args) => (
+const Transactions: ComponentStory<typeof Stimulator> = (args) => (
   <Stimulator {...args} />
 );
 const TemplateAchievements: ComponentStory<typeof Achievements> = (args) => (
@@ -29,5 +29,5 @@ export const Default = Template.bind({});
 Default.args = { credentials: getServiceAccountCredentials() || {} };
 export const Achievement = TemplateAchievements.bind({});
 Achievement.args = { credentials: getServiceAccountCredentials() || {} };
-export const DefaultStimulator = TemplateStimulator.bind({});
-DefaultStimulator.args = { credentials: getServiceAccountCredentials() || {} };
+export const TransactionSimulator = Transactions.bind({});
+TransactionSimulator.args = { credentials: getServiceAccountCredentials() || {} };

@@ -45,7 +45,9 @@ const Achievements = (props: IAchievements) => {
               <ul className="formStyle">
                 <div className="achievement">
                   <li>
-                    <label>Achiever Id :</label>
+                    <label>
+                      Achiever Id <sup className="requiredStar">*</sup> :
+                    </label>
                     <input
                       value={props.achieverId}
                       required
@@ -53,12 +55,25 @@ const Achievements = (props: IAchievements) => {
                     />
                   </li>
                   <li>
-                    <label>Achievement Identifier : </label>
-                    <input required value={props.action} {...register("action")} />
+                    <label>
+                      Achievement Identifier{" "}
+                      <sup className="requiredStar">*</sup> : :{" "}
+                    </label>
+                    <input
+                      required
+                      value={props.action}
+                      {...register("action")}
+                    />
                   </li>
                   <li>
-                    <label>Value :</label>
-                    <input required value={props.value} {...register("value")} />
+                    <label>
+                      Value <sup className="requiredStar">*</sup> : :
+                    </label>
+                    <input
+                      required
+                      value={props.value}
+                      {...register("value")}
+                    />
                   </li>
                 </div>
               </ul>
