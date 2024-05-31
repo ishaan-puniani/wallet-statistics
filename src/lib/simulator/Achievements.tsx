@@ -24,6 +24,9 @@ const Achievements = (props: IAchievements) => {
           ...props.credentials,
         }
       );
+      if(simulateUserAchievement.data.length ===0){
+        alert('No Data')
+      }
       if (simulateUserAchievement.data.length > 0) {
         setSimulateRecord(simulateUserAchievement.data);
         setView(true);

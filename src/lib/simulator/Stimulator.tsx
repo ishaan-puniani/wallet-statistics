@@ -35,7 +35,7 @@ export interface IStimulatorProps {
   achieverId?: string;
   action?: string;
   value?: number;
-  achievementIdentifier?:string;
+  achievementIdentifier?: string;
 }
 
 const Stimulator = (props: IStimulatorProps) => {
@@ -115,6 +115,8 @@ const Stimulator = (props: IStimulatorProps) => {
         return service && provider && vendor;
       case 5:
         return fromWallet;
+      case 6:
+        return true;
       default:
         return false;
     }
@@ -403,7 +405,7 @@ const Stimulator = (props: IStimulatorProps) => {
                         </li>
                       </>
                     )}
-                     {step === 6 && (
+                    {step === 6 && (
                       <>
                         <li>
                           <label>Achiever Id :</label>
