@@ -36,7 +36,7 @@ export interface IStimulatorProps {
   action?: string;
   value?: number;
   achievementIdentifier?: string;
-  achivements?: JSON;
+  achievements?: JSON;
 }
 
 const Stimulator = (props: IStimulatorProps) => {
@@ -47,13 +47,15 @@ const Stimulator = (props: IStimulatorProps) => {
   const form = useForm();
 
   const onSubmit = async (data: any) => {
+    // eslint-disable-next-line no-debugger
+    debugger
     const record = {
       ...data,
-      achivements: [
+      achievements: [
         {
           achieverId: data.achieverId,
           action: data.action,
-          value: data.value,
+          value: data.value||0,
         },
       ],
     };
@@ -61,7 +63,7 @@ const Stimulator = (props: IStimulatorProps) => {
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
         {
-          record,
+         data: record,
         }
       );
 
@@ -75,11 +77,11 @@ const Stimulator = (props: IStimulatorProps) => {
   const handleDotransaction = async (data: any) => {
     const record = {
       ...data,
-      achivements: [
+      achievements: [
         {
           achieverId: data.achieverId,
           action: data.action,
-          value: data.value,
+          value: data.value||0,
         },
       ],
     };
@@ -87,7 +89,7 @@ const Stimulator = (props: IStimulatorProps) => {
       const response = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
         {
-          record,
+          data: record,
           ...props.credentials,
         }
       );
