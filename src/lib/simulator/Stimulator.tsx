@@ -458,88 +458,97 @@ const Stimulator = (props: IStimulatorProps) => {
               </div>
             )}
             {view && (
-              <div>
-                <table>
-                  <tr>
-                    <th>Partner Id</th>
-                    <th>Is Credit</th>
-                    <th>Transaction Type</th>
-                    <th>Currency </th>
-                    <th>Amount </th>
-                    <th>Achievements </th>
-                  </tr>
-                  {record.map((transaction: any) => (
+              <>
+                <div>
+                  <table>
                     <tr>
-                      <td>
-                        <p>
-                          {transaction?.isCredit
-                            ? transaction?.payeeId
-                            : transaction?.payerId}
-                        </p>
-                      </td>
-                      <td>
-                        <p>{transaction?.isCredit ? "true" : "false"}</p>
-                      </td>
-                      <td>
-                        <p>{transaction?.transactionTypeIdentifier}</p>
-                      </td>
-                      <td>
-                        <p>{transaction?.currency}</p>
-                      </td>
-                      <td>
-                        <p>{transaction?.amount}</p>
-                      </td>
-                      <td>
-                        {transaction.achievements.map((achievement: any) => (
-                          <div key={achievement.id}>
-                            <span>
-                              Achievement - {achievement.achievementIdentifier}
-                            </span>
-                            <br />
-                            <span>
-                              Reward Type -{" "}
+                      <th>Partner Id</th>
+                      <th>Is Credit</th>
+                      <th>Transaction Type</th>
+                      <th>Currency </th>
+                      <th>Amount </th>
+                    </tr>
+                    {record.map((transaction: any) => (
+                      <tr>
+                        <td>
+                          <p>
+                            {transaction?.isCredit
+                              ? transaction?.payeeId
+                              : transaction?.payerId}
+                          </p>
+                        </td>
+                        <td>
+                          <p>{transaction?.isCredit ? "true" : "false"}</p>
+                        </td>
+                        <td>
+                          <p>{transaction?.transactionTypeIdentifier}</p>
+                        </td>
+                        <td>
+                          <p>{transaction?.currency}</p>
+                        </td>
+                        <td>
+                          <p>{transaction?.amount}</p>
+                        </td>
+                      
+                      </tr>
+                    ))}
+                  </table>
+                </div>
+                {record && record[0]?.achievements.length > 0 && (
+                  <>
+                    <h1 className="rewardtitle">Achievement Rewards</h1>
+                    <table>
+                      <tr>
+                        <th>Achievement</th>
+                        <th>Reward Type</th>
+                        <th>Coupon Type</th>
+                        <th>Currency</th>
+                        <th>Amount</th>
+                      </tr>
+                      {record[0].achievements.map((transaction: any) => (
+                        <tr>
+                          <td>
+                            <p>{transaction.achievementIdentifier}</p>
+                          </td>
+                          <td>
+                            <p>
                               {
-                                achievement.achievements.transactionRewardDetail
+                                transaction.achievements.transactionRewardDetail
                                   ?.rewardType
                               }
-                            </span>
-                            <br />
-                            {achievement.achievements.transactionRewardDetail
-                              ?.couponType && (
-                              <>
-                                <span>
-                                  Coupon Type -{" "}
-                                  {
-                                    achievement.achievements
-                                      .transactionRewardDetail?.couponType
-                                  }
-                                </span>
-                                <br />
-                              </>
-                            )}
-                            <span>
-                              Amount -{" "}
+                            </p>
+                          </td>
+                          <td>
+                            <p>
+                              {" "}
                               {
-                                achievement.achievements.transactionRewardDetail
-                                  .amount
+                                transaction.achievements.transactionRewardDetail
+                                  ?.couponType
                               }
-                            </span>
-                            <br />
-                            <span>
-                              Currency -{" "}
+                            </p>
+                          </td>
+                          <td>
+                            <p>
                               {
-                                achievement.achievements.transactionRewardDetail
-                                  .currency
+                                transaction?.achievements
+                                  .transactionRewardDetail.currency
                               }
-                            </span>
-                            <br />
-                          </div>
-                        ))}
-                      </td>
-                    </tr>
-                  ))}
-                </table>
-              </div>
+                            </p>
+                          </td>
+                          <td>
+                            <p>
+                              {
+                                transaction?.achievements
+                                  .transactionRewardDetail.amount
+                              }
+                            </p>
+                          </td>
+                        </tr>
+                      ))}
+                    </table>
+                  </>
+                )}
+              </>
             )}
             <div
               className=" formBtn"
@@ -606,6 +615,9 @@ export const StimulatorWrapper = styled.div`
     margin: 24px;
     height: 240px;
   }
+  .rewardtitle{
+    margin-top:10px
+  }
   .formBtn {
     input {
       margin: 5px;
@@ -621,6 +633,7 @@ export const StimulatorWrapper = styled.div`
   .formError {
     color: #ff0000;
   }
+  
   .formStyle li {
     padding: 0;
     display: flex;
