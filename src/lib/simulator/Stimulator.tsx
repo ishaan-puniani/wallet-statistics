@@ -48,14 +48,14 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const onSubmit = async (data: any) => {
     // eslint-disable-next-line no-debugger
-    debugger
+    debugger;
     const record = {
       ...data,
       achievements: [
         {
           achieverId: data.achieverId,
           action: data.action,
-          value: data.value||0,
+          value: data.value || 0,
         },
       ],
     };
@@ -63,7 +63,7 @@ const Stimulator = (props: IStimulatorProps) => {
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
         {
-         data: record,
+          data: record,
         }
       );
 
@@ -81,7 +81,7 @@ const Stimulator = (props: IStimulatorProps) => {
         {
           achieverId: data.achieverId,
           action: data.action,
-          value: data.value||0,
+          value: data.value || 0,
         },
       ],
     };
@@ -466,6 +466,7 @@ const Stimulator = (props: IStimulatorProps) => {
                     <th>Transaction Type</th>
                     <th>Currency </th>
                     <th>Amount </th>
+                    <th>Achievements </th>
                   </tr>
                   {record.map((transaction: any) => (
                     <tr>
@@ -487,6 +488,53 @@ const Stimulator = (props: IStimulatorProps) => {
                       </td>
                       <td>
                         <p>{transaction?.amount}</p>
+                      </td>
+                      <td>
+                        {transaction.achievements.map((achievement: any) => (
+                          <div key={achievement.id}>
+                            <span>
+                              Achievement - {achievement.achievementIdentifier}
+                            </span>
+                            <br />
+                            <span>
+                              Reward Type -{" "}
+                              {
+                                achievement.achievements.transactionRewardDetail
+                                  ?.rewardType
+                              }
+                            </span>
+                            <br />
+                            {achievement.achievements.transactionRewardDetail
+                              ?.couponType && (
+                              <>
+                                <span>
+                                  Coupon Type -{" "}
+                                  {
+                                    achievement.achievements
+                                      .transactionRewardDetail?.couponType
+                                  }
+                                </span>
+                                <br />
+                              </>
+                            )}
+                            <span>
+                              Amount -{" "}
+                              {
+                                achievement.achievements.transactionRewardDetail
+                                  .amount
+                              }
+                            </span>
+                            <br />
+                            <span>
+                              Currency -{" "}
+                              {
+                                achievement.achievements.transactionRewardDetail
+                                  .currency
+                              }
+                            </span>
+                            <br />
+                          </div>
+                        ))}
                       </td>
                     </tr>
                   ))}
