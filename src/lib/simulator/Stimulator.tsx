@@ -489,7 +489,6 @@ const Stimulator = (props: IStimulatorProps) => {
                         <td>
                           <p>{transaction?.amount}</p>
                         </td>
-                      
                       </tr>
                     ))}
                   </table>
@@ -504,6 +503,7 @@ const Stimulator = (props: IStimulatorProps) => {
                         <th>Coupon Type</th>
                         <th>Currency</th>
                         <th>Amount</th>
+                        <th>End Date</th>
                       </tr>
                       {record[0].achievements.map((transaction: any) => (
                         <tr>
@@ -540,6 +540,14 @@ const Stimulator = (props: IStimulatorProps) => {
                               {
                                 transaction?.achievements
                                   .transactionRewardDetail.amount
+                              }
+                            </p>
+                          </td>
+                          <td>
+                            <p>
+                              {
+                                transaction.achievements.transactionRewardDetail
+                                  ?.endDate
                               }
                             </p>
                           </td>
@@ -615,8 +623,8 @@ export const StimulatorWrapper = styled.div`
     margin: 24px;
     height: 240px;
   }
-  .rewardtitle{
-    margin-top:10px
+  .rewardtitle {
+    margin-top: 10px;
   }
   .formBtn {
     input {
@@ -633,7 +641,7 @@ export const StimulatorWrapper = styled.div`
   .formError {
     color: #ff0000;
   }
-  
+
   .formStyle li {
     padding: 0;
     display: flex;
