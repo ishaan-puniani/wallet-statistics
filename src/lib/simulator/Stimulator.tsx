@@ -493,7 +493,7 @@ const Stimulator = (props: IStimulatorProps) => {
                     ))}
                   </table>
                 </div>
-                {record && record[0]?.achievements.length > 0 && (
+                {record && record[0]?.achievements?.length > 0 && (
                   <>
                     <h1 className="rewardtitle">Achievement Rewards</h1>
                     <table>
