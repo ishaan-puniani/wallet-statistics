@@ -169,11 +169,13 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         props.parentTransactionTypeIdentifier &&
         props.parentTransactionTypeIdentifier !== ""
       ) {
-        // const total = props.transactionTypes?.reduce((acc, curr) => {
-        //   return balance[curr] ?? 0 + acc;
-        // }, 0);
+        const total = props.transactionTypes?.reduce((acc, curr) => {
+          return (acc = acc + balance[curr] ?? 0);
+        }, 0);
         chartData.push({
-          value: Math.abs(balance[props.parentTransactionTypeIdentifier]),
+          value: Math.abs(
+            balance[props.parentTransactionTypeIdentifier] - total
+          ),
           name: props.identifierMapper[props.parentTransactionTypeIdentifier],
         });
         chartColors.push(props?.parentChartColor ?? makeRandomColor());
