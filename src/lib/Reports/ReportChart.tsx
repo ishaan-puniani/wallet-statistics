@@ -62,6 +62,7 @@ export interface IPartnerBalancesPieChartProps {
   includePrevious: boolean;
   includeToday: boolean;
   amountType?: "amount" | "virtual";
+  setChartLoading?: any;
 }
 
 const option: any = {
@@ -100,9 +101,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
       : transactionType;
 
   const themeConfig =
-    Object.keys(props.themeConfig).length > 0
-      ? props.themeConfig
-      : null;
+    Object.keys(props.themeConfig).length > 0 ? props.themeConfig : null;
 
   const chartType = props.chartType || "bar";
 
@@ -118,6 +117,9 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      if (props?.setChartLoading) {
+        props?.setChartLoading(true);
+      }
 
       const balances = await _fetchGetBalances(
         props.credentials,
@@ -171,7 +173,9 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
               }
             }),
             itemStyle: {
-              color: themeConfig && themeConfig[dataType?.label] || makeRandomColor(),
+              color:
+                (themeConfig && themeConfig[dataType?.label]) ||
+                makeRandomColor(),
             },
             smooth: true,
             symbol: "none",
@@ -184,6 +188,9 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
 
       setChartOption(chartOptions);
       setLoading(false);
+      if (props?.setChartLoading) {
+        props?.setChartLoading(false);
+      }
     };
 
     fetchData();

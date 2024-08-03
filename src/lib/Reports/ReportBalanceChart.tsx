@@ -54,6 +54,8 @@ export interface IPartnerBalancesPieChartProps {
   parentTransactionTypeIdentifier?: string;
   updateParentTransactionTypeId?: any;
   pieSliceClickable?: boolean;
+  parentChartColor?: string;
+  setChartLoading?: any;
 }
 
 const option: any = {
@@ -108,6 +110,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      if (props?.setChartLoading) {
+        props?.setChartLoading(true);
+      }
       let balances: any;
       if (
         props.transactionTypes.length ||
@@ -164,16 +169,14 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         props.parentTransactionTypeIdentifier &&
         props.parentTransactionTypeIdentifier !== ""
       ) {
-        const total = props.transactionTypes?.reduce((acc, curr) => {
-          return balance[curr] ?? 0 + acc;
-        }, 0);
+        // const total = props.transactionTypes?.reduce((acc, curr) => {
+        //   return balance[curr] ?? 0 + acc;
+        // }, 0);
         chartData.push({
-          value: Math.abs(
-            total - balance[props.parentTransactionTypeIdentifier]
-          ),
+          value: Math.abs(balance[props.parentTransactionTypeIdentifier]),
           name: props.identifierMapper[props.parentTransactionTypeIdentifier],
         });
-        chartColors.push(makeRandomColor());
+        chartColors.push(props?.parentChartColor ?? makeRandomColor());
       }
       console.log(props.transactionTypes);
       console.log("identifierMapper", props.identifierMapper);
@@ -221,6 +224,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       setChartOption(chartOptions);
 
       setLoading(false);
+      if (props?.setChartLoading) {
+        props?.setChartLoading(false);
+      }
     };
     fetchData();
   }, [
