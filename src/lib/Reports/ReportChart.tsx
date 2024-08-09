@@ -63,6 +63,7 @@ export interface IPartnerBalancesPieChartProps {
   includeToday: boolean;
   amountType?: "amount" | "virtual";
   setChartLoading?: any;
+  absolute?: boolean;
 }
 
 const option: any = {
@@ -142,33 +143,53 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
             data: balances.map((row: any) => {
               if (dataType.type === "debit") {
                 if (props.amountType === "virtual") {
-                  return (
-                    row?.groupedDebitVirtualValues[dataType?.transactionType] ||
-                    0
-                  );
+                  return props?.absolute
+                    ? Math.abs(
+                        row?.groupedDebitVirtualValues[
+                          dataType?.transactionType
+                        ]
+                      ) || 0
+                    : row?.groupedDebitVirtualValues[
+                        dataType?.transactionType
+                      ] || 0;
                 } else {
-                  return (
-                    row?.groupedDebitAmounts[dataType?.transactionType] || 0
-                  );
+                  return props?.absolute
+                    ? Math.abs(
+                        row?.groupedDebitAmounts[dataType?.transactionType]
+                      ) || 0
+                    : row?.groupedDebitAmounts[dataType?.transactionType] || 0;
                 }
               } else if (dataType.type === "credit") {
                 if (props.amountType === "virtual") {
-                  return (
-                    row?.groupedCrediVirtualValues[dataType?.transactionType] ||
-                    0
-                  );
+                  return props?.absolute
+                    ? Math.abs(
+                        row?.groupedCrediVirtualValues[
+                          dataType?.transactionType
+                        ]
+                      ) || 0
+                    : row?.groupedCrediVirtualValues[
+                        dataType?.transactionType
+                      ] || 0;
                 } else {
-                  return (
-                    row?.groupedCreditAmounts[dataType?.transactionType] || 0
-                  );
+                  return props?.absolute
+                    ? Math.abs(
+                        row?.groupedCreditAmounts[dataType?.transactionType]
+                      ) || 0
+                    : row?.groupedCreditAmounts[dataType?.transactionType] || 0;
                 }
               } else if (dataType.type === "balance") {
                 if (props.amountType === "virtual") {
-                  return (
-                    row?.groupedVirtualValues[dataType?.transactionType] || 0
-                  );
+                  return props?.absolute
+                    ? Math.abs(
+                        row?.groupedVirtualValues[dataType?.transactionType]
+                      ) || 0
+                    : row?.groupedVirtualValues[dataType?.transactionType] || 0;
                 } else {
-                  return row?.groupedAmounts[dataType?.transactionType] || 0;
+                  return props?.absolute
+                    ? Math.abs(
+                        row?.groupedAmounts[dataType?.transactionType]
+                      ) || 0
+                    : row?.groupedAmounts[dataType?.transactionType] || 0;
                 }
               }
             }),
