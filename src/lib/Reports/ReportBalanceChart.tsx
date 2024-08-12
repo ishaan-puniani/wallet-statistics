@@ -174,7 +174,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           props.parentTransactionTypeIdentifier
         );
         const total = props.transactionTypes?.reduce((acc, curr) => {
-          return (acc = acc + balance[curr] ?? 0);
+          return (acc = acc + (balance[curr] ?? 0));
         }, 0);
         console.log("total", total);
         chartData.push({
