@@ -30,4 +30,9 @@ Default.args = { credentials: getServiceAccountCredentials() || {} };
 export const Achievement = TemplateAchievements.bind({});
 Achievement.args = { credentials: getServiceAccountCredentials() || {} };
 export const TransactionSimulator = Transactions.bind({});
-TransactionSimulator.args = { credentials: getServiceAccountCredentials() || {} };
+TransactionSimulator.args = {
+  credentials: getServiceAccountCredentials() || {},
+  defaultValues: {},
+  fieldsToShow: [],
+  tabsToShow: [],
+};

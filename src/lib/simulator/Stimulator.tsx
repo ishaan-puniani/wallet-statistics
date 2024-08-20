@@ -3,40 +3,13 @@ import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { API_HOST } from "../../constants";
 import styled from "styled-components";
+
 export interface IStimulatorProps {
   credentials?: any;
-  transactionType?: "WALLET_REFUND" | "CP_WITHDRAWAL";
-  amount?: string;
-  currency?: "USD" | "COINS" | "CUSDT";
-  virtualValue?: 0;
-  isCredit?: "true" | "false";
-  reference?: string;
-  paymentMethod?: string;
-  remark?: string;
-  description?: string;
-  productId?: string;
-  productName?: string;
-  sku?: string;
-  payerId?: string;
-  payerName?: string;
-  payeeId?: string;
-  payeeName?: string;
-  onBehalfOfId?: string;
-  onBehalfOfName?: string;
-  additionalData?: string;
-  baseTransaction?: string;
-  service?: string;
-  provider?: string;
-  vendor?: string;
-  executeCommissionFor?: string;
-  executeCommissionAmount?: string;
-  metadata?: string;
-  fromWallet?: string;
-  achieverId?: string;
-  action?: string;
-  value?: number;
-  achievementIdentifier?: string;
-  achievements?: JSON;
+  tabsToShow?: [1, 3, 6];
+  fieldsToShow?: ["transactionType", "amount"];
+  defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
+  defaultValues?: Record<string, any>;
 }
 
 const Stimulator = (props: IStimulatorProps) => {
@@ -106,38 +79,41 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const nextStep = () => {
     form.trigger();
-    setStep(step + 1);
-  };
 
+    const currentIndex = props.tabsToShow?.indexOf(step as any) ?? -1;
+    const nextIndex = currentIndex + 1;
+
+    if (nextIndex < (props.tabsToShow?.length ?? 0)) {
+      const nextStep = props.tabsToShow[nextIndex];
+      setStep(nextStep);
+    }
+  };
   const prevStep = () => {
-    setStep(step - 1);
+    form.trigger();
+    const currentIndex = props.tabsToShow?.indexOf(step as any) ?? -1;
+    const prevIndex = currentIndex - 1;
+
+    if (prevIndex >= 0) {
+      const prevStep = props.tabsToShow[prevIndex];
+      setStep(prevStep);
+    }
   };
 
-  const {
-    transactionType,
-    amount,
-    currency,
-    isCredit,
-    reference,
-    payerId,
-    service,
-    provider,
-    vendor,
-    fromWallet,
-  } = form.watch();
+  const { transactionType, amount, currency, isCredit, payerId, fromWallet } =
+    form.watch();
 
   const handleDisable = () => {
     switch (step) {
       case 1:
         return transactionType && amount && currency && isCredit;
       case 2:
-        return reference;
+        return true;
       case 3:
-        return payerId;
+        return payerId && fromWallet;
       case 4:
-        return service && provider && vendor;
+        return true;
       case 5:
-        return fromWallet;
+        return true;
       case 6:
         return true;
       default:
@@ -145,6 +121,23 @@ const Stimulator = (props: IStimulatorProps) => {
     }
   };
 
+  const isFieldVisible = (field: any) => {
+    if (props.fieldsToShow?.length) {
+      return props.fieldsToShow.includes(field);
+    } else {
+      return true;
+    }
+  };
+  const isStepVisible = (stepIndex: any) => {
+    if (props.tabsToShow?.length) {
+      return props.tabsToShow.includes(stepIndex);
+    }
+    return true; // Show step if tabsToShow is empty or not defined
+  };
+
+  const handleStep = (step: React.SetStateAction<number>) => {
+    setStep(step);
+  };
   return (
     <>
       <StimulatorWrapper>
@@ -155,302 +148,386 @@ const Stimulator = (props: IStimulatorProps) => {
               <div className="flex_container">
                 <div className="steps_list">
                   <ul>
-                    <li className={`${step === 1 ? "activeStep" : ""}`}>
-                      {" "}
-                      Basic Transaction Info
-                    </li>
-                    <li className={`${step === 2 ? "activeStep" : ""}`}>
-                      {" "}
-                      Transaction Details
-                    </li>
-                    <li className={`${step === 3 ? "activeStep" : ""}`}>
-                      Payer and Payee Information
-                    </li>
-                    <li className={`${step === 4 ? "activeStep" : ""}`}>
-                      Service Provide Info
-                    </li>
-                    <li className={`${step === 5 ? "activeStep" : ""}`}>
-                      Commission and Metadata
-                    </li>
-                    <li className={`${step === 6 ? "activeStep" : ""}`}>
-                      Achievement Rewards
-                    </li>
+                    {isStepVisible(1) && (
+                      <li
+                        onClick={() => handleStep(1)}
+                        className={`${step === 1 ? "activeStep" : ""}`}
+                      >
+                        Basic Transaction Info
+                      </li>
+                    )}
+                    {isStepVisible(2) && (
+                      <li
+                        onClick={() => handleStep(2)}
+                        className={`${step === 2 ? "activeStep" : ""}`}
+                      >
+                        Transaction Details
+                      </li>
+                    )}
+                    {isStepVisible(3) && (
+                      <li
+                        onClick={() => handleStep(3)}
+                        className={`${step === 3 ? "activeStep" : ""}`}
+                      >
+                        Payer and Payee Information
+                      </li>
+                    )}
+                    {isStepVisible(4) && (
+                      <li
+                        onClick={() => handleStep(4)}
+                        className={`${step === 4 ? "activeStep" : ""}`}
+                      >
+                        Service Provider Info
+                      </li>
+                    )}
+                    {isStepVisible(5) && (
+                      <li
+                        onClick={() => handleStep(5)}
+                        className={`${step === 5 ? "activeStep" : ""}`}
+                      >
+                        Commission and Metadata
+                      </li>
+                    )}
+                    {isStepVisible(6) && (
+                      <li
+                        onClick={() => handleStep(6)}
+                        className={`${step === 6 ? "activeStep" : ""}`}
+                      >
+                        Achievement Rewards
+                      </li>
+                    )}
                   </ul>
                 </div>
                 <div className="container">
                   <div className="formStyle">
                     {step === 1 && (
                       <>
-                        <li>
-                          <label>
-                            Transaction Type{" "}
-                            <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            name="transactionType"
-                            value={props.transactionType}
-                            {...form.register("transactionType", {
-                              required: true,
-                            })}
-                          />
-                        </li>
-                        <li>
-                          <label>
-                            Amount <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            name="amount"
-                            value={props.amount}
-                            {...form.register("amount")}
-                            required
-                          />
-                        </li>
-                        <li>
-                          <label>
-                            Currency <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            name="currency"
-                            value={props.currency}
-                            {...form.register("currency")}
-                            required
-                          />
-                        </li>
-                        <li>
-                          <label>Virtual Value :</label>
-                          <input
-                            value={props.virtualValue}
-                            {...form.register("virtualValue")}
-                          />
-                        </li>
-                        <li>
-                          <label>
-                            Is Credit <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.isCredit}
-                            {...form.register("isCredit")}
-                            required
-                          />
-                        </li>
+                        {isFieldVisible("transactionType") && (
+                          <li>
+                            <label>
+                              Transaction Type{" "}
+                              <sup className="requiredStar">*</sup> :
+                            </label>
+                            <input
+                              name="transactionType"
+                              value={props.defaultValues?.transactionType}
+                              {...form.register("transactionType", {
+                                required: true,
+                              })}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("amount") && (
+                          <li>
+                            <label>
+                              Amount <sup className="requiredStar">*</sup> :
+                            </label>
+                            <input
+                              name="amount"
+                              value={props.defaultValues?.amount}
+                              {...form.register("amount")}
+                              required
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("currency") && (
+                          <li>
+                            <label>
+                              Currency <sup className="requiredStar">*</sup> :
+                            </label>
+                            <input
+                              name="currency"
+                              value={props.defaultValues?.currency}
+                              {...form.register("currency")}
+                              required
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("virtualValue") && (
+                          <li>
+                            <label>Virtual Value :</label>
+                            <input
+                              value={props.defaultValues?.virtualValue}
+                              {...form.register("virtualValue")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("isCredit") && (
+                          <li>
+                            <label>
+                              Is Credit <sup className="requiredStar">*</sup> :
+                            </label>
+                            <input
+                              value={props.defaultValues?.isCredit}
+                              {...form.register("isCredit")}
+                              required
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("reference") && (
+                          <li>
+                            <label>
+                              Reference <sup className="requiredStar">*</sup> :
+                            </label>
+                            <input
+                              value={props.defaultValues?.reference}
+                              {...form.register("reference")}
+                              required
+                            />
+                          </li>
+                        )}
                       </>
                     )}
 
                     {step === 2 && (
                       <>
-                        <li>
-                          <label>
-                            Reference <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.reference}
-                            {...form.register("reference")}
-                            required
-                          />
-                        </li>
-                        <li>
-                          <label>Payment Method :</label>
-                          <input
-                            value={props.paymentMethod}
-                            {...form.register("paymentMethod")}
-                          />
-                        </li>
-
-                        <li>
-                          <label>SKU :</label>
-                          <input value={props.sku} {...form.register("sku")} />
-                        </li>
-                        <li>
-                          <label>Remark:</label>
-                          <input
-                            value={props.remark}
-                            {...form.register("remark")}
-                          />
-                        </li>
-                        <li>
-                          <label>Description :</label>
-                          <input
-                            value={props.description}
-                            {...form.register("description")}
-                          />
-                        </li>
-                        <li>
-                          <label>Product Id :</label>
-                          <input
-                            value={props.productId}
-                            {...form.register("productId")}
-                          />
-                        </li>
-                        <li>
-                          <label>Product Name :</label>
-                          <input
-                            value={props.productName}
-                            {...form.register("productName")}
-                          />
-                        </li>
+                        {isFieldVisible("paymentMethod") && (
+                          <li>
+                            <label>Payment Method :</label>
+                            <input
+                              value={props.defaultValues?.paymentMethod}
+                              {...form.register("paymentMethod")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("sku") && (
+                          <li>
+                            <label>SKU :</label>
+                            <input
+                              value={props.defaultValues?.sku}
+                              {...form.register("sku")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("remark") && (
+                          <li>
+                            <label>Remark:</label>
+                            <input
+                              value={props.defaultValues?.remark}
+                              {...form.register("remark")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("description") && (
+                          <li>
+                            <label>Description :</label>
+                            <input
+                              value={props.defaultValues?.description}
+                              {...form.register("description")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("productId") && (
+                          <li>
+                            <label>Product Id :</label>
+                            <input
+                              value={props.defaultValues?.productId}
+                              {...form.register("productId")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("productName") && (
+                          <li>
+                            <label>Product Name :</label>
+                            <input
+                              value={props.defaultValues?.productName}
+                              {...form.register("productName")}
+                            />
+                          </li>
+                        )}
                       </>
                     )}
                     {step === 3 && (
                       <>
-                        <li>
-                          <label>
-                            Payer Id <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.payerId}
-                            {...form.register("payerId")}
-                            required
-                          />
-                        </li>
-                        <li>
-                          <label>Payer Name :</label>
-                          <input
-                            value={props.payerName}
-                            {...form.register("payerName")}
-                          />
-                        </li>
+                        {isFieldVisible("payerId") && (
+                          <li>
+                            <label>
+                              Payer Id <sup className="requiredStar">*</sup> :
+                            </label>
+                            <input
+                              value={props.defaultValues?.payerId}
+                              {...form.register("payerId")}
+                              required
+                            />
+                          </li>
+                        )}
 
-                        <li>
-                          <label>
-                            Payee Id <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.payeeId}
-                            {...form.register("payeeId")}
-                          />
-                        </li>
-                        <li>
-                          <label>Payee Name :</label>
-                          <input
-                            value={props.payeeName}
-                            {...form.register("payeeName")}
-                          />
-                        </li>
-                        <li>
-                          <label>On Behalf Of Id :</label>
-                          <input
-                            value={props.onBehalfOfId}
-                            {...form.register("onBehalfOfId")}
-                          />
-                        </li>
-                        <li>
-                          <label>On Behalf Of Name :</label>
-                          <input
-                            value={props.onBehalfOfName}
-                            {...form.register("onBehalfOfName")}
-                          />
-                        </li>
+                        {isFieldVisible("payeeId") && (
+                          <li>
+                            <label>
+                              Payee Id <sup className="requiredStar">*</sup> :
+                            </label>
+                            <input
+                              value={props.defaultValues?.payeeId}
+                              {...form.register("payeeId")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("service") && (
+                          <li>
+                            <label>Service :</label>
+                            <input
+                              value={props.defaultValues?.service}
+                              {...form.register("service")}
+                              required
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("provider") && (
+                          <li>
+                            <label>Provider :</label>
+                            <input
+                              value={props.defaultValues?.provider}
+                              {...form.register("provider")}
+                              required
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("vendor") && (
+                          <li>
+                            <label>Vendor :</label>
+                            <input
+                              value={props.defaultValues?.vendor}
+                              {...form.register("vendor")}
+                              required
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("fromWallet") && (
+                          <li>
+                            <label>
+                              From Wallet <sup className="requiredStar">*</sup>{" "}
+                              :
+                            </label>
+                            <input
+                              value={props.defaultValues?.fromWallet}
+                              {...form.register("fromWallet")}
+                              required
+                            />
+                          </li>
+                        )}
                       </>
                     )}
                     {step === 4 && (
                       <>
-                        <li>
-                          <label>Additional Data :</label>
-                          <input
-                            value={props.additionalData}
-                            {...form.register("additionalData")}
-                          />
-                        </li>
-                        <li>
-                          <label>Base Transaction :</label>
-                          <input
-                            value={props.baseTransaction}
-                            {...form.register("baseTransaction")}
-                          />
-                        </li>
-
-                        <li>
-                          <label>
-                            Service <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.service}
-                            {...form.register("service")}
-                            required
-                          />
-                        </li>
-
-                        <li>
-                          <label>
-                            Provider <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.provider}
-                            {...form.register("provider")}
-                            required
-                          />
-                        </li>
-                        <li>
-                          <label>
-                            Vendor <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.vendor}
-                            {...form.register("vendor")}
-                            required
-                          />
-                        </li>
+                        {isFieldVisible("payerName") && (
+                          <li>
+                            <label>Payer Name :</label>
+                            <input
+                              value={props.defaultValues?.payerName}
+                              {...form.register("payerName")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("payeeName") && (
+                          <li>
+                            <label>Payee Name :</label>
+                            <input
+                              value={props.defaultValues?.payeeName}
+                              {...form.register("payeeName")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("onBehalfOfId") && (
+                          <li>
+                            <label>On Behalf Of Id :</label>
+                            <input
+                              value={props.defaultValues?.onBehalfOfId}
+                              {...form.register("onBehalfOfId")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("onBehalfOfName") && (
+                          <li>
+                            <label>On Behalf Of Name :</label>
+                            <input
+                              value={props.defaultValues?.onBehalfOfName}
+                              {...form.register("onBehalfOfName")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("additionalData") && (
+                          <li>
+                            <label>Additional Data :</label>
+                            <input
+                              value={props.defaultValues?.additionalData}
+                              {...form.register("additionalData")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("baseTransaction") && (
+                          <li>
+                            <label>Base Transaction :</label>
+                            <input
+                              value={props.defaultValues?.baseTransaction}
+                              {...form.register("baseTransaction")}
+                            />
+                          </li>
+                        )}
                       </>
                     )}
                     {step === 5 && (
                       <>
-                        <li>
-                          <label>Execute Commission For:</label>
-                          <input
-                            value={props.executeCommissionFor}
-                            {...form.register("executeCommissionFor")}
-                          />
-                        </li>
-                        <li>
-                          <label>Execute Commission Amount:</label>
-                          <input
-                            value={props.executeCommissionAmount}
-                            {...form.register("executeCommissionAmount")}
-                          />
-                        </li>
-                        <li>
-                          <label>Metadata :</label>
-                          <input
-                            value={props.metadata}
-                            {...form.register("metadata")}
-                          />
-                        </li>
-
-                        <li>
-                          <label>
-                            From Wallet <sup className="requiredStar">*</sup> :
-                          </label>
-                          <input
-                            value={props.fromWallet}
-                            {...form.register("fromWallet")}
-                            required
-                          />
-                        </li>
+                        {isFieldVisible("executeCommissionFor") && (
+                          <li>
+                            <label>Execute Commission For:</label>
+                            <input
+                              value={props.defaultValues?.executeCommissionFor}
+                              {...form.register("executeCommissionFor")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("executeCommissionAmount") && (
+                          <li>
+                            <label>Execute Commission Amount:</label>
+                            <input
+                              value={
+                                props.defaultValues?.executeCommissionAmount
+                              }
+                              {...form.register("executeCommissionAmount")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("executeCommissionAmount") && (
+                          <li>
+                            <label>Metadata :</label>
+                            <input
+                              value={props.defaultValues?.metadata}
+                              {...form.register("metadata")}
+                            />
+                          </li>
+                        )}
                       </>
                     )}
                     {step === 6 && (
                       <>
-                        <li>
-                          <label>Achiever Id :</label>
-                          <input
-                            value={props.achieverId}
-                            {...form.register("achieverId")}
-                          />
-                        </li>
-                        <li>
-                          <label>Achievement Identifier :</label>
-                          <input
-                            value={props.action}
-                            {...form.register("action")}
-                          />
-                        </li>
-                        <li>
-                          <label>Value :</label>
-                          <input
-                            value={props.value}
-                            {...form.register("value")}
-                          />
-                        </li>
+                        {isFieldVisible("achieverId") && (
+                          <li>
+                            <label>Achiever Id :</label>
+                            <input
+                              value={props.defaultValues?.achieverId}
+                              {...form.register("achieverId")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("action") && (
+                          <li>
+                            <label>Achievement Identifier :</label>
+                            <input
+                              value={props.defaultValues?.action}
+                              {...form.register("action")}
+                            />
+                          </li>
+                        )}
+                        {isFieldVisible("value") && (
+                          <li>
+                            <label>Value :</label>
+                            <input
+                              value={props.defaultValues?.value}
+                              {...form.register("value")}
+                            />
+                          </li>
+                        )}
                       </>
                     )}
                   </div>
@@ -738,10 +815,12 @@ export const StimulatorWrapper = styled.div`
     li {
       list-style: none;
       padding: 10px 0px;
+      cursor: pointer;
     }
   }
   .activeStep {
     // background: blue;
+
     color: #1677ff;
   }
 `;
