@@ -16,7 +16,7 @@ const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
   const [view, setView] = useState(false);
   const [record, setRecord] = useState<any>({});
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<any>(1);
   const form = useForm();
   const [transactionTypes, setTransactionTypes] = useState<any>();
   const [currencyList, setCurrencyList] = useState<any>();
@@ -63,10 +63,12 @@ const Stimulator = (props: IStimulatorProps) => {
   }, []);
 
   const onSubmit = async (data: any) => {
-    // eslint-disable-next-line no-debugger
-    debugger;
+    const payerId = data.isCredit === "false" ? data.payerId : application_id;
+    const payeeId = data.isCredit === "true" ? data.payerId : application_id;
     const record = {
       ...data,
+      payerId: payerId,
+      payeeId: payeeId,
       achievements: [
         {
           achieverId: data.achieverId,
@@ -91,8 +93,12 @@ const Stimulator = (props: IStimulatorProps) => {
     }
   };
   const handleDotransaction = async (data: any) => {
+    const payerId = data.isCredit === "false" ? data.payerId : application_id;
+    const payeeId = data.isCredit === "true" ? data.payerId : application_id;
     const record = {
       ...data,
+      payerId: payerId,
+      payeeId: payeeId,
       achievements: [
         {
           achieverId: data.achieverId,
@@ -123,22 +129,26 @@ const Stimulator = (props: IStimulatorProps) => {
   const nextStep = () => {
     form.trigger();
 
-    const currentIndex = props.tabsToShow?.indexOf(step as any) ?? -1;
+    const currentIndex = props.tabsToShow?.indexOf(step) ?? -1;
     const nextIndex = currentIndex + 1;
 
     if (nextIndex < (props.tabsToShow?.length ?? 0)) {
       const nextStep = props.tabsToShow[nextIndex];
       setStep(nextStep);
+    } else {
+      setStep(step + 1);
     }
   };
   const prevStep = () => {
     form.trigger();
-    const currentIndex = props.tabsToShow?.indexOf(step as any) ?? -1;
+    const currentIndex = props.tabsToShow?.indexOf(step) ?? -1;
     const prevIndex = currentIndex - 1;
 
     if (prevIndex >= 0) {
       const prevStep = props.tabsToShow[prevIndex];
       setStep(prevStep);
+    } else {
+      setStep(step - 1);
     }
   };
 
@@ -260,7 +270,9 @@ const Stimulator = (props: IStimulatorProps) => {
                               required
                             >
                               {" "}
-                              <StyledOption>Select Transaction type</StyledOption>
+                              <StyledOption>
+                                Select Transaction type
+                              </StyledOption>
                               {transactionTypes?.length > 0 &&
                                 transactionTypes.map((cur: any) => (
                                   <StyledOption key={cur.id} value={cur.id}>
