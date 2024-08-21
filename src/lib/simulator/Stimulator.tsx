@@ -1,13 +1,13 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { API_HOST } from "../../constants";
 import styled from "styled-components";
 
 export interface IStimulatorProps {
   credentials?: any;
-  tabsToShow?: [1, 3, 6];
-  fieldsToShow?: ["transactionType", "amount"];
+  tabsToShow?: [];
+  fieldsToHide?: [];
   defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
   defaultValues?: Record<string, any>;
 }
@@ -18,6 +18,49 @@ const Stimulator = (props: IStimulatorProps) => {
   const [record, setRecord] = useState<any>({});
   const [step, setStep] = useState(1);
   const form = useForm();
+  const [transactionTypes, setTransactionTypes] = useState<any>();
+  const [currencyList, setCurrencyList] = useState<any>();
+
+  const { application_id, token } = props.credentials;
+  const fetchTypes = async () => {
+    try {
+      const types = await axios.get(
+        `${API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setTransactionTypes(types.data);
+    } catch (err: any) {
+      console.log(err?.response?.data);
+      alert(err?.response?.data);
+    }
+  };
+
+  const fetchCurrencies = async () => {
+    try {
+      const types = await axios.get(
+        `${API_HOST}/tenant/${application_id}/currency/autocomplete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setCurrencyList(types.data);
+    } catch (err: any) {
+      console.log(err?.response?.data);
+      alert(err?.response?.data);
+    }
+  };
+  useEffect(() => {
+    fetchTypes();
+    fetchCurrencies();
+  }, []);
 
   const onSubmit = async (data: any) => {
     // eslint-disable-next-line no-debugger
@@ -122,8 +165,8 @@ const Stimulator = (props: IStimulatorProps) => {
   };
 
   const isFieldVisible = (field: any) => {
-    if (props.fieldsToShow?.length) {
-      return props.fieldsToShow.includes(field);
+    if (props.fieldsToHide?.length) {
+      return !props.fieldsToHide.includes(field);
     } else {
       return true;
     }
@@ -208,13 +251,23 @@ const Stimulator = (props: IStimulatorProps) => {
                               Transaction Type{" "}
                               <sup className="requiredStar">*</sup> :
                             </label>
-                            <input
+                            <select
                               name="transactionType"
                               value={props.defaultValues?.transactionType}
                               {...form.register("transactionType", {
                                 required: true,
                               })}
-                            />
+                              required
+                            >
+                              {" "}
+                              <StyledOption>Select Transaction type</StyledOption>
+                              {transactionTypes?.length > 0 &&
+                                transactionTypes.map((cur: any) => (
+                                  <StyledOption key={cur.id} value={cur.id}>
+                                    {cur.label}
+                                  </StyledOption>
+                                ))}
+                            </select>
                           </li>
                         )}
                         {isFieldVisible("amount") && (
@@ -235,12 +288,22 @@ const Stimulator = (props: IStimulatorProps) => {
                             <label>
                               Currency <sup className="requiredStar">*</sup> :
                             </label>
-                            <input
+
+                            <select
                               name="currency"
                               value={props.defaultValues?.currency}
-                              {...form.register("currency")}
-                              required
-                            />
+                              {...form.register("currency", {
+                                required: true,
+                              })}
+                            >
+                              <StyledOption>Select Currency </StyledOption>
+                              {currencyList?.length > 0 &&
+                                currencyList.map((cur: any) => (
+                                  <StyledOption key={cur.id} value={cur.id}>
+                                    {cur.label}
+                                  </StyledOption>
+                                ))}
+                            </select>
                           </li>
                         )}
                         {isFieldVisible("virtualValue") && (
@@ -665,13 +728,25 @@ const Stimulator = (props: IStimulatorProps) => {
                     </button>
                   )}{" "}
                   {step === 6 && (
-                    <button
-                      className="submitBtn"
-                      type="submit"
-                      disabled={!handleDisable()}
-                    >
-                      Simulate
-                    </button>
+                    <>
+                      {props.defaultAction === "SIMULATE" && (
+                        <button
+                          className="submitBtn"
+                          type="submit"
+                          disabled={!handleDisable()}
+                        >
+                          Simulate
+                        </button>
+                      )}
+                      {props.defaultAction === "COMMIT_TRANSACTION" && (
+                        <button
+                          className="submitBtn"
+                          onClick={form.handleSubmit(handleDotransaction)}
+                        >
+                          Commit Transaction
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -756,6 +831,16 @@ export const StimulatorWrapper = styled.div`
       width: 220px;
     }
   }
+  .formStyle li select {
+    width: 340px;
+    height: 28px;
+    @media screen and (max-width: 845px) {
+      width: 315px;
+    }
+    @media screen and (max-width: 425px) {
+      width: 220px;
+    }
+  }
   .formStyle .achievement > li {
     width: 480px;
     @media screen and (max-width: 845px) {
@@ -823,5 +908,10 @@ export const StimulatorWrapper = styled.div`
 
     color: #1677ff;
   }
+`;
+
+const StyledOption = styled.option`
+  padding: 8px;
+  border: 1px solid;
 `;
 export default Stimulator;

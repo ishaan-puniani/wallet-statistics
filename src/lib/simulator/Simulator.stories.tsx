@@ -33,6 +33,7 @@ export const TransactionSimulator = Transactions.bind({});
 TransactionSimulator.args = {
   credentials: getServiceAccountCredentials() || {},
   defaultValues: {},
-  fieldsToShow: [],
+  fieldsToHide: [],
   tabsToShow: [],
+  defaultAction:'COMMIT_TRANSACTION'
 };
