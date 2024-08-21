@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
@@ -11,6 +10,7 @@ export interface IStimulatorProps {
   fieldsToHide?: string[];
   defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
   defaultValues?: Record<string, any>;
+  __token: string;
 }
 
 const Stimulator = (props: IStimulatorProps) => {
@@ -22,14 +22,15 @@ const Stimulator = (props: IStimulatorProps) => {
   const [transactionTypes, setTransactionTypes] = useState<any>();
   const [currencyList, setCurrencyList] = useState<any>();
 
-  const { application_id, token } = props.credentials;
+  const { application_id, __token } = props.credentials;
+  // const token = props.__token
   const fetchTypes = async () => {
     try {
       const types = await axios.get(
         `${API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${__token}`,
           },
         }
       );
@@ -47,7 +48,7 @@ const Stimulator = (props: IStimulatorProps) => {
         `${API_HOST}/tenant/${application_id}/currency/autocomplete`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${__token}`,
           },
         }
       );
@@ -126,7 +127,7 @@ const Stimulator = (props: IStimulatorProps) => {
       alert(err?.response?.data);
     }
   };
-  
+
   const nextStep = () => {
     form.trigger();
     const currentIndex = props.tabsToShow?.indexOf(step) ?? -1;
@@ -185,7 +186,7 @@ const Stimulator = (props: IStimulatorProps) => {
     if (props.tabsToShow?.length) {
       return props.tabsToShow.includes(stepIndex);
     }
-    return true; 
+    return true;
   };
 
   const handleStep = (step: React.SetStateAction<number>) => {
@@ -196,7 +197,13 @@ const Stimulator = (props: IStimulatorProps) => {
       <StimulatorWrapper>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <h1>Transaction Simulator</h1>
+            <h1>
+              {props.defaultAction === "SIMULATE" ? (
+                <>Transaction Simulator</>
+              ) : (
+                <>Transaction</>
+              )}
+            </h1>
             {!view && (
               <div className="flex_container">
                 <div className="steps_list">
