@@ -14,7 +14,6 @@
       "jsx": "react",
       "allowSyntheticDefaultImports": true,
       "skipLibCheck": true,
-      "ignoreDeprecations": "5.0" ,
     },
     "include": ["src/lib"],
     "exclude": ["node_modules",
