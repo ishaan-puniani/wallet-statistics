@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
@@ -6,8 +7,8 @@ import styled from "styled-components";
 
 export interface IStimulatorProps {
   credentials?: any;
-  tabsToShow?: [];
-  fieldsToHide?: [];
+  tabsToShow?: number[];
+  fieldsToHide?: string[];
   defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
   defaultValues?: Record<string, any>;
 }
@@ -125,10 +126,9 @@ const Stimulator = (props: IStimulatorProps) => {
       alert(err?.response?.data);
     }
   };
-
+  
   const nextStep = () => {
     form.trigger();
-
     const currentIndex = props.tabsToShow?.indexOf(step) ?? -1;
     const nextIndex = currentIndex + 1;
 
@@ -185,7 +185,7 @@ const Stimulator = (props: IStimulatorProps) => {
     if (props.tabsToShow?.length) {
       return props.tabsToShow.includes(stepIndex);
     }
-    return true; // Show step if tabsToShow is empty or not defined
+    return true; 
   };
 
   const handleStep = (step: React.SetStateAction<number>) => {
