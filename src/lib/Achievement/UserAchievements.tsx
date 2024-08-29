@@ -34,8 +34,11 @@ const UserAchievement = (props: UserAchievementsFilter) => {
   console.log(achievement)
   return (
     <>
-      {loading && <h1>Loading</h1>}
       <ViewsWrapper>
+      {loading && <h1 className="no-data">Loading</h1>}
+      {!loading && achievement?.length === 0 ? (
+            <div className="no-data">No data</div>
+      ) : null}
         {props.showRaw ? <>
           {achievement?.map((rec) => (
             <>
@@ -108,6 +111,12 @@ const UserAchievement = (props: UserAchievementsFilter) => {
   );
 };
 export const ViewsWrapper = styled.div`
+ .no-data {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
   display: flex;
   flex-wrap: wrap;
 .card {
