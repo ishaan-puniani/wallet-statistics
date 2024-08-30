@@ -12,7 +12,7 @@ export const _userAchivements = async (
   const limitValue = limit ? `&limit=${limit}` : `&`;
   const offsetValue = offset ? `&offset=${offset}` : `&`;
 
-  const userAchivements = await axios.post(
+  const userAchivements = await axios.get(
     `${API_HOST}/tenant/${credentials.application_id}/user-achievements/?${filterQuery}${limitValue}${offsetValue}`,
     {
       ...credentials,

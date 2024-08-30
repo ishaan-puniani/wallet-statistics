@@ -5,7 +5,6 @@ import moment from "moment";
 import Loader from "../Reports/Loader";
 
 export interface IUserAchievementTable {
-  userId: string;
   credentials: {
     application_id: string;
     __token: string;
