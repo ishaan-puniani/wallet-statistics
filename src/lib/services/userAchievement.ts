@@ -15,7 +15,9 @@ export const _userAchivements = async (
   const userAchivements = await axios.get(
     `${API_HOST}/tenant/${credentials.application_id}/user-achievements/?${filterQuery}${limitValue}${offsetValue}`,
     {
-      ...credentials,
+      headers: {
+        Authorization: `Bearer ${credentials.__token}`,
+      },
     }
   );
   return userAchivements.data;
