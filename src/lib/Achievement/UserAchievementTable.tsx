@@ -45,15 +45,11 @@ const UserAchievementTable = (props: IUserAchievementTable) => {
         <table className="table">
           <tr className="table-heading">
             <th>Created At</th>
+            <th>Achievement Identifier</th>
             <th>Achiever Id</th>
-            <th>Achiever Name</th>
-            <th>ValidUpto</th>
             <th>Is Acknowledged</th>
             <th>Acknowledged At</th>
-            <th>Unique Reference</th>
-            <th>Achievement Identifier</th>
             <th>Progress</th>
-            <th>Opt Out</th>
           </tr>
 
           {loading && (
@@ -71,15 +67,11 @@ const UserAchievementTable = (props: IUserAchievementTable) => {
             return (
               <tr className="table-data">
                 <td>{moment(row?.createdAt).format("DD-MM-YYYY HH:MM")}</td>
+                <td>{row?.achievementIdentifier ?? "NA"}</td>
                 <td>{row?.achieverId ?? "NA"}</td>
-                <td>{row?.achieverName ?? "NA"}</td>
-                <td>{row?.validUpTo ?? "NA"}</td>
                 <td>{row?.isAcknowledged ? "Yes" : "No"}</td>
                 <td>{row?.acknowledgedAt ?? "NA"}</td>
-                <td>{row?.uniqueReference ?? "NA"}</td>
-                <td>{row?.achievementIdentifier ?? "NA"}</td>
                 <td>{row?.progress ?? "NA"}</td>
-                <td>{row?.optOut ? "Yes" : "No"}</td>
               </tr>
             );
           })}

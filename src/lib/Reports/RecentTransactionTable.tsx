@@ -71,9 +71,9 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
             <th>Partner Id</th>
             <th>TransactionType</th>
             <th>Amount</th>
-            <th>Reference</th>
+            <th className="reference">Reference</th>
             <th>On Behalf Of Id</th>
-            <th>Remark</th>
+            <th className="remark">Remark</th>
           </tr>
 
           {loading && (
@@ -189,6 +189,12 @@ const Wrapper = styled.div`
   }
   .table-data:hover {
     background-color: #efefef;
+  }
+  .reference {
+    width: 50px;
+  }
+  .remark {
+    width: 50px;
   }
 `;
 
