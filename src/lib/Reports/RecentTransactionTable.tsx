@@ -7,14 +7,21 @@ import Loader from "./Loader";
 export interface IRecentTransactionTable {
   userId: string;
   currency: string;
-  credentials: any;
+  credentials: {
+    application_id: string;
+    __token: string;
+  };
   showRaw: boolean;
-  filterMap: any;
+  filterMap: {
+    Currency: string;
+    PartnerId: string;
+  };
   endDate: Date;
   startDate: Date;
   limit: string;
-  routePage?: any;
-  handleTransactionTypeDetails?: any;
+  routePage?: () => void;
+  // eslint-disable-next-line no-unused-vars
+  handleTransactionTypeDetails?: (id: string) => void;
 }
 
 const RecentTransactionTable = (props: IRecentTransactionTable) => {
@@ -45,17 +52,28 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
     getTransactions();
   }, [props.userId, props.startDate, props.endDate, props.currency]);
 
+  const getPartnerId = (payerId: string | null, payeeId: string | null) => {
+    if (payerId !== props.credentials.application_id) {
+      return payerId;
+    } else if (payeeId !== props.credentials.application_id) {
+      return payeeId;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <Wrapper>
       <div style={{ overflowX: "auto" }}>
         <table className="table">
           <tr className="table-heading">
             <th>Created At</th>
+            <th>Partner Id</th>
+            <th>TransactionType</th>
             <th>Amount</th>
-            <th>Currency</th>
-            <th>IsCredit</th>
-            <th>Transaction type</th>
             <th>Reference</th>
+            <th>On Behalf Of Id</th>
+            <th>Remark</th>
           </tr>
 
           {loading && (
@@ -73,13 +91,7 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
             return (
               <tr className="table-data">
                 <td>{moment(row?.createdAt).format("DD-MM-YYYY HH:MM")}</td>
-                <td
-                  className={row?.isCredit > 0 ? "amount-plus" : "amount-minus"}
-                >
-                  {row?.isCredit > 0 ? `+ ${row?.amount}` : `- ${row?.amount}`}
-                </td>
-                <td>{row?.currency}</td>
-                <td>{row?.isCredit ? "Yes" : "No"}</td>
+                <td>{getPartnerId(row?.payerId, row?.payeeId)}</td>
                 <td
                   className="table-data__transactionType"
                   onClick={() =>
@@ -92,7 +104,14 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
                 >
                   {row?.transactionTypeDetail?.name}
                 </td>
+                <td
+                  className={row?.isCredit > 0 ? "amount-plus" : "amount-minus"}
+                >
+                  {row?.isCredit > 0 ? `+ ${row?.amount}` : `- ${row?.amount}`}
+                </td>
                 <td>{row?.reference}</td>
+                <td>{row?.onBehalfOfId}</td>
+                <td>{row?.remark ? "Yes" : "No"}</td>
               </tr>
             );
           })}
