@@ -3,6 +3,7 @@ import {
   _renderUserAchievements,
   _renderAcknowledgeAchievements,
   _renderUnacknowledgeAchievements,
+  _renderUserAchievementTable,
 } from "./Achievement";
 import {
   renderDropdownAmountTypes,
@@ -127,6 +128,9 @@ class WalletStatistics {
   };
   renderUnacknowledgeAchievements = (container: any, props: any) => {
     _renderUnacknowledgeAchievements(container, props);
+  };
+  renderUserAchievementTable = (container: any, props: any) => {
+    _renderUserAchievementTable(container, props);
   };
   renderPartnerHeirarchy = (container: any, props: any) => {
     renderPartnerHeirarchyView(container, props);

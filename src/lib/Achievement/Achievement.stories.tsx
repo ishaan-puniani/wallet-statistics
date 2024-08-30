@@ -6,6 +6,7 @@ import UserAchievement from "./UserAchievements";
 import AcknowledgeAchievement from "./AcknowledgeAchievement";
 import GetUserAchievement from "./GetUserAchievement";
 import UnacknowledgedAchievement from "./UnacknowledgedAchievement";
+import UserAchievementTable from "./UserAchievementTable";
 
 export default {
   title: "Example/Achievement",
@@ -34,6 +35,10 @@ const TemplateFour: ComponentStory<typeof GetUserAchievement> = (args) => (
 
 const TemplateFive: ComponentStory<typeof UnacknowledgedAchievement> = (args) => (
   <UnacknowledgedAchievement {...args} />
+);
+
+const TemplateSix: ComponentStory<typeof UserAchievementTable> = (args) => (
+  <UserAchievementTable {...args} />
 );
 
 export const AvailableAchievements = TemplateOne.bind({});
@@ -66,4 +71,11 @@ export const UnacknowledgedAchievements = TemplateFive.bind({});
 UnacknowledgedAchievements.args = {
   credentials: getServiceAccountCredentials() || {},
   achieverId: "",
+};
+
+export const UserAchievementsTable = TemplateSix.bind({});
+UserAchievementsTable.args = {
+  credentials: getServiceAccountCredentials() || {},
+  limit: "10",
+  offset: "0"
 };
