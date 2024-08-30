@@ -71,16 +71,14 @@ const UserAchievementTable = (props: IUserAchievementTable) => {
             return (
               <tr className="table-data">
                 <td>{moment(row?.createdAt).format("DD-MM-YYYY HH:MM")}</td>
-                <td>{row?.achieverId}</td>
-                <td>{row?.achieverName}</td>
-                <td>{row?.validUpTo}</td>
+                <td>{row?.achieverId ?? "NA"}</td>
+                <td>{row?.achieverName ?? "NA"}</td>
+                <td>{row?.validUpTo ?? "NA"}</td>
                 <td>{row?.isAcknowledged ? "Yes" : "No"}</td>
-                <td>
-                  {moment(row?.acknowledgedAt).format("DD-MM-YYYY HH:MM")}
-                </td>
-                <td>{row?.uniqueReference}</td>
-                <td>{row?.achievementIdentifier}</td>
-                <td>{row?.progress}</td>
+                <td>{row?.acknowledgedAt ?? "NA"}</td>
+                <td>{row?.uniqueReference ?? "NA"}</td>
+                <td>{row?.achievementIdentifier ?? "NA"}</td>
+                <td>{row?.progress ?? "NA"}</td>
                 <td>{row?.optOut ? "Yes" : "No"}</td>
               </tr>
             );
