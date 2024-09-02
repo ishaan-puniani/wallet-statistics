@@ -8,6 +8,7 @@ import MiniTransactionTypeCard from "./MiniTransactionTypeCard";
 import GroupReportChart from "./GroupReportChart";
 import RecentTransactionTable from "./RecentTransactionTable";
 import MiniCard from "./MiniCard";
+import TransactionsCount from "./TransactionsCount";
 
 export default {
   title: "Example/Reports",
@@ -37,6 +38,10 @@ const TemplateFive: ComponentStory<typeof RecentTransactionTable> = (args) => (
 
 const TemplateSix: ComponentStory<typeof MiniCard> = (args) => (
   <MiniCard {...args} />
+);
+
+const TemplateSeven: ComponentStory<typeof TransactionsCount> = (args) => (
+  <TransactionsCount {...args} />
 );
 
 export const PartnerBalanceReportChart = TemplateTwo.bind({});
@@ -110,5 +115,19 @@ MiniTransaction.args = {
   transactionType: "",
   showPrevious: false,
   isTransaction: false,
-  volume: 'group',
+  volume: "group",
+};
+
+export const TransactionCount = TemplateSeven.bind({});
+TransactionCount.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  includePrevious: false,
+  cardConfig: {},
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionType: "",
+  showPrevious: false,
+  totalCount: false,
 };

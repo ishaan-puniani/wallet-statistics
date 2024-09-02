@@ -25,6 +25,7 @@ import {
   _renderGroupReportChart,
   _renderRecentTransactionTable,
   _renderMiniCard,
+  _renderTransactionCount,
 } from "./Reports";
 import {
   _renderPartnerHeirarchyChart,
@@ -170,6 +171,9 @@ class WalletStatistics {
   };
   renderMiniCard = (container: any, props: any) => {
     _renderMiniCard(container, props);
+  };
+  renderTransactionCount = (container: any, props: any) => {
+    _renderTransactionCount(container, props);
   };
   renderValidateTransactionRule = (container: any, props: any) => {
     renderTransactionRule(container, props);

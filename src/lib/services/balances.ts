@@ -96,3 +96,16 @@ export const _fetchReportTransactions = async (
   );
   return getGroupedBalances.data;
 };
+
+export const _fetchReportTransactionsCount = async (
+  credentials: any,
+  group: string
+) => {
+  const getGroupedBalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/count/?Group=${group}`,
+    {
+      ...credentials,
+    }
+  );
+  return getGroupedBalances.data;
+};

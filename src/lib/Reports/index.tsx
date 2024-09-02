@@ -6,6 +6,7 @@ import MiniTransactionTypeCard from "./MiniTransactionTypeCard";
 import GroupReportChart from "./GroupReportChart";
 import RecentTransactionTable from "./RecentTransactionTable";
 import MiniCard from "./MiniCard";
+import { TransactionCount } from "./PartnerReport.stories";
 
 export const _renderReportChart = (container: any, props: any) => {
   ReactDOM.render(<ReportChart {...props} />, container);
@@ -29,4 +30,8 @@ export const _renderRecentTransactionTable = (container: any, props: any) => {
 
 export const _renderMiniCard = (container: any, props: any) => {
   ReactDOM.render(<MiniCard {...props} />, container);
+};
+
+export const _renderTransactionCount = (container: any, props: any) => {
+  ReactDOM.render(<TransactionCount {...props} />, container);
 };
