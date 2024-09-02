@@ -13,6 +13,7 @@ export interface ITransactionsCount {
   endDate: Date;
   startDate: Date;
   group: string;
+  transactionCountType: any;
   totalCount?: boolean;
   transactionType?: string;
   showPrevious?: boolean;
@@ -20,10 +21,22 @@ export interface ITransactionsCount {
   questionMessage?: string;
 }
 
+const type = {
+  groupedPeriod: "countGroupedPeriod",
+  groupedPeriodAndType: "countGroupedPeriodAndType",
+  perTransactionType: "countPerTransactionType",
+};
+
 const TransactionsCount = (props: ITransactionsCount) => {
+  const getTypeValue = (key: keyof typeof type) => {
+    return type[key];
+  };
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState<any>();
   const [percentChange, setPercentChange] = useState(0);
+  const transactionCountType = getTypeValue(
+    props.transactionCountType ?? type.groupedPeriod
+  );
 
   const {
     group = "monthly",
@@ -76,14 +89,26 @@ const TransactionsCount = (props: ITransactionsCount) => {
     }
   };
 
-  const getTransactionCount = (date: moment.Moment, offset = 0) => {
+  const getTransactionCount = (date?: moment.Moment, offset = 0) => {
+    if (transactionCountType === type.perTransactionType) {
+      return count?.[transactionCountType][props?.transactionType] ?? 0;
+    }
     const periodDate = offset
       ? formatDate(date.subtract(offset, grouped(group)), group)
       : formatDate(date, group);
-    return count?.countGroupedPeriod[periodDate] ?? 0;
+    if (transactionCountType === type.groupedPeriodAndType) {
+      return (
+        count?.[transactionCountType][periodDate][props?.transactionType] ?? 0
+      );
+    } else if (transactionCountType === type.groupedPeriod) {
+      return count?.[transactionCountType][periodDate] ?? 0;
+    }
   };
 
   useEffect(() => {
+    if (totalCount || transactionCountType === type.perTransactionType) {
+      return;
+    }
     const currentCount = getTransactionCount(moment(startDate));
     const previousCount = getTransactionCount(moment(startDate), 1);
     const percent =
@@ -96,7 +121,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
       <Wrapper>
         <div className="total-count">
           <div>{label ?? "Total Transactions"}</div>
-          <div>{count?.totalCount}</div>
+          <div>{loading ? <Loader /> : count?.totalCount}</div>
         </div>
       </Wrapper>
     );
@@ -109,7 +134,18 @@ const TransactionsCount = (props: ITransactionsCount) => {
           <div>{label ?? "Transactions"}</div>
         </div>
         <div className="card-amount-container">
-          <div className="amount">{getTransactionCount(moment(startDate))}</div>
+          <div
+            className={
+              "amount " + showPrevious ||
+              transactionCountType !== type.perTransactionType
+                ? ""
+                : "not-previous-amount"
+            }
+          >
+            {transactionCountType === type.perTransactionType
+              ? getTransactionCount()
+              : getTransactionCount(moment(startDate))}
+          </div>
           <div className="percent">
             {loading ? (
               <Loader />
@@ -121,7 +157,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
             )}
           </div>
         </div>
-        {showPrevious && (
+        {showPrevious && transactionCountType !== type.perTransactionType && (
           <>
             <hr />
             <div className="previous">
@@ -152,13 +188,6 @@ const TransactionsCount = (props: ITransactionsCount) => {
 };
 
 const Wrapper = styled.div`
-  position: relative;
-  .total-count {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
   .transaction-type-card {
     padding: 0 12px;
     h2 {
