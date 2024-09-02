@@ -4,6 +4,7 @@ import { _fetchReportTransactionsCount } from "../services/balances";
 import moment from "moment";
 import Loader from "./Loader";
 import { questionMark, upTrend, downTrend } from "../../svgs";
+import clsx from "clsx";
 
 export interface ITransactionsCount {
   userId: string;
@@ -91,17 +92,18 @@ const TransactionsCount = (props: ITransactionsCount) => {
 
   const getTransactionCount = (date?: moment.Moment, offset = 0) => {
     if (transactionCountType === type.perTransactionType) {
-      return count?.[transactionCountType][props?.transactionType] ?? 0;
+      return count?.[transactionCountType]?.[props?.transactionType] ?? 0;
     }
     const periodDate = offset
       ? formatDate(date.subtract(offset, grouped(group)), group)
       : formatDate(date, group);
     if (transactionCountType === type.groupedPeriodAndType) {
       return (
-        count?.[transactionCountType][periodDate][props?.transactionType] ?? 0
+        count?.[transactionCountType]?.[periodDate]?.[props?.transactionType] ??
+        0
       );
     } else if (transactionCountType === type.groupedPeriod) {
-      return count?.[transactionCountType][periodDate] ?? 0;
+      return count?.[transactionCountType]?.[periodDate] ?? 0;
     }
   };
 
@@ -133,29 +135,37 @@ const TransactionsCount = (props: ITransactionsCount) => {
         <div className="heading">
           <div>{label ?? "Transactions"}</div>
         </div>
-        <div className="card-amount-container">
+        <div
+          className={clsx({
+            "card-amount-container": true,
+            "per-transaction-type":
+              showPrevious || transactionCountType === type.perTransactionType,
+          })}
+        >
           <div
-            className={
-              "amount " + showPrevious ||
-              transactionCountType !== type.perTransactionType
-                ? ""
-                : "not-previous-amount"
-            }
+            className={clsx({
+              amount: true,
+              "not-previous-amount":
+                showPrevious ||
+                transactionCountType !== type.perTransactionType,
+            })}
           >
             {transactionCountType === type.perTransactionType
               ? getTransactionCount()
               : getTransactionCount(moment(startDate))}
           </div>
-          <div className="percent">
-            {loading ? (
-              <Loader />
-            ) : (
-              <>
-                {percentChange < 0 ? downTrend : upTrend}
-                <p>{Math.abs(percentChange).toFixed(2)}%</p>
-              </>
-            )}
-          </div>
+          {transactionCountType !== type.perTransactionType && (
+            <div className="percent">
+              {loading ? (
+                <Loader />
+              ) : (
+                <>
+                  {percentChange < 0 ? downTrend : upTrend}
+                  <p>{Math.abs(percentChange).toFixed(2)}%</p>
+                </>
+              )}
+            </div>
+          )}
         </div>
         {showPrevious && transactionCountType !== type.perTransactionType && (
           <>
