@@ -69,7 +69,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
       case "daily":
         return date.format("YYYY-MM-DD");
       case "weekly":
-        return date.format("YYYY-MM-DD");
+        return date.endOf("week").format("YYYY-MM-DD");
       case "quarterly":
         return date.endOf("quarter").format("YYYY-MM-DD");
       case "yearly":
