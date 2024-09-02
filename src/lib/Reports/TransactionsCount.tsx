@@ -68,7 +68,9 @@ const TransactionsCount = (props: ITransactionsCount) => {
         return date.endOf("month").format("YYYY-MM-DD");
       case "daily":
         return date.format("YYYY-MM-DD");
-      case "Quarterly":
+      case "weekly":
+        return date.format("YYYY-MM-DD");
+      case "quarterly":
         return date.endOf("quarter").format("YYYY-MM-DD");
       case "yearly":
         return date.endOf("year").format("YYYY-MM-DD");
@@ -83,7 +85,9 @@ const TransactionsCount = (props: ITransactionsCount) => {
         return "month";
       case "daily":
         return "day";
-      case "Quarterly":
+      case "weekly":
+        return "week";
+      case "quarterly":
         return "quarter";
       case "yearly":
         return "year";
