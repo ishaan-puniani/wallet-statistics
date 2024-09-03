@@ -7,6 +7,8 @@ import GroupReportChart from "./GroupReportChart";
 import RecentTransactionTable from "./RecentTransactionTable";
 import MiniCard from "./MiniCard";
 import { TransactionCount } from "./PartnerReport.stories";
+import TransactionCountLineChart from "./TransactionCountLineChart";
+import CountPerTransactionTypePieChart from "./CountPerTransactionTypePieChart";
 
 export const _renderReportChart = (container: any, props: any) => {
   ReactDOM.render(<ReportChart {...props} />, container);
@@ -34,4 +36,18 @@ export const _renderMiniCard = (container: any, props: any) => {
 
 export const _renderTransactionCount = (container: any, props: any) => {
   ReactDOM.render(<TransactionCount {...props} />, container);
+};
+
+export const _renderTransactionCountLineChart = (
+  container: any,
+  props: any
+) => {
+  ReactDOM.render(<TransactionCountLineChart {...props} />, container);
+};
+
+export const _renderCountPerTransactionTypePieChart = (
+  container: any,
+  props: any
+) => {
+  ReactDOM.render(<CountPerTransactionTypePieChart {...props} />, container);
 };

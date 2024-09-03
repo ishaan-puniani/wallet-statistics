@@ -9,6 +9,8 @@ import GroupReportChart from "./GroupReportChart";
 import RecentTransactionTable from "./RecentTransactionTable";
 import MiniCard from "./MiniCard";
 import TransactionsCount from "./TransactionsCount";
+import TransactionCountLineChart from "./TransactionCountLineChart";
+import CountPerTransactionTypePieChart from "./CountPerTransactionTypePieChart";
 
 export default {
   title: "Example/Reports",
@@ -43,6 +45,14 @@ const TemplateSix: ComponentStory<typeof MiniCard> = (args) => (
 const TemplateSeven: ComponentStory<typeof TransactionsCount> = (args) => (
   <TransactionsCount {...args} />
 );
+
+const TemplateEight: ComponentStory<typeof TransactionCountLineChart> = (
+  args
+) => <TransactionCountLineChart {...args} />;
+
+const TemplateNine: ComponentStory<typeof CountPerTransactionTypePieChart> = (
+  args
+) => <CountPerTransactionTypePieChart {...args} />;
 
 export const PartnerBalanceReportChart = TemplateTwo.bind({});
 PartnerBalanceReportChart.args = {
@@ -130,4 +140,20 @@ TransactionCount.args = {
   transactionType: "",
   showPrevious: false,
   totalCount: false,
+};
+
+export const TransactionCountLine = TemplateEight.bind({});
+TransactionCountLine.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionTypes: [],
+};
+
+export const CountPerTransactionTypePie = TemplateNine.bind({});
+CountPerTransactionTypePie.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
 };

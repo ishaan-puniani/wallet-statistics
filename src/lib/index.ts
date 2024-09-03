@@ -26,6 +26,8 @@ import {
   _renderRecentTransactionTable,
   _renderMiniCard,
   _renderTransactionCount,
+  _renderTransactionCountLineChart,
+  _renderCountPerTransactionTypePieChart,
 } from "./Reports";
 import {
   _renderPartnerHeirarchyChart,
@@ -44,6 +46,7 @@ import {
   _fetchGetBalances,
   _fetchTransactionGroupedBalances,
   _fetchReportTransactions,
+  _fetchReportTransactionsCount,
 } from "./services/balances";
 import { _fetchTransactions, _fetchTransaction } from "./services/transactions";
 import {
@@ -84,6 +87,7 @@ class WalletStatistics {
     stimulateMultiTransactions: stimulateMultiTransactions,
     fetchTransactionGroupedBalances: _fetchTransactionGroupedBalances,
     fetchReportTransactions: _fetchReportTransactions,
+    fetchReportTransactionsCount: _fetchReportTransactionsCount,
   };
 
   // expose fetchTransactions for testing purpose
@@ -174,6 +178,12 @@ class WalletStatistics {
   };
   renderTransactionCount = (container: any, props: any) => {
     _renderTransactionCount(container, props);
+  };
+  renderTransactionCountLineChart = (container: any, props: any) => {
+    _renderTransactionCountLineChart(container, props);
+  };
+  renderCountPerTransactionTypePieChart = (container: any, props: any) => {
+    _renderCountPerTransactionTypePieChart(container, props);
   };
   renderValidateTransactionRule = (container: any, props: any) => {
     renderTransactionRule(container, props);
