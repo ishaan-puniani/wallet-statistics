@@ -109,3 +109,42 @@ export const _fetchReportTransactionsCount = async (
   );
   return getGroupedBalances.data;
 };
+
+export const _fetchReportUserAchievementsCount = async (
+  credentials: any,
+  group: string
+) => {
+  const getGroupedBalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/userachievements/grouped/count/?Group=${group}`,
+    {
+      ...credentials,
+    }
+  );
+  return getGroupedBalances.data;
+};
+
+export const _fetchReportUserAchievementsLogsCount = async (
+  credentials: any,
+  group: string
+) => {
+  const getGroupedBalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/userachievements/logs/grouped/count/?Group=${group}`,
+    {
+      ...credentials,
+    }
+  );
+  return getGroupedBalances.data;
+};
+
+export const _fetchReportPartnersCount = async (
+  credentials: any,
+  group: string
+) => {
+  const getGroupedBalances = await axios.post(
+    `${REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/partners/grouped/count/?Group=${group}`,
+    {
+      ...credentials,
+    }
+  );
+  return getGroupedBalances.data;
+};

@@ -11,6 +11,9 @@ import MiniCard from "./MiniCard";
 import TransactionsCount from "./TransactionsCount";
 import TransactionCountLineChart from "./TransactionCountLineChart";
 import CountPerTransactionTypePieChart from "./CountPerTransactionTypePieChart";
+import PartnersCount from "./PartnersCount";
+import UserAchievementsCount from "./UserAchievementsCount";
+import UserAchievementsLogsCount from "./UserAchievementsLogsCount";
 
 export default {
   title: "Example/Reports",
@@ -53,6 +56,17 @@ const TemplateEight: ComponentStory<typeof TransactionCountLineChart> = (
 const TemplateNine: ComponentStory<typeof CountPerTransactionTypePieChart> = (
   args
 ) => <CountPerTransactionTypePieChart {...args} />;
+
+const TemplateTen: ComponentStory<typeof PartnersCount> = (args) => (
+  <PartnersCount {...args} />
+);
+
+const TemplateEleven: ComponentStory<typeof UserAchievementsCount> = (args) => (
+  <UserAchievementsCount {...args} />
+);
+const TemplateTwelve: ComponentStory<typeof UserAchievementsLogsCount> = (
+  args
+) => <UserAchievementsLogsCount {...args} />;
 
 export const PartnerBalanceReportChart = TemplateTwo.bind({});
 PartnerBalanceReportChart.args = {
@@ -156,4 +170,45 @@ export const CountPerTransactionTypePie = TemplateNine.bind({});
 CountPerTransactionTypePie.args = {
   credentials: getServiceAccountCredentials() || {},
   showRaw: false,
+};
+
+export const PartnerCount = TemplateTen.bind({});
+PartnerCount.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  includePrevious: false,
+  cardConfig: {},
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionType: "",
+  showPrevious: false,
+  totalCount: false,
+};
+
+export const UserAchievementCount = TemplateEleven.bind({});
+UserAchievementCount.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  includePrevious: false,
+  cardConfig: {},
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionType: "",
+  showPrevious: false,
+  totalCount: false,
+};
+export const UserAchievementLogsCount = TemplateTwelve.bind({});
+UserAchievementLogsCount.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  includePrevious: false,
+  cardConfig: {},
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionType: "",
+  showPrevious: false,
+  totalCount: false,
 };

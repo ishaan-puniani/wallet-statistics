@@ -28,6 +28,9 @@ import {
   _renderTransactionCount,
   _renderTransactionCountLineChart,
   _renderCountPerTransactionTypePieChart,
+  _renderPartnersCount,
+  _renderUserAchievementsCount,
+  _renderUserAchievementsLogsCount,
 } from "./Reports";
 import {
   _renderPartnerHeirarchyChart,
@@ -47,6 +50,9 @@ import {
   _fetchTransactionGroupedBalances,
   _fetchReportTransactions,
   _fetchReportTransactionsCount,
+  _fetchReportUserAchievementsCount,
+  _fetchReportUserAchievementsLogsCount,
+  _fetchReportPartnersCount,
 } from "./services/balances";
 import { _fetchTransactions, _fetchTransaction } from "./services/transactions";
 import {
@@ -88,6 +94,9 @@ class WalletStatistics {
     fetchTransactionGroupedBalances: _fetchTransactionGroupedBalances,
     fetchReportTransactions: _fetchReportTransactions,
     fetchReportTransactionsCount: _fetchReportTransactionsCount,
+    fetchReportUserAchievementsCount: _fetchReportUserAchievementsCount,
+    fetchReportUserAchievementsLogsCount: _fetchReportUserAchievementsLogsCount,
+    fetchReportPartnersCount: _fetchReportPartnersCount,
   };
 
   // expose fetchTransactions for testing purpose
@@ -184,6 +193,15 @@ class WalletStatistics {
   };
   renderCountPerTransactionTypePieChart = (container: any, props: any) => {
     _renderCountPerTransactionTypePieChart(container, props);
+  };
+  renderPartnersCount = (container: any, props: any) => {
+    _renderPartnersCount(container, props);
+  };
+  renderUserAchievementsCount = (container: any, props: any) => {
+    _renderUserAchievementsCount(container, props);
+  };
+  renderUserAchievementsLogsCount = (container: any, props: any) => {
+    _renderUserAchievementsLogsCount(container, props);
   };
   renderValidateTransactionRule = (container: any, props: any) => {
     renderTransactionRule(container, props);

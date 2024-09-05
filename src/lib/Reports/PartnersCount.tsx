@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { _fetchReportTransactionsCount } from "../services/balances";
+import { _fetchReportPartnersCount } from "../services/balances";
 import moment from "moment";
 import Loader from "./Loader";
 import { questionMark, upTrend, downTrend } from "../../svgs";
 import clsx from "clsx";
 
-export interface ITransactionsCount {
+export interface IPartnersCount {
   userId: string;
   credentials: any;
   showRaw?: boolean;
@@ -28,7 +28,7 @@ const type = {
   perType: "countPerType",
 };
 
-const TransactionsCount = (props: ITransactionsCount) => {
+const PartnersCount = (props: IPartnersCount) => {
   const getTypeValue = (key: keyof typeof type) => {
     return type[key];
   };
@@ -51,7 +51,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const transactionsCount = await _fetchReportTransactionsCount(
+      const transactionsCount = await _fetchReportPartnersCount(
         props.credentials,
         group
       );
@@ -126,7 +126,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
     return (
       <Wrapper>
         <div className="total-count">
-          <div>{label ?? "Total Transactions"}</div>
+          <div>{label ?? "Total Partners"}</div>
           <div>{loading ? <Loader /> : count?.totalCount}</div>
         </div>
       </Wrapper>
@@ -137,7 +137,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
     <Wrapper>
       <div className="transaction-type-card">
         <div className="heading">
-          <div>{label ?? "Transactions"}</div>
+          <div>{label ?? "Partners"}</div>
         </div>
         <div
           className={clsx({
@@ -150,8 +150,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
             className={clsx({
               amount: true,
               "not-previous-amount":
-                showPrevious ||
-                transactionCountType !== type.perType,
+                showPrevious || transactionCountType !== type.perType,
             })}
           >
             {transactionCountType === type.perType
@@ -248,4 +247,4 @@ const Wrapper = styled.div`
   }
 `;
 
-export default TransactionsCount;
+export default PartnersCount;
