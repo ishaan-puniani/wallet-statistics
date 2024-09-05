@@ -12,7 +12,7 @@ import { CanvasRenderer } from "echarts/renderers";
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { _fetchReportTransactionsCount } from "../services/balances";
+import {_fetchReportUserAchievementsCount } from "../services/balances";
 import styled from "styled-components";
 import Loader from "./Loader";
 
@@ -27,7 +27,7 @@ echarts.use([
   LegendComponent,
 ]);
 
-export interface ICountPerTransactionTypePieChart {
+export interface ICountPerAchievementsTypePieChart {
   credentials: any;
   showRaw?: boolean;
 }
@@ -70,8 +70,8 @@ const option: any = {
   ],
 };
 
-const CountPerTransactionTypePieChart = (
-  props: ICountPerTransactionTypePieChart
+const CountPerAchievementsTypePieChart = (
+  props: ICountPerAchievementsTypePieChart
 ) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
@@ -80,7 +80,7 @@ const CountPerTransactionTypePieChart = (
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const transactionsCount = await _fetchReportTransactionsCount(
+      const transactionsCount = await _fetchReportUserAchievementsCount(
         props.credentials,
         "weekly"
       );
@@ -146,7 +146,7 @@ const CountPerTransactionTypePieChart = (
   );
 };
 
-export default CountPerTransactionTypePieChart;
+export default CountPerAchievementsTypePieChart;
 
 const Wrapper = styled.div`
   .loader {

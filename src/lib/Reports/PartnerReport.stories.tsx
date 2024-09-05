@@ -14,6 +14,12 @@ import CountPerTransactionTypePieChart from "./CountPerTransactionTypePieChart";
 import PartnersCount from "./PartnersCount";
 import UserAchievementsCount from "./UserAchievementsCount";
 import UserAchievementsLogsCount from "./UserAchievementsLogsCount";
+import PartnersCountLineChart from "./PartnersCountLineChart";
+import UserAchievementsCountLineChart from "./UserAchievementsCountLineChart";
+import UserAchievementsLogsCountLineChart from "./UserAchievementsLogsCountLineChart";
+import CountPerPartnerTypePieChart from "./CountPerPartnerTypePieChart";
+import CountPerAchievementsTypePieChart from "./CountPerAchievementsTypePieChart";
+import CountPerAchievementsLogsTypePieChart from "./CountPerAchievementsLogsTypePieChart";
 
 export default {
   title: "Example/Reports",
@@ -67,6 +73,28 @@ const TemplateEleven: ComponentStory<typeof UserAchievementsCount> = (args) => (
 const TemplateTwelve: ComponentStory<typeof UserAchievementsLogsCount> = (
   args
 ) => <UserAchievementsLogsCount {...args} />;
+
+const TemplateThirteen: ComponentStory<typeof PartnersCountLineChart> = (
+  args
+) => <PartnersCountLineChart {...args} />;
+
+const TemplateFourteen: ComponentStory<typeof UserAchievementsCountLineChart> =
+  (args) => <UserAchievementsCountLineChart {...args} />;
+const TemplateFifteen: ComponentStory<
+  typeof UserAchievementsLogsCountLineChart
+> = (args) => <UserAchievementsLogsCountLineChart {...args} />;
+
+const TemplateSixteen: ComponentStory<typeof CountPerPartnerTypePieChart> = (
+  args
+) => <CountPerPartnerTypePieChart {...args} />;
+
+const TemplateSeventeen: ComponentStory<
+  typeof CountPerAchievementsTypePieChart
+> = (args) => <CountPerAchievementsTypePieChart {...args} />;
+
+const TemplateEightteen: ComponentStory<
+  typeof CountPerAchievementsLogsTypePieChart
+> = (args) => <CountPerAchievementsLogsTypePieChart {...args} />;
 
 export const PartnerBalanceReportChart = TemplateTwo.bind({});
 PartnerBalanceReportChart.args = {
@@ -211,4 +239,51 @@ UserAchievementLogsCount.args = {
   transactionType: "",
   showPrevious: false,
   totalCount: false,
+};
+
+export const PartnerCountLineChart = TemplateThirteen.bind({});
+PartnerCountLineChart.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionTypes: [],
+};
+export const UserAchievementCountLineChart = TemplateFourteen.bind({});
+UserAchievementCountLineChart.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionTypes: [],
+};
+
+export const UserAchievementLogsCountLineChart = TemplateFifteen.bind({});
+UserAchievementLogsCountLineChart.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+  group: "",
+  startDate: moment(),
+  endDate: moment(),
+  transactionTypes: [],
+};
+
+export const CountPerPartnersTypePieChart = TemplateSixteen.bind({});
+CountPerPartnersTypePieChart.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+};
+
+export const CountPerAchievementTypePieChart = TemplateSeventeen.bind({});
+CountPerAchievementTypePieChart.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
+};
+
+export const CountPerAchievementLogsTypePieChart = TemplateEightteen.bind({});
+CountPerAchievementLogsTypePieChart.args = {
+  credentials: getServiceAccountCredentials() || {},
+  showRaw: false,
 };

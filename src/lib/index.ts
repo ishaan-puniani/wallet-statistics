@@ -31,6 +31,12 @@ import {
   _renderPartnersCount,
   _renderUserAchievementsCount,
   _renderUserAchievementsLogsCount,
+  _renderPartnersCountLineChart,
+  _renderUserAchievementsCountLineChart,
+  _renderUserAchievementsLogsCountLineChart,
+  _renderCountPerPartnerTypePieChart,
+  _renderCountPerAchievementsTypePieChart,
+  _renderCountPerAchievementsLogsTypePieChart,
 } from "./Reports";
 import {
   _renderPartnerHeirarchyChart,
@@ -202,6 +208,24 @@ class WalletStatistics {
   };
   renderUserAchievementsLogsCount = (container: any, props: any) => {
     _renderUserAchievementsLogsCount(container, props);
+  };
+  renderPartnersCountLineChart = (container: any, props: any) => {
+    _renderPartnersCountLineChart(container, props);
+  };
+  renderUserAchievementsCountLineChart = (container: any, props: any) => {
+    _renderUserAchievementsCountLineChart(container, props);
+  };
+  renderUserAchievementsLogsCountLineChart = (container: any, props: any) => {
+    _renderUserAchievementsLogsCountLineChart(container, props);
+  };
+  renderCountPerPartnerTypePieChart = (container: any, props: any) => {
+    _renderCountPerPartnerTypePieChart(container, props);
+  };
+  renderCountPerAchievementsTypePieChart = (container: any, props: any) => {
+    _renderCountPerAchievementsTypePieChart(container, props);
+  };
+  renderCountPerAchievementsLogsTypePieChart = (container: any, props: any) => {
+    _renderCountPerAchievementsLogsTypePieChart(container, props);
   };
   renderValidateTransactionRule = (container: any, props: any) => {
     renderTransactionRule(container, props);

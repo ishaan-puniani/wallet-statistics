@@ -12,6 +12,12 @@ import CountPerTransactionTypePieChart from "./CountPerTransactionTypePieChart";
 import PartnersCount from "./PartnersCount";
 import UserAchievementsCount from "./UserAchievementsCount";
 import UserAchievementsLogsCount from "./UserAchievementsLogsCount";
+import PartnersCountLineChart from "./PartnersCountLineChart";
+import UserAchievementsCountLineChart from "./UserAchievementsCountLineChart";
+import UserAchievementsLogsCountLineChart from "./UserAchievementsLogsCountLineChart";
+import CountPerPartnerTypePieChart from "./CountPerPartnerTypePieChart";
+import CountPerAchievementsTypePieChart from "./CountPerAchievementsTypePieChart";
+import CountPerAchievementsLogsTypePieChart from "./CountPerAchievementsLogsTypePieChart";
 
 export const _renderReportChart = (container: any, props: any) => {
   ReactDOM.render(<ReportChart {...props} />, container);
@@ -67,4 +73,46 @@ export const _renderUserAchievementsLogsCount = (
   props: any
 ) => {
   ReactDOM.render(<UserAchievementsLogsCount {...props} />, container);
+};
+
+export const _renderPartnersCountLineChart = (container: any, props: any) => {
+  ReactDOM.render(<PartnersCountLineChart {...props} />, container);
+};
+
+export const _renderUserAchievementsCountLineChart = (
+  container: any,
+  props: any
+) => {
+  ReactDOM.render(<UserAchievementsCountLineChart {...props} />, container);
+};
+
+export const _renderUserAchievementsLogsCountLineChart = (
+  container: any,
+  props: any
+) => {
+  ReactDOM.render(<UserAchievementsLogsCountLineChart {...props} />, container);
+};
+
+export const _renderCountPerPartnerTypePieChart = (
+  container: any,
+  props: any
+) => {
+  ReactDOM.render(<CountPerPartnerTypePieChart {...props} />, container);
+};
+
+export const _renderCountPerAchievementsTypePieChart = (
+  container: any,
+  props: any
+) => {
+  ReactDOM.render(<CountPerAchievementsTypePieChart {...props} />, container);
+};
+
+export const _renderCountPerAchievementsLogsTypePieChart = (
+  container: any,
+  props: any
+) => {
+  ReactDOM.render(
+    <CountPerAchievementsLogsTypePieChart {...props} />,
+    container
+  );
 };
