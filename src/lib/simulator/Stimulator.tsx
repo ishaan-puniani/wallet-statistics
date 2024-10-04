@@ -163,7 +163,10 @@ const Stimulator = (props: IStimulatorProps) => {
       case 2:
         return true;
       case 3:
-        return payerId && fromWallet;
+        if (isFieldVisible("payerId")) {
+          return payerId && fromWallet;
+        }
+        return fromWallet;
       case 4:
         return true;
       case 5:
