@@ -143,6 +143,7 @@ const Stimulator = (props: IStimulatorProps) => {
       if (response.status === 200) {
         if (setIsTransactionExecuted) {
           setIsTransactionExecuted(true);
+          setView(false);
         } else {
           alert("Transaction Excuted Successfully");
         }
@@ -313,8 +314,7 @@ const Stimulator = (props: IStimulatorProps) => {
                               })}
                               required
                             >
-                              {" "}
-                              <StyledOption value={null}>
+                              <StyledOption value="">
                                 Select Transaction type
                               </StyledOption>
                               {transactionTypes?.length > 0 &&
@@ -352,8 +352,8 @@ const Stimulator = (props: IStimulatorProps) => {
                                 required: true,
                               })}
                             >
-                              <StyledOption value={null}>
-                                Select Currency{" "}
+                              <StyledOption value="">
+                                Select Currency
                               </StyledOption>
                               {currencyList?.length > 0 &&
                                 currencyList.map((cur: any) => (
@@ -385,8 +385,8 @@ const Stimulator = (props: IStimulatorProps) => {
                                 required: true,
                               })}
                             >
-                              <StyledOption value={null}>
-                                Select IsCredit{" "}
+                              <StyledOption value="">
+                                Select IsCredit
                               </StyledOption>
                               {IS_CREDIT_LIST.map((isCredit: any) => (
                                 <StyledOption
