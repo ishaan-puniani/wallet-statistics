@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { API_HOST } from "../../constants";
 import styled from "styled-components";
@@ -11,7 +11,13 @@ export interface IStimulatorProps {
   defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
   defaultValues?: Record<string, any>;
   __token: string;
+  setIsTransactionExecuted: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+const IS_CREDIT_LIST = [
+  { id: "debit", label: "Debit" },
+  { id: "credit", label: "Credit" },
+];
 
 const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
@@ -22,10 +28,19 @@ const Stimulator = (props: IStimulatorProps) => {
   const [transactionTypes, setTransactionTypes] = useState<any>();
   const [currencyList, setCurrencyList] = useState<any>();
 
-  const { application_id, __token } = props.credentials;
+  const {
+    credentials,
+    tabsToShow,
+    fieldsToHide,
+    defaultAction,
+    setIsTransactionExecuted,
+  } = props;
+
+  const { application_id, __token } = credentials;
   // const token = props.__token
-  const fetchTypes = async () => {
+  const fetchTypes = useCallback(async () => {
     try {
+      // need to move this api in common area
       const types = await axios.get(
         `${API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
         {
@@ -40,10 +55,11 @@ const Stimulator = (props: IStimulatorProps) => {
       console.log(err?.response?.data);
       alert(err?.response?.data);
     }
-  };
+  }, []);
 
-  const fetchCurrencies = async () => {
+  const fetchCurrencies = useCallback(async () => {
     try {
+      // need to move this api in common area
       const types = await axios.get(
         `${API_HOST}/tenant/${application_id}/currency/autocomplete`,
         {
@@ -58,17 +74,21 @@ const Stimulator = (props: IStimulatorProps) => {
       console.log(err?.response?.data);
       alert(err?.response?.data);
     }
-  };
+  }, []);
+
   useEffect(() => {
     fetchTypes();
     fetchCurrencies();
   }, []);
 
   const onSubmit = async (data: any) => {
-    const payerId = data.isCredit === "false" ? data.payerId : application_id;
-    const payeeId = data.isCredit === "true" ? data.payerId : application_id;
+    const isCredit = data.isCredit === "debit" ? false : true;
+    const payerId = isCredit ? application_id : data.payerId;
+    const payeeId = isCredit ? data.payerId : application_id;
+
     const record = {
       ...data,
+      isCredit,
       payerId: payerId,
       payeeId: payeeId,
       achievements: [
@@ -94,11 +114,14 @@ const Stimulator = (props: IStimulatorProps) => {
       alert(err?.response?.data);
     }
   };
-  const handleDotransaction = async (data: any) => {
-    const payerId = data.isCredit === "false" ? data.payerId : application_id;
-    const payeeId = data.isCredit === "true" ? data.payerId : application_id;
+  const handleDoTransaction = async (data: any) => {
+    const isCredit = data.isCredit === "debit" ? false : true;
+    const payerId = isCredit ? application_id : data.payerId;
+    const payeeId = isCredit ? data.payerId : application_id;
+
     const record = {
       ...data,
+      isCredit,
       payerId: payerId,
       payeeId: payeeId,
       achievements: [
@@ -118,7 +141,11 @@ const Stimulator = (props: IStimulatorProps) => {
         }
       );
       if (response.status === 200) {
-        alert("Transaction Excuted Successfully");
+        if (setIsTransactionExecuted) {
+          setIsTransactionExecuted(true);
+        } else {
+          alert("Transaction Excuted Successfully");
+        }
       }
       // setRecord(response.data);
       // setView(!view);
@@ -130,11 +157,11 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const nextStep = () => {
     form.trigger();
-    const currentIndex = props.tabsToShow?.indexOf(step) ?? -1;
+    const currentIndex = tabsToShow?.indexOf(step) ?? -1;
     const nextIndex = currentIndex + 1;
 
-    if (nextIndex < (props.tabsToShow?.length ?? 0)) {
-      const nextStep = props.tabsToShow[nextIndex];
+    if (nextIndex < (tabsToShow?.length ?? 0)) {
+      const nextStep = tabsToShow[nextIndex];
       setStep(nextStep);
     } else {
       setStep(step + 1);
@@ -142,11 +169,11 @@ const Stimulator = (props: IStimulatorProps) => {
   };
   const prevStep = () => {
     form.trigger();
-    const currentIndex = props.tabsToShow?.indexOf(step) ?? -1;
+    const currentIndex = tabsToShow?.indexOf(step) ?? -1;
     const prevIndex = currentIndex - 1;
 
     if (prevIndex >= 0) {
-      const prevStep = props.tabsToShow[prevIndex];
+      const prevStep = tabsToShow[prevIndex];
       setStep(prevStep);
     } else {
       setStep(step - 1);
@@ -179,15 +206,15 @@ const Stimulator = (props: IStimulatorProps) => {
   };
 
   const isFieldVisible = (field: any) => {
-    if (props.fieldsToHide?.length) {
-      return !props.fieldsToHide.includes(field);
+    if (fieldsToHide?.length) {
+      return !fieldsToHide.includes(field);
     } else {
       return true;
     }
   };
   const isStepVisible = (stepIndex: any) => {
-    if (props.tabsToShow?.length) {
-      return props.tabsToShow.includes(stepIndex);
+    if (tabsToShow?.length) {
+      return tabsToShow.includes(stepIndex);
     }
     return true;
   };
@@ -201,7 +228,7 @@ const Stimulator = (props: IStimulatorProps) => {
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <h1>
-              {props.defaultAction === "SIMULATE" ? (
+              {defaultAction === "SIMULATE" ? (
                 <>Transaction Simulator</>
               ) : (
                 <>Transaction</>
@@ -342,11 +369,23 @@ const Stimulator = (props: IStimulatorProps) => {
                             <label>
                               Is Credit <sup className="requiredStar">*</sup> :
                             </label>
-                            <input
+                            <select
+                              name="isCredit"
                               value={props.defaultValues?.isCredit}
-                              {...form.register("isCredit")}
-                              required
-                            />
+                              {...form.register("isCredit", {
+                                required: true,
+                              })}
+                            >
+                              <StyledOption>Select IsCredit </StyledOption>
+                              {IS_CREDIT_LIST.map((isCredit: any) => (
+                                <StyledOption
+                                  key={isCredit.id}
+                                  value={isCredit.id}
+                                >
+                                  {isCredit.label}
+                                </StyledOption>
+                              ))}
+                            </select>
                           </li>
                         )}
                         {isFieldVisible("reference") && (
@@ -751,7 +790,7 @@ const Stimulator = (props: IStimulatorProps) => {
                   )}{" "}
                   {step === 6 && (
                     <>
-                      {props.defaultAction === "SIMULATE" && (
+                      {defaultAction === "SIMULATE" && (
                         <button
                           className="submitBtn"
                           type="submit"
@@ -760,10 +799,10 @@ const Stimulator = (props: IStimulatorProps) => {
                           Simulate
                         </button>
                       )}
-                      {props.defaultAction === "COMMIT_TRANSACTION" && (
+                      {defaultAction === "COMMIT_TRANSACTION" && (
                         <button
                           className="submitBtn"
-                          onClick={form.handleSubmit(handleDotransaction)}
+                          onClick={form.handleSubmit(handleDoTransaction)}
                         >
                           Commit Transaction
                         </button>
@@ -779,7 +818,7 @@ const Stimulator = (props: IStimulatorProps) => {
                   </button>
                   <button
                     className="submitBtn"
-                    onClick={form.handleSubmit(handleDotransaction)}
+                    onClick={form.handleSubmit(handleDoTransaction)}
                   >
                     Commit Transaction
                   </button>
