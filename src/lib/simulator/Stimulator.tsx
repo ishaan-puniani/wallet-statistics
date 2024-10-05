@@ -180,13 +180,20 @@ const Stimulator = (props: IStimulatorProps) => {
     }
   };
 
-  const { transactionType, amount, currency, isCredit, payerId, fromWallet } =
-    form.watch();
+  const {
+    transactionType,
+    amount,
+    currency,
+    isCredit,
+    payerId,
+    fromWallet,
+    reference,
+  } = form.watch();
 
   const handleDisable = () => {
     switch (step) {
       case 1:
-        return transactionType && amount && currency && isCredit;
+        return transactionType && amount && currency && isCredit && reference;
       case 2:
         return true;
       case 3:
@@ -307,7 +314,7 @@ const Stimulator = (props: IStimulatorProps) => {
                               required
                             >
                               {" "}
-                              <StyledOption>
+                              <StyledOption value={null}>
                                 Select Transaction type
                               </StyledOption>
                               {transactionTypes?.length > 0 &&
@@ -345,7 +352,9 @@ const Stimulator = (props: IStimulatorProps) => {
                                 required: true,
                               })}
                             >
-                              <StyledOption>Select Currency </StyledOption>
+                              <StyledOption value={null}>
+                                Select Currency{" "}
+                              </StyledOption>
                               {currencyList?.length > 0 &&
                                 currencyList.map((cur: any) => (
                                   <StyledOption key={cur.id} value={cur.id}>
@@ -376,7 +385,9 @@ const Stimulator = (props: IStimulatorProps) => {
                                 required: true,
                               })}
                             >
-                              <StyledOption>Select IsCredit </StyledOption>
+                              <StyledOption value={null}>
+                                Select IsCredit{" "}
+                              </StyledOption>
                               {IS_CREDIT_LIST.map((isCredit: any) => (
                                 <StyledOption
                                   key={isCredit.id}
