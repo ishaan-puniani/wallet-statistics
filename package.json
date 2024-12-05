@@ -35,7 +35,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-es2015": "^7.0.0-beta.53",
-    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.18.6",
     "@storybook/addon-actions": "^6.5.13",
     "@storybook/addon-essentials": "^6.5.13",
