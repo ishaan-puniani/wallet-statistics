@@ -23,6 +23,7 @@ const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
   const [view, setView] = useState(false);
   const [record, setRecord] = useState<any>({});
+  const [snippet,setSnippet] = useState<any>();
   const [step, setStep] = useState<any>(1);
   const form = useForm();
   const [transactionTypes, setTransactionTypes] = useState<any>();
@@ -36,7 +37,8 @@ const Stimulator = (props: IStimulatorProps) => {
     setIsTransactionExecuted,
   } = props;
 
-  const { application_id, __token } = credentials;
+  const { application_id,__token } = credentials;
+
   // const token = props.__token
   const fetchTypes = useCallback(async () => {
     try {
@@ -109,6 +111,12 @@ const Stimulator = (props: IStimulatorProps) => {
 
       setRecord(fetchBalance.data);
       setView(!view);
+
+      const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+        -H "Authorization: Bearer ${__token}" \
+        -H "Content-Type: application/json" \
+        -d '${JSON.stringify({data: record})}'`;
+      setSnippet(curlCommand);
     } catch (err: any) {
       console.log(err?.response?.data);
       alert(err?.response?.data);
@@ -704,6 +712,7 @@ const Stimulator = (props: IStimulatorProps) => {
                       </tr>
                     ))}
                   </table>
+                  {snippet}
                 </div>
                 {record && record[0]?.achievements?.length > 0 && (
                   <>
