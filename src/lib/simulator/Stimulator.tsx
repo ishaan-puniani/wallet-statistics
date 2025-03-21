@@ -37,7 +37,7 @@ const Stimulator = (props: IStimulatorProps) => {
   const [view, setView] = useState(false);
   const [record, setRecord] = useState<any>({});
   const [payload, setPayload] = useState<any>({});
-  const [snippet,setSnippet] = useState<any>();
+  const [snippet,setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
   const form = useForm();
   const [transactionTypes, setTransactionTypes] = useState<any>();
@@ -884,7 +884,7 @@ task.resume()`
                         {/* <Copy size={16} /> */}
                         COPY
                       </CopyButton>
-                      <Highlight language="javascript" code={snippet[selected]}>
+                      <Highlight language="javascript" code={snippet[selected]||""}>
                         {({ style, tokens, getLineProps, getTokenProps }) => (
                           <pre style={style}>
                             {tokens.map((line, i) => (
