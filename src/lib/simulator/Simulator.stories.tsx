@@ -35,5 +35,6 @@ TransactionSimulator.args = {
   defaultValues: {},
   fieldsToHide: [],
   tabsToShow: [],
-  defaultAction:'COMMIT_TRANSACTION'
+  defaultAction:'COMMIT_TRANSACTION',
+  showApiSnippets:false,
 };

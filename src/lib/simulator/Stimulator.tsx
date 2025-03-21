@@ -10,6 +10,7 @@ export interface IStimulatorProps {
   tabsToShow?: number[];
   fieldsToHide?: string[];
   defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
+  showApiSnippets?: false;
   defaultValues?: Record<string, any>;
   __token: string;
   setIsTransactionExecuted: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,12 +56,11 @@ const Stimulator = (props: IStimulatorProps) => {
     tabsToShow,
     fieldsToHide,
     defaultAction,
+    showApiSnippets,
     setIsTransactionExecuted,
   } = props;
 
   const { application_id,__token } = credentials;
-  // const { application_id } = credentials;
-  // const __token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxZTcwNjNjLTE1NTctNDk5Yi1iMjAwLTJlMWIxZDlhZjMzZCIsImlhdCI6MTc0MjIyNzQ1OCwiZXhwIjoxNzQyODMyMjU4fQ.lNFJpr25woHu2jSG7iUGMJdJOZP7emz4PADFKUprPYA"
 
   // const token = props.__token
   const fetchTypes = useCallback(async () => {
@@ -124,7 +124,7 @@ const Stimulator = (props: IStimulatorProps) => {
         },
       ],
     };
-    setPayload({data:record});
+    
     try {
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
@@ -136,11 +136,15 @@ const Stimulator = (props: IStimulatorProps) => {
       setRecord(fetchBalance.data);
       setView(!view);
 
-      const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+      if(showApiSnippets){
+        const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
         -d '${JSON.stringify({data: record})}'`;
-      setSnippet({curl:curlCommand});
+        setPayload({data:record});
+        setSnippet({curl:curlCommand});
+      }
+      
     } catch (err: any) {
       console.log(err?.response?.data);
       alert(err?.response?.data);
@@ -149,9 +153,15 @@ const Stimulator = (props: IStimulatorProps) => {
   
   const handleSnippetChange = (val:any)=>{
     setSelected(val);
+    let url="";
+    if(defaultAction==="SIMULATE"){
+      url=`${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
+    }else{
+      url=`${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+    }
     switch(val){
       case "curl":
-        setSnippet({curl:`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+        setSnippet({curl:`curl -X POST "${url}" \
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
         -d '${JSON.stringify(payload)}'`});
@@ -160,7 +170,7 @@ const Stimulator = (props: IStimulatorProps) => {
         setSnippet({
           axios:
 `await axios.post(
-  "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction", 
+  "${url}", 
   ${JSON.stringify(payload)}, 
   { 
     headers: { 
@@ -175,7 +185,7 @@ const Stimulator = (props: IStimulatorProps) => {
         setSnippet({
           fetch:
 `fetch(
-  "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction",
+  "${url}",
   {
     method: "POST",
     headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },
@@ -189,7 +199,7 @@ const Stimulator = (props: IStimulatorProps) => {
           python:
 `import requests
 headers = { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" }
-response = requests.post("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction", json=${JSON.stringify(payload)}, headers=headers)
+response = requests.post("${url}", json=${JSON.stringify(payload)}, headers=headers)
 print(response.json())`
         });
         break;
@@ -199,7 +209,7 @@ print(response.json())`
 `import okhttp3.*;
 OkHttpClient client = new OkHttpClient();
 RequestBody body = RequestBody.create(MediaType.parse("application/json"),${JSON.stringify(payload)});
-Request request = new Request.Builder().url("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction")
+Request request = new Request.Builder().url("${url}")
   .post(body).header("Authorization", "Bearer ${__token}").build();
 Response response = client.newCall(request).execute();\nSystem.out.println(response.body().string());`
         });
@@ -209,7 +219,7 @@ Response response = client.newCall(request).execute();\nSystem.out.println(respo
           dart:
 `import 'package:http/http.dart' as http;
 void postData() async {
-  var response = await http.post(Uri.parse("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction"),
+  var response = await http.post(Uri.parse("${url}"),
     headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },\n    body: jsonEncode(${JSON.stringify(payload)})
   );
   print(response.body);
@@ -228,7 +238,7 @@ import (
 )
 func main() {
   payload := strings.NewReader("${JSON.stringify(payload)}")
-  req, _ := http.NewRequest("POST", "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction", bytes.NewBuffer(jsonBody))
+  req, _ := http.NewRequest("POST", "${url}", bytes.NewBuffer(jsonBody))
   req.Header.Set("Authorization", "Bearer ${__token}")
   req.Header.Set("Content-Type", "application/json")
   client := &http.Client{}\n  res, _ := client.Do(req)
@@ -241,7 +251,7 @@ func main() {
         setSnippet({
           php:`
 <?php
-  $ch = curl_init("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction");
+  $ch = curl_init("${url}");
   curl_setopt($ch, CURLOPT_POST, 1);
   curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "Authorization: Bearer ${__token}",
@@ -258,7 +268,7 @@ func main() {
         setSnippet({
           swift:
 `import Foundation
-let url = URL(string: "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction")!
+let url = URL(string: "${url}")!
 var request = URLRequest(url: url)
 request.httpMethod = "POST"
 request.setValue("Bearer ${__token}", forHTTPHeaderField: "Authorization")
@@ -274,7 +284,7 @@ task.resume()`
         break;
       default:
        
-        setSnippet({curl:`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+        setSnippet({curl:`curl -X POST "${url}" \
           -H "Authorization: Bearer ${__token}" \
           -H "Content-Type: application/json" \
           -d '${JSON.stringify(payload)}'`});
@@ -318,6 +328,18 @@ task.resume()`
       }
       // setRecord(response.data);
       // setView(!view);
+
+      if(showApiSnippets){
+        const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction" \
+        -H "Authorization: Bearer ${__token}" \
+        -H "Content-Type: application/json" \
+        -d '${JSON.stringify({data: record,...props.credentials})}'`;
+        setPayload({
+          data: record,
+          ...props.credentials,
+        });
+        setSnippet({curl:curlCommand});
+      }
     } catch (err: any) {
       console.log(err?.response?.data);
       alert(err?.response?.data);
@@ -872,33 +894,34 @@ task.resume()`
                       </tr>
                     ))}
                   </table>
-                  <Container>
-                    <Dropdown value={selected} onChange={(e)=>handleSnippetChange(e.target.value)}>
-                      {CODE_SNIPPET_OPTIONS.map((item: any) => (
-                              <option value={item.id}>{item.label}</option>
-                      ))}
-                    </Dropdown>
-                    
-                    <CodeContainer>
-                      <CopyButton onClick={copyToClipboard}>
-                        {/* <Copy size={16} /> */}
-                        COPY
-                      </CopyButton>
-                      <Highlight language="javascript" code={snippet[selected]||""}>
-                        {({ style, tokens, getLineProps, getTokenProps }) => (
-                          <pre style={style}>
-                            {tokens.map((line, i) => (
-                              <div key={i} {...getLineProps({ line })}>
-                                {line.map((token, key) => (
-                                  <span key={key} {...getTokenProps({ token })} />
-                                ))}
-                              </div>
-                            ))}
-                          </pre>
-                        )}
-                      </Highlight>
-                    </CodeContainer>
-                  </Container>
+                  {showApiSnippets &&
+                    (<Container>
+                      <Dropdown value={selected} onChange={(e)=>handleSnippetChange(e.target.value)}>
+                        {CODE_SNIPPET_OPTIONS.map((item: any) => (
+                                <option value={item.id}>{item.label}</option>
+                        ))}
+                      </Dropdown>
+                      
+                      <CodeContainer>
+                        <CopyButton onClick={copyToClipboard}>
+                          {/* <Copy size={16} /> */}
+                          COPY
+                        </CopyButton>
+                        <Highlight language="javascript" code={snippet[selected]||""}>
+                          {({ style, tokens, getLineProps, getTokenProps }) => (
+                            <pre style={style}>
+                              {tokens.map((line, i) => (
+                                <div key={i} {...getLineProps({ line })}>
+                                  {line.map((token, key) => (
+                                    <span key={key} {...getTokenProps({ token })} />
+                                  ))}
+                                </div>
+                              ))}
+                            </pre>
+                          )}
+                        </Highlight>
+                      </CodeContainer>
+                    </Container>)}
                 </div>
                 {record && record[0]?.achievements?.length > 0 && (
                   <>
@@ -965,6 +988,7 @@ task.resume()`
                 )}
               </>
             )}
+
             <div
               className=" formBtn"
               style={{
