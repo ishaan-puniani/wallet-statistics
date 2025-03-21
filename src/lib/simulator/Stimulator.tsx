@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { API_HOST } from "../../constants";
 import styled from "styled-components";
+import { Highlight } from "prism-react-renderer";
 
 export interface IStimulatorProps {
   credentials?: any;
@@ -19,15 +20,35 @@ const IS_CREDIT_LIST = [
   { id: "credit", label: "Credit" },
 ];
 
+const CODE_SNIPPET_OPTIONS = [
+  {id:"curl",label:"cURL"},
+  {id:"axios",label:"Axios"},
+  {id:"fetch",label:"Fetch"},
+  {id:"python",label:"Python"},
+  {id:"java",label:"Java/Android"},
+  {id:"dart",label:"Dart/Flutter"},
+  {id:"go",label:"Go"},
+  {id:"php",label:"Php"},
+  {id:"swift",label:"Swift"},
+]
+
 const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
   const [view, setView] = useState(false);
   const [record, setRecord] = useState<any>({});
+  const [payload, setPayload] = useState<any>({});
   const [snippet,setSnippet] = useState<any>();
   const [step, setStep] = useState<any>(1);
   const form = useForm();
   const [transactionTypes, setTransactionTypes] = useState<any>();
   const [currencyList, setCurrencyList] = useState<any>();
+
+  const [selected, setSelected] = useState("curl");
+
+  const copyToClipboard = (e:any) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(snippet[selected]);
+  };
 
   const {
     credentials,
@@ -38,6 +59,8 @@ const Stimulator = (props: IStimulatorProps) => {
   } = props;
 
   const { application_id,__token } = credentials;
+  // const { application_id } = credentials;
+  // const __token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQxZTcwNjNjLTE1NTctNDk5Yi1iMjAwLTJlMWIxZDlhZjMzZCIsImlhdCI6MTc0MjIyNzQ1OCwiZXhwIjoxNzQyODMyMjU4fQ.lNFJpr25woHu2jSG7iUGMJdJOZP7emz4PADFKUprPYA"
 
   // const token = props.__token
   const fetchTypes = useCallback(async () => {
@@ -101,6 +124,7 @@ const Stimulator = (props: IStimulatorProps) => {
         },
       ],
     };
+    setPayload({data:record});
     try {
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
@@ -116,12 +140,148 @@ const Stimulator = (props: IStimulatorProps) => {
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
         -d '${JSON.stringify({data: record})}'`;
-      setSnippet(curlCommand);
+      setSnippet({curl:curlCommand});
     } catch (err: any) {
       console.log(err?.response?.data);
       alert(err?.response?.data);
     }
   };
+  
+  const handleSnippetChange = (val:any)=>{
+    setSelected(val);
+    switch(val){
+      case "curl":
+        setSnippet({curl:`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+        -H "Authorization: Bearer ${__token}" \
+        -H "Content-Type: application/json" \
+        -d '${JSON.stringify(payload)}'`});
+        break;
+      case "axios":
+        setSnippet({
+          axios:
+`await axios.post(
+  "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction", 
+  ${JSON.stringify(payload)}, 
+  { 
+    headers: { 
+      "Authorization": "Bearer ${__token}",
+      "Content-Type": "application/json" } 
+  })
+  .then(response => console.log(response.data)
+);`
+        });
+        break;
+      case "fetch":
+        setSnippet({
+          fetch:
+`fetch(
+  "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction",
+  {
+    method: "POST",
+    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },
+    body: ${JSON.stringify(payload)}
+  })
+  .then(response => response.json())\n.then(data => console.log(data));`
+        });
+        break;
+      case "python":
+        setSnippet({
+          python:
+`import requests
+headers = { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" }
+response = requests.post("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction", json=${JSON.stringify(payload)}, headers=headers)
+print(response.json())`
+        });
+        break;
+      case "java":
+        setSnippet({
+          java:
+`import okhttp3.*;
+OkHttpClient client = new OkHttpClient();
+RequestBody body = RequestBody.create(MediaType.parse("application/json"),${JSON.stringify(payload)});
+Request request = new Request.Builder().url("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction")
+  .post(body).header("Authorization", "Bearer ${__token}").build();
+Response response = client.newCall(request).execute();\nSystem.out.println(response.body().string());`
+        });
+        break;
+      case "dart":
+        setSnippet({
+          dart:
+`import 'package:http/http.dart' as http;
+void postData() async {
+  var response = await http.post(Uri.parse("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction"),
+    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },\n    body: jsonEncode(${JSON.stringify(payload)})
+  );
+  print(response.body);
+}`
+        });
+        break;
+      case "go":
+        setSnippet({
+          go:
+`package main
+import (
+  "fmt"
+  "bytes"
+  "net/http"
+  "io/ioutil"
+)
+func main() {
+  payload := strings.NewReader("${JSON.stringify(payload)}")
+  req, _ := http.NewRequest("POST", "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction", bytes.NewBuffer(jsonBody))
+  req.Header.Set("Authorization", "Bearer ${__token}")
+  req.Header.Set("Content-Type", "application/json")
+  client := &http.Client{}\n  res, _ := client.Do(req)
+  body, _ := ioutil.ReadAll(res.Body)
+  fmt.Println(string(body))
+}`
+        });
+        break;
+      case "php":
+        setSnippet({
+          php:`
+<?php
+  $ch = curl_init("${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction");
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Authorization: Bearer ${__token}",
+    "Content-Type: application/json"
+  ]);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, ${JSON.stringify(payload)});
+  $response = curl_exec($ch);\ncurl_close($ch);
+?>`
+        });        
+        break;
+      case "swift":
+        let p :any= JSON.stringify(payload);
+        p = p.replaceAll("{","[").replaceAll("}","]");
+        setSnippet({
+          swift:
+`import Foundation
+let url = URL(string: "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction")!
+var request = URLRequest(url: url)
+request.httpMethod = "POST"
+request.setValue("Bearer ${__token}", forHTTPHeaderField: "Authorization")
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.httpBody = try? JSONSerialization.data(withJSONObject:${p}, options: [])
+let task = URLSession.shared.dataTask(with: request) { data, response, error in
+  if let data = data {
+    print(String(data: data, encoding: .utf8)!)
+  }
+}
+task.resume()`
+        });
+        break;
+      default:
+       
+        setSnippet({curl:`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+          -H "Authorization: Bearer ${__token}" \
+          -H "Content-Type: application/json" \
+          -d '${JSON.stringify(payload)}'`});
+    
+    }
+  }
+
   const handleDoTransaction = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
     const payerId = isCredit ? application_id : data.payerId;
@@ -712,7 +872,33 @@ const Stimulator = (props: IStimulatorProps) => {
                       </tr>
                     ))}
                   </table>
-                  {snippet}
+                  <Container>
+                    <Dropdown value={selected} onChange={(e)=>handleSnippetChange(e.target.value)}>
+                      {CODE_SNIPPET_OPTIONS.map((item: any) => (
+                              <option value={item.id}>{item.label}</option>
+                      ))}
+                    </Dropdown>
+                    
+                    <CodeContainer>
+                      <CopyButton onClick={copyToClipboard}>
+                        {/* <Copy size={16} /> */}
+                        COPY
+                      </CopyButton>
+                      <Highlight language="javascript" code={snippet[selected]}>
+                        {({ style, tokens, getLineProps, getTokenProps }) => (
+                          <pre style={style}>
+                            {tokens.map((line, i) => (
+                              <div key={i} {...getLineProps({ line })}>
+                                {line.map((token, key) => (
+                                  <span key={key} {...getTokenProps({ token })} />
+                                ))}
+                              </div>
+                            ))}
+                          </pre>
+                        )}
+                      </Highlight>
+                    </CodeContainer>
+                  </Container>
                 </div>
                 {record && record[0]?.achievements?.length > 0 && (
                   <>
@@ -995,4 +1181,45 @@ const StyledOption = styled.option`
   padding: 8px;
   border: 1px solid;
 `;
+
+//for snippet
+const Container = styled.div`
+  max-width: 600px;
+  padding: 16px;
+`;
+
+const Dropdown = styled.select`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 16px;
+`;
+
+const CodeContainer = styled.div`
+  position: relative;
+  background: #1e1e1e;
+  color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  font-family: monospace;
+  overflow-x: auto;
+`;
+
+const CopyButton = styled.button`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #444;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background: #666;
+  }
+`;
+
 export default Stimulator;
