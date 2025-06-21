@@ -25,7 +25,7 @@ const PayerTransaction = (props: Payers) => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-profile-by-identifier-for-currency/${props.userId}/${props.currency}`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-transaction-profile-by-identifier-for-currency/${props.userId}/${props.currency}`,
         {
           ...props.credentials,
         }

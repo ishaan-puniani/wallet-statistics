@@ -18,7 +18,7 @@ const DropdownCurrencyTypes = (props: IDropdownProps) => {
     const fetchData = async () => {
       // setLoading(true);
       const fetchCurrencyTypes = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
         {
           ...props.credentials,
         }

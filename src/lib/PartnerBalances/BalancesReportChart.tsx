@@ -16,8 +16,6 @@ import {
   CanvasRenderer,
   // SVGRenderer,
 } from "echarts/renderers";
-import axios from "axios";
-import { API_HOST } from "../../constants";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchBalanceHistory } from "../services/balances";

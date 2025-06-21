@@ -18,7 +18,7 @@ const DropdownTransactionTypes = (props: IDropdownTransactionProps) => {
     const fetchData = async () => {
       // setLoading(true);
       const fetchTransactionData = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
         {
           ...props.credentials,
         }

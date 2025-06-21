@@ -24,7 +24,7 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
     const fetchTransactionData = async () => {
       // setLoading(true);
       const fetchTransactionData = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
         {
           ...props.credentials,
         }
@@ -38,7 +38,7 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
     const fetchCurrencyData = async () => {
       // setLoading(true);
       const fetchCurrencyTypes = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
         {
           ...props.credentials,
         }
@@ -55,7 +55,7 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
 
   const onSubmit = async (data: any) => {
     const validate = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/validate-transaction-rule`,
+      `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/validate-transaction-rule`,
       {
         data,
       }

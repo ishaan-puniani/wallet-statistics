@@ -17,7 +17,7 @@ const GetUserAchievement = (props: IGetUserAchievement) => {
   const onSubmit = async (data: any) => {
     try {
       const response = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/user-achievements/get-active/${props.achieverId}`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/user-achievements/get-active/${props.achieverId}`,
         {
           data,
         }

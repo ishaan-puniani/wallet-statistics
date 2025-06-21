@@ -18,7 +18,7 @@ const Achievements = (props: IAchievements) => {
   const onSubmit = async (data: any) => {
     try {
       const simulateUserAchievement = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/simulate-user-achievements`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/simulate-user-achievements`,
         {
           data,
           ...props.credentials,

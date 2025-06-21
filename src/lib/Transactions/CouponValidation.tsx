@@ -18,7 +18,7 @@ const CouponValidation = (props: ICouponValidation) => {
 
   const onSubmit = async (data: any) => {
     const validate = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/validate-coupon`,
+      `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/validate-coupon`,
       {
         data,
       }

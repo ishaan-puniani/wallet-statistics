@@ -37,7 +37,7 @@ export const EndPointDetails = () => {
   function endpoint() {
     return {
       __html: ` 
-      REPORTING_API_HOST/tenant/applicationId/reports/getbalances?Filter%5BPartnerId%5D=DPK&Filter%5BCurrency%5D=INR&Filter%5BDateRange%5D=2023-01-31&Filter%5BDateRange%5D=2023-12-31&group=monthly
+      credentials.reporting_host || REPORTING_API_HOST/tenant/applicationId/reports/getbalances?Filter%5BPartnerId%5D=DPK&Filter%5BCurrency%5D=INR&Filter%5BDateRange%5D=2023-01-31&Filter%5BDateRange%5D=2023-12-31&group=monthly
     }`,
     };
   }

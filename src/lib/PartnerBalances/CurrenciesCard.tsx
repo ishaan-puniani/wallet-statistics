@@ -17,7 +17,7 @@ const CurrenciesCard = (props: ICurrencies) => {
     const fetchData = async () => {
       // setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete?filter[userId]=${props.userId}`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete?filter[userId]=${props.userId}`,
 
         {
           ...props.credentials,

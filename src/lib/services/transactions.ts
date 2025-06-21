@@ -11,7 +11,7 @@ export const _fetchTransactions = async (
   const filterQuery = getFilterQueryString({ filter: filterMap });
 
   const transactions = await axios.post(
-    `${API_HOST}/tenant/${credentials.application_id}/get-transaction?limit=${limit}&offset=${offset}&${filterQuery}`,
+    `${credentials.host || API_HOST}/tenant/${credentials.application_id}/get-transaction?limit=${limit}&offset=${offset}&${filterQuery}`,
     {
       ...credentials,
     }
@@ -22,7 +22,7 @@ export const _fetchTransactions = async (
 
 export const _fetchTransaction = async (credentials: any, data: any) => {
   const transactions = await axios.post(
-    `${API_HOST}/tenant/${credentials.application_id}/get-transaction/${data.id}`,
+    `${credentials.host || API_HOST}/tenant/${credentials.application_id}/get-transaction/${data.id}`,
     {
       ...credentials,
     }

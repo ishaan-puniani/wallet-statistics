@@ -9,7 +9,7 @@ export const _initialize = async (credentials: any, reset?: boolean) => {
   const cachedTheme = getTheme();
   if (!cachedTheme) {
     const themeResponse = await axios.get(
-      `${API_HOST}/tenant/${credentials.application_id}/settings`
+      `${credentials.host || API_HOST}/tenant/${credentials.application_id}/settings`
     );
     if (themeResponse && themeResponse.data) {
       if (themeResponse.data.themeConfig) {

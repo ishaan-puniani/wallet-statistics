@@ -13,7 +13,7 @@ export const _userAchivements = async (
   const offsetValue = offset ? `&offset=${offset}` : `&`;
 
   const userAchivements = await axios.get(
-    `${API_HOST}/tenant/${credentials.application_id}/user-achievements/?${filterQuery}${limitValue}${offsetValue}`,
+    `${credentials.host || API_HOST}/tenant/${credentials.application_id}/user-achievements/?${filterQuery}${limitValue}${offsetValue}`,
     {
       headers: {
         Authorization: `Bearer ${credentials.__token}`,

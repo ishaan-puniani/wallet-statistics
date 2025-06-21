@@ -4,7 +4,6 @@
 import axios from "axios";
 import React, { useMemo, useState } from "react";
 import styled from "styled-components";
-import { API_HOST } from "../../constants";
 import {
   useFilters,
   useGlobalFilter,

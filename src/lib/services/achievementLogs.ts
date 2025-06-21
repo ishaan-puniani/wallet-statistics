@@ -9,7 +9,7 @@ export const _fetchAchievementsLogs = async (
   offset?: any
 ) => {
   const achievementLogs = await axios.post(
-    `${API_HOST}/tenant/${credentials.application_id}/get-user-achievement-logs?limit=${limit}&offset=${offset}&filter[transaction]=${transaction}&filter[userAchievement]=${userAchievement}`,
+    `${credentials.host || API_HOST}/tenant/${credentials.application_id}/get-user-achievement-logs?limit=${limit}&offset=${offset}&filter[transaction]=${transaction}&filter[userAchievement]=${userAchievement}`,
     {
       ...credentials,
     }
@@ -22,7 +22,7 @@ export const _fetchUserAchievementsLogs = async (
   achieverId?: string
 ) => {
   const achievements = await axios.post(
-    `${API_HOST}/tenant/${credentials.application_id}/user-achievements/get-active/${achieverId}`,
+    `${credentials.host || API_HOST}/tenant/${credentials.application_id}/user-achievements/get-active/${achieverId}`,
     {
       ...credentials,
     }

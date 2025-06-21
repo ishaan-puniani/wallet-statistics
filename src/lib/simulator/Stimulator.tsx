@@ -67,7 +67,7 @@ const Stimulator = (props: IStimulatorProps) => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
+        `${credentials.host || API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
@@ -86,7 +86,7 @@ const Stimulator = (props: IStimulatorProps) => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${API_HOST}/tenant/${application_id}/currency/autocomplete`,
+        `${credentials.host || API_HOST}/tenant/${application_id}/currency/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
@@ -127,7 +127,7 @@ const Stimulator = (props: IStimulatorProps) => {
     
     try {
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+        `${credentials.host || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
         {
           data: record,
         }
@@ -137,7 +137,7 @@ const Stimulator = (props: IStimulatorProps) => {
       setView(!view);
 
       if(showApiSnippets){
-        const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+        const curlCommand=`curl -X POST "${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
         -d '${JSON.stringify({data: record})}'`;
@@ -155,9 +155,9 @@ const Stimulator = (props: IStimulatorProps) => {
     setSelected(val);
     let url="";
     if(defaultAction==="SIMULATE"){
-      url=`${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
+      url=`${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
     }else{
-      url=`${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+      url=`${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
     }
     switch(val){
       case "curl":
@@ -312,7 +312,7 @@ task.resume()`
     };
     try {
       const response = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
+        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
         {
           data: record,
           ...props.credentials,
@@ -330,7 +330,7 @@ task.resume()`
       // setView(!view);
 
       if(showApiSnippets){
-        const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction" \
+        const curlCommand=`curl -X POST "${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction" \
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
         -d '${JSON.stringify({data: record,...props.credentials})}'`;
