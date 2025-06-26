@@ -13,6 +13,7 @@ export interface ITransactionDetails {
   showRaw: boolean;
   loadLinkedTransactions: boolean;
   loadLinkedAchievements: boolean;
+  transactionDateRange?: {start: string, end: string};
 }
 const TransactionDetails = (props: ITransactionDetails) => {
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ const TransactionDetails = (props: ITransactionDetails) => {
     const fetchLinkedTransactionsData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?filter[baseTransaction]=${props.transactionId}`,
+        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?filter[baseTransaction]=${props.transactionId}&filter[createdAtRange]=${props.transactionDateRange.start}&filter[createdAtRange]=${props.transactionDateRange.end}`,
         {
           ...props.credentials,
         }
