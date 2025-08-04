@@ -108,7 +108,7 @@
     "multiselect-react-dropdown": "^2.0.25",
     "prism-react-renderer": "^2.4.1",
     "qs": "^6.11.1",
-    "react-hook-form": "^7.38.0",
+    "react-hook-form": "^7.62.0",
     "react-modal": "^3.16.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-table": "^7.8.0",
