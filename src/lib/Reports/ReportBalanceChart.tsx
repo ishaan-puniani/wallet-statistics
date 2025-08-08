@@ -1,3 +1,43 @@
+/**
+ * type -> debit | credit | amount
+ * amountType -> virtual | real
+ * volume -> group | total
+ */
+
+/**
+ * api-reponse ---
+ * type Transaction_Type: string 
+
+type BalanceMap = Partial<Record<Transaction_Type, number>>;
+export interface BalanceEntry {
+  date: string;
+  currency: string;
+
+  groupedAmounts: BalanceMap;
+  totalAmounts: BalanceMap;
+
+  groupedVirtualValues: BalanceMap;
+  totalVirtualValues: BalanceMap;
+
+  groupedCreditAmounts: BalanceMap;
+  totalCreditAmounts: BalanceMap;
+
+  groupedCrediVirtualValues: BalanceMap;
+  totalCrediVirtualValues: BalanceMap | null;
+
+  groupedDebitAmounts: BalanceMap;
+  totalDebitAmounts: BalanceMap;
+
+  groupedDebitVirtualValues: BalanceMap;
+  totalDebitVirtualValues: BalanceMap;
+
+  groupedTransactions: BalanceMap;
+  totalTransactions: BalanceMap;
+
+  groupBy: number;
+}
+ */
+
 import React, { useEffect, useState } from "react";
 // import the core library.
 import ReactEChartsCore from "echarts-for-react/lib/core";
@@ -20,9 +60,10 @@ import {
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { _fetchBalance, _fetchGetBalances } from "../services/balances";
+import { _fetchGetBalances } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
+import { balanceKeyMap } from "./utils/utils";
 
 // Register the required components
 echarts.use([
@@ -56,6 +97,7 @@ export interface IPartnerBalancesPieChartProps {
   pieSliceClickable?: boolean;
   parentChartColor?: string;
   setChartLoading?: any;
+  volume?: "total" | "group";
 }
 
 const option: any = {
@@ -106,6 +148,11 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   const includePrevious = props.includePrevious || false;
   const includeToday = props.includeToday || false;
   const type = props.type || "debit";
+  const volume = props.volume || "total";
+
+  const volumeType = volume === "group" ? "group" : "total";
+  const virtualOrReal = props.amountType === "virtual" ? "virtual" : "real";
+  const key = balanceKeyMap?.[type]?.[virtualOrReal]?.[volumeType];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -137,33 +184,12 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       const theme = getTheme() || {};
       theme.transactionTypes = props.themeConfig || theme.transactionTypes;
       let chartOptions;
+      // eslint-disable-next-line prefer-const
       chartOptions = Object.keys(props.chartOptions).length
         ? props.chartOptions
         : option;
 
-      const getBalance = () => {
-        if (type === "debit") {
-          if (props.amountType === "virtual") {
-            return balances[0]?.groupedDebitVirtualValues ?? {};
-          } else {
-            return balances[0]?.groupedDebitAmounts ?? {};
-          }
-        } else if (type === "credit") {
-          if (props.amountType === "virtual") {
-            return balances[0]?.groupedCrediVirtualValues ?? {};
-          } else {
-            return balances[0]?.groupedCreditAmounts ?? {};
-          }
-        } else if (type === "amount") {
-          if (props.amountType === "virtual") {
-            return balances[0]?.groupedVirtualValues ?? {};
-          } else {
-            return balances[0]?.groupedAmounts ?? {};
-          }
-        } else return {};
-      };
-
-      const balance = getBalance();
+      const balance = balances?.[0]?.[key] ?? {};
 
       if (
         props.parentTransactionTypeIdentifier &&
@@ -196,6 +222,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       if (Object.keys(balance).length) {
         setRawData(balances);
         console.log(balance);
+        // eslint-disable-next-line prefer-const
         for (let transactionTypes in balance) {
           if (
             (props.transactionTypes &&
@@ -251,6 +278,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     props.endDate,
     props.transactionTypes,
     props?.parentTransactionTypeIdentifier,
+    props?.volume,
   ]);
 
   const onChartClick = (params: any) => {

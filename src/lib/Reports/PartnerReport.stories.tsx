@@ -107,6 +107,7 @@ PartnerBalanceReportChart.args = {
   startDate: moment(),
   endDate: moment(),
   type: "",
+  volume: "group",
 };
 export const PartnerReportChart = TemplateDemo.bind({});
 PartnerReportChart.args = {

@@ -60,3 +60,39 @@ export const sortXData = (xData: string[]) => {
     return 0;
   });
 };
+
+export const balanceKeyMap: Record<
+  string,
+  Record<string, Record<string, string>>
+> = {
+  debit: {
+    virtual: {
+      group: "groupedDebitVirtualValues",
+      total: "totalDebitVirtualValues",
+    },
+    real: {
+      group: "groupedDebitAmounts",
+      total: "totalDebitAmounts",
+    },
+  },
+  credit: {
+    virtual: {
+      group: "groupedCrediVirtualValues",
+      total: "totalCrediVirtualValues",
+    },
+    real: {
+      group: "groupedCreditAmounts",
+      total: "totalCreditAmounts",
+    },
+  },
+  amount: {
+    virtual: {
+      group: "groupedVirtualValues",
+      total: "totalVirtualValues",
+    },
+    real: {
+      group: "groupedAmounts",
+      total: "totalAmounts",
+    },
+  },
+};
