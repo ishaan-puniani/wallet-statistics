@@ -61,7 +61,6 @@ const Stimulator = (props: IStimulatorProps) => {
   } = props;
 
   const { application_id, __token } = credentials;
-  
 
   // const token = props.__token
   const fetchTypes = useCallback(async () => {
@@ -313,6 +312,7 @@ task.resume()`,
         },
       ],
     };
+    debugger;
     try {
       const response = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
