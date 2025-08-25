@@ -17,28 +17,28 @@ export interface IStimulatorProps {
 }
 
 const IS_CREDIT_LIST = [
-  { id: "debit", label: "Debit" },
-  { id: "credit", label: "Credit" },
+  { id: "credit", label: "Add to Wallet" },
+  { id: "debit", label: "Debit from Wallet" },
 ];
 
 const CODE_SNIPPET_OPTIONS = [
-  {id:"curl",label:"cURL"},
-  {id:"axios",label:"Axios"},
-  {id:"fetch",label:"Fetch"},
-  {id:"python",label:"Python"},
-  {id:"java",label:"Java/Android"},
-  {id:"dart",label:"Dart/Flutter"},
-  {id:"go",label:"Go"},
-  {id:"php",label:"Php"},
-  {id:"swift",label:"Swift"},
-]
+  { id: "curl", label: "cURL" },
+  { id: "axios", label: "Axios" },
+  { id: "fetch", label: "Fetch" },
+  { id: "python", label: "Python" },
+  { id: "java", label: "Java/Android" },
+  { id: "dart", label: "Dart/Flutter" },
+  { id: "go", label: "Go" },
+  { id: "php", label: "Php" },
+  { id: "swift", label: "Swift" },
+];
 
 const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
   const [view, setView] = useState(false);
   const [record, setRecord] = useState<any>({});
   const [payload, setPayload] = useState<any>({});
-  const [snippet,setSnippet] = useState<any>({});
+  const [snippet, setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
   const form = useForm();
   const [transactionTypes, setTransactionTypes] = useState<any>();
@@ -46,7 +46,7 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const [selected, setSelected] = useState("curl");
 
-  const copyToClipboard = (e:any) => {
+  const copyToClipboard = (e: any) => {
     e.preventDefault();
     navigator.clipboard.writeText(snippet[selected]);
   };
@@ -60,7 +60,8 @@ const Stimulator = (props: IStimulatorProps) => {
     setIsTransactionExecuted,
   } = props;
 
-  const { application_id,__token } = credentials;
+  const { application_id, __token } = credentials;
+  
 
   // const token = props.__token
   const fetchTypes = useCallback(async () => {
@@ -124,7 +125,7 @@ const Stimulator = (props: IStimulatorProps) => {
         },
       ],
     };
-    
+
     try {
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
@@ -136,40 +137,42 @@ const Stimulator = (props: IStimulatorProps) => {
       setRecord(fetchBalance.data);
       setView(!view);
 
-      if(showApiSnippets){
-        const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
+      if (showApiSnippets) {
+        const curlCommand = `curl -X POST "${API_HOST}/tenant/${
+          props.credentials.application_id
+        }/simulate-currency-transaction" \
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
-        -d '${JSON.stringify({data: record})}'`;
-        setPayload({data:record});
-        setSnippet({curl:curlCommand});
+        -d '${JSON.stringify({ data: record })}'`;
+        setPayload({ data: record });
+        setSnippet({ curl: curlCommand });
       }
-      
     } catch (err: any) {
       console.log(err?.response?.data);
       alert(err?.response?.data);
     }
   };
-  
-  const handleSnippetChange = (val:any)=>{
+
+  const handleSnippetChange = (val: any) => {
     setSelected(val);
-    let url="";
-    if(defaultAction==="SIMULATE"){
-      url=`${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
-    }else{
-      url=`${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+    let url = "";
+    if (defaultAction === "SIMULATE") {
+      url = `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
+    } else {
+      url = `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
     }
-    switch(val){
+    switch (val) {
       case "curl":
-        setSnippet({curl:`curl -X POST "${url}" \
+        setSnippet({
+          curl: `curl -X POST "${url}" \
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
-        -d '${JSON.stringify(payload)}'`});
+        -d '${JSON.stringify(payload)}'`,
+        });
         break;
       case "axios":
         setSnippet({
-          axios:
-`await axios.post(
+          axios: `await axios.post(
   "${url}", 
   ${JSON.stringify(payload)}, 
   { 
@@ -178,58 +181,59 @@ const Stimulator = (props: IStimulatorProps) => {
       "Content-Type": "application/json" } 
   })
   .then(response => console.log(response.data)
-);`
+);`,
         });
         break;
       case "fetch":
         setSnippet({
-          fetch:
-`fetch(
+          fetch: `fetch(
   "${url}",
   {
     method: "POST",
     headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },
     body: ${JSON.stringify(payload)}
   })
-  .then(response => response.json())\n.then(data => console.log(data));`
+  .then(response => response.json())\n.then(data => console.log(data));`,
         });
         break;
       case "python":
         setSnippet({
-          python:
-`import requests
+          python: `import requests
 headers = { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" }
-response = requests.post("${url}", json=${JSON.stringify(payload)}, headers=headers)
-print(response.json())`
+response = requests.post("${url}", json=${JSON.stringify(
+            payload
+          )}, headers=headers)
+print(response.json())`,
         });
         break;
       case "java":
         setSnippet({
-          java:
-`import okhttp3.*;
+          java: `import okhttp3.*;
 OkHttpClient client = new OkHttpClient();
-RequestBody body = RequestBody.create(MediaType.parse("application/json"),${JSON.stringify(payload)});
+RequestBody body = RequestBody.create(MediaType.parse("application/json"),${JSON.stringify(
+            payload
+          )});
 Request request = new Request.Builder().url("${url}")
   .post(body).header("Authorization", "Bearer ${__token}").build();
-Response response = client.newCall(request).execute();\nSystem.out.println(response.body().string());`
+Response response = client.newCall(request).execute();\nSystem.out.println(response.body().string());`,
         });
         break;
       case "dart":
         setSnippet({
-          dart:
-`import 'package:http/http.dart' as http;
+          dart: `import 'package:http/http.dart' as http;
 void postData() async {
   var response = await http.post(Uri.parse("${url}"),
-    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },\n    body: jsonEncode(${JSON.stringify(payload)})
+    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },\n    body: jsonEncode(${JSON.stringify(
+            payload
+          )})
   );
   print(response.body);
-}`
+}`,
         });
         break;
       case "go":
         setSnippet({
-          go:
-`package main
+          go: `package main
 import (
   "fmt"
   "bytes"
@@ -244,12 +248,12 @@ func main() {
   client := &http.Client{}\n  res, _ := client.Do(req)
   body, _ := ioutil.ReadAll(res.Body)
   fmt.Println(string(body))
-}`
+}`,
         });
         break;
       case "php":
         setSnippet({
-          php:`
+          php: `
 <?php
   $ch = curl_init("${url}");
   curl_setopt($ch, CURLOPT_POST, 1);
@@ -259,15 +263,14 @@ func main() {
   ]);
   curl_setopt($ch, CURLOPT_POSTFIELDS, ${JSON.stringify(payload)});
   $response = curl_exec($ch);\ncurl_close($ch);
-?>`
-        });        
+?>`,
+        });
         break;
       case "swift":
-        let p :any= JSON.stringify(payload);
-        p = p.replaceAll("{","[").replaceAll("}","]");
+        let p: any = JSON.stringify(payload);
+        p = p.replaceAll("{", "[").replaceAll("}", "]");
         setSnippet({
-          swift:
-`import Foundation
+          swift: `import Foundation
 let url = URL(string: "${url}")!
 var request = URLRequest(url: url)
 request.httpMethod = "POST"
@@ -279,18 +282,18 @@ let task = URLSession.shared.dataTask(with: request) { data, response, error in
     print(String(data: data, encoding: .utf8)!)
   }
 }
-task.resume()`
+task.resume()`,
         });
         break;
       default:
-       
-        setSnippet({curl:`curl -X POST "${url}" \
+        setSnippet({
+          curl: `curl -X POST "${url}" \
           -H "Authorization: Bearer ${__token}" \
           -H "Content-Type: application/json" \
-          -d '${JSON.stringify(payload)}'`});
-    
+          -d '${JSON.stringify(payload)}'`,
+        });
     }
-  }
+  };
 
   const handleDoTransaction = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
@@ -329,16 +332,18 @@ task.resume()`
       // setRecord(response.data);
       // setView(!view);
 
-      if(showApiSnippets){
-        const curlCommand=`curl -X POST "${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction" \
+      if (showApiSnippets) {
+        const curlCommand = `curl -X POST "${API_HOST}/tenant/${
+          props.credentials.application_id
+        }/execute-currency-transaction" \
         -H "Authorization: Bearer ${__token}" \
         -H "Content-Type: application/json" \
-        -d '${JSON.stringify({data: record,...props.credentials})}'`;
+        -d '${JSON.stringify({ data: record, ...props.credentials })}'`;
         setPayload({
           data: record,
           ...props.credentials,
         });
-        setSnippet({curl:curlCommand});
+        setSnippet({ curl: curlCommand });
       }
     } catch (err: any) {
       console.log(err?.response?.data);
@@ -568,25 +573,28 @@ task.resume()`
                             <label>
                               Is Credit <sup className="requiredStar">*</sup> :
                             </label>
-                            <select
-                              name="isCredit"
-                              value={props.defaultValues?.isCredit}
-                              {...form.register("isCredit", {
-                                required: true,
-                              })}
-                            >
-                              <StyledOption value="">
-                                Select IsCredit
-                              </StyledOption>
+                            <RadioGroup>
                               {IS_CREDIT_LIST.map((isCredit: any) => (
-                                <StyledOption
-                                  key={isCredit.id}
-                                  value={isCredit.id}
-                                >
-                                  {isCredit.label}
-                                </StyledOption>
+                                <RadioOption key={isCredit.id}>
+                                  <input
+                                    type="radio"
+                                    id={isCredit.id}
+                                    name="isCredit"
+                                    value={isCredit.id}
+                                    defaultChecked={
+                                      props.defaultValues?.isCredit ===
+                                      isCredit.id
+                                    }
+                                    {...form.register("isCredit", {
+                                      required: true,
+                                    })}
+                                  />
+                                  <label htmlFor={isCredit.id}>
+                                    {isCredit.label}
+                                  </label>
+                                </RadioOption>
                               ))}
-                            </select>
+                            </RadioGroup>
                           </li>
                         )}
                         {isFieldVisible("reference") && (
@@ -894,26 +902,35 @@ task.resume()`
                       </tr>
                     ))}
                   </table>
-                  {showApiSnippets &&
-                    (<Container>
-                      <Dropdown value={selected} onChange={(e)=>handleSnippetChange(e.target.value)}>
+                  {showApiSnippets && (
+                    <Container>
+                      <Dropdown
+                        value={selected}
+                        onChange={(e) => handleSnippetChange(e.target.value)}
+                      >
                         {CODE_SNIPPET_OPTIONS.map((item: any) => (
-                                <option value={item.id}>{item.label}</option>
+                          <option value={item.id}>{item.label}</option>
                         ))}
                       </Dropdown>
-                      
+
                       <CodeContainer>
                         <CopyButton onClick={copyToClipboard}>
                           {/* <Copy size={16} /> */}
                           COPY
                         </CopyButton>
-                        <Highlight language="javascript" code={snippet[selected]||""}>
+                        <Highlight
+                          language="javascript"
+                          code={snippet[selected] || ""}
+                        >
                           {({ style, tokens, getLineProps, getTokenProps }) => (
                             <pre style={style}>
                               {tokens.map((line, i) => (
                                 <div key={i} {...getLineProps({ line })}>
                                   {line.map((token, key) => (
-                                    <span key={key} {...getTokenProps({ token })} />
+                                    <span
+                                      key={key}
+                                      {...getTokenProps({ token })}
+                                    />
                                   ))}
                                 </div>
                               ))}
@@ -921,7 +938,8 @@ task.resume()`
                           )}
                         </Highlight>
                       </CodeContainer>
-                    </Container>)}
+                    </Container>
+                  )}
                 </div>
                 {record && record[0]?.achievements?.length > 0 && (
                   <>
@@ -1243,6 +1261,46 @@ const CopyButton = styled.button`
   cursor: pointer;
   &:hover {
     background: #666;
+  }
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 330px;
+  @media screen and (max-width: 845px) {
+    width: 315px;
+  }
+  @media screen and (max-width: 425px) {
+    width: 220px;
+  }
+`;
+
+const RadioOption = styled.div`
+  width: 150px !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  input[type="radio"] {
+    width: 15px !important;
+    height: 16px !important;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  label {
+    margin: 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+  }
+
+  &:hover {
+    label {
+      color: #000;
+    }
   }
 `;
 
