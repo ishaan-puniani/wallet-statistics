@@ -108,8 +108,8 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const onSubmit = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
-    const payerId = isCredit ? props.credentials.application_id : data.payerId;
-    const payeeId = isCredit ? data.payerId : props.credentials.application_id;
+    const payerId = isCredit ? application_id : data.payerId;
+    const payeeId = isCredit ? data.payeeId : application_id;
 
     const record = {
       ...data,
@@ -297,7 +297,7 @@ task.resume()`,
   const handleDoTransaction = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
     const payerId = isCredit ? application_id : data.payerId;
-    const payeeId = isCredit ? data.payerId : application_id;
+    const payeeId = isCredit ? data.payeeId : application_id;
 
     const record = {
       ...data,
