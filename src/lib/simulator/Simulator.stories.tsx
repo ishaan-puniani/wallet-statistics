@@ -34,6 +34,7 @@ TransactionSimulator.args = {
   credentials: getServiceAccountCredentials() || {},
   defaultValues: {},
   fieldsToHide: [],
+  fieldsToDisable: [],
   tabsToShow: [],
   defaultAction:'COMMIT_TRANSACTION',
   showApiSnippets:false,

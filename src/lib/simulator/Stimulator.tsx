@@ -9,6 +9,7 @@ export interface IStimulatorProps {
   credentials?: any;
   tabsToShow?: number[];
   fieldsToHide?: string[];
+  fieldsToDisable?: string[];
   defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
   showApiSnippets?: false;
   defaultValues?: Record<string, any>;
@@ -55,12 +56,14 @@ const Stimulator = (props: IStimulatorProps) => {
     credentials,
     tabsToShow,
     fieldsToHide,
+    fieldsToDisable,
     defaultAction,
     showApiSnippets,
     setIsTransactionExecuted,
   } = props;
 
-  const { application_id, __token } = credentials;
+  const { application_id } = credentials;
+  const __token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUzYWM2M2VhLTA1OGMtNDQ5NS1hZDE3LTVjODNiYzZkZDU1OSIsImlhdCI6MTc1NjEwMjUyOCwiZXhwIjoxNzU2NzA3MzI4fQ.rmnAF_emv0jw4GT7ZPSpfDoN0_AaB_dqNQOaM0_ses0'
 
   // const token = props.__token
   const fetchTypes = useCallback(async () => {
@@ -415,6 +418,13 @@ task.resume()`,
       return true;
     }
   };
+  const isFieldDisabled = (field: any) => {
+    if (fieldsToDisable?.length) {
+      return fieldsToDisable.includes(field);
+    } else {
+      return false;
+    }
+  };
   const isStepVisible = (stepIndex: any) => {
     if (tabsToShow?.length) {
       return tabsToShow.includes(stepIndex);
@@ -429,7 +439,7 @@ task.resume()`,
     <>
       <StimulatorWrapper>
         <FormProvider {...form}>
-          <form >
+          <form>
             <h1>
               {defaultAction === "SIMULATE" ? (
                 <>Transaction Simulator</>
@@ -507,6 +517,7 @@ task.resume()`,
                               {...form.register("transactionType", {
                                 required: true,
                               })}
+                              disabled={isFieldDisabled('transactionType')}
                               required
                             >
                               <StyledOption value="">
@@ -681,6 +692,7 @@ task.resume()`,
                               value={props.defaultValues?.payerId}
                               {...form.register("payerId")}
                               required
+                              disabled={isFieldDisabled('payerId')}
                             />
                           </li>
                         )}
@@ -693,6 +705,7 @@ task.resume()`,
                             <input
                               value={props.defaultValues?.payeeId}
                               {...form.register("payeeId")}
+                              disabled={isFieldDisabled('payeeId')}
                             />
                           </li>
                         )}
@@ -747,6 +760,7 @@ task.resume()`,
                           <li>
                             <label>Payer Name :</label>
                             <input
+                              disabled={isFieldDisabled("payerName")}
                               value={props.defaultValues?.payerName}
                               {...form.register("payerName")}
                             />
@@ -756,6 +770,7 @@ task.resume()`,
                           <li>
                             <label>Payee Name :</label>
                             <input
+                              disabled={isFieldDisabled("payeeName")}
                               value={props.defaultValues?.payeeName}
                               {...form.register("payeeName")}
                             />
