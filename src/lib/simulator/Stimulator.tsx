@@ -108,8 +108,8 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const onSubmit = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
-    const payerId = isCredit ? application_id : data.payerId;
-    const payeeId = isCredit ? data.payerId : application_id;
+    const payerId = isCredit ? props.credentials.application_id : data.payerId;
+    const payeeId = isCredit ? data.payerId : props.credentials.application_id;
 
     const record = {
       ...data,
@@ -124,7 +124,7 @@ const Stimulator = (props: IStimulatorProps) => {
         },
       ],
     };
-
+    debugger;
     try {
       const fetchBalance = await axios.post(
         `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
@@ -429,7 +429,7 @@ task.resume()`,
     <>
       <StimulatorWrapper>
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form >
             <h1>
               {defaultAction === "SIMULATE" ? (
                 <>Transaction Simulator</>
@@ -1042,6 +1042,7 @@ task.resume()`,
                         <button
                           className="submitBtn"
                           type="submit"
+                          onClick={form.handleSubmit(onSubmit)}
                           disabled={!handleDisable()}
                         >
                           Simulate
@@ -1050,6 +1051,7 @@ task.resume()`,
                       {defaultAction === "COMMIT_TRANSACTION" && (
                         <button
                           className="submitBtn"
+                          type="submit"
                           onClick={form.handleSubmit(handleDoTransaction)}
                         >
                           Commit Transaction
