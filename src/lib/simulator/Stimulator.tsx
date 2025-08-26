@@ -110,8 +110,12 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const onSubmit = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
-    const payerId = isCredit ? application_id : data.payerId;
-    const payeeId = isCredit ? data.payeeId : application_id;
+    const payerId = isCredit
+      ? application_id
+      : props.defaultValues.payerId || data.payerId;
+    const payeeId = isCredit
+      ? props.defaultValues.payeeId || data.payeeId
+      : application_id;
 
     const record = {
       ...data,
@@ -516,7 +520,7 @@ task.resume()`,
                               {...form.register("transactionType", {
                                 required: true,
                               })}
-                              disabled={isFieldDisabled('transactionType')}
+                              disabled={isFieldDisabled("transactionType")}
                               required
                             >
                               <StyledOption value="">
@@ -691,7 +695,7 @@ task.resume()`,
                               value={props.defaultValues?.payerId}
                               {...form.register("payerId")}
                               required
-                              disabled={isFieldDisabled('payerId')}
+                              disabled={isFieldDisabled("payerId")}
                             />
                           </li>
                         )}
@@ -704,7 +708,7 @@ task.resume()`,
                             <input
                               value={props.defaultValues?.payeeId}
                               {...form.register("payeeId")}
-                              disabled={isFieldDisabled('payeeId')}
+                              disabled={isFieldDisabled("payeeId")}
                             />
                           </li>
                         )}
