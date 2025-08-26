@@ -302,9 +302,12 @@ task.resume()`,
 
   const handleDoTransaction = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
-    const payerId = isCredit ? application_id : data.payerId;
-    const payeeId = isCredit ? data.payeeId : application_id;
-
+    const payerId = isCredit
+      ? application_id
+      : props.defaultValues.payerId || data.payerId;
+    const payeeId = isCredit
+      ? props.defaultValues.payeeId || data.payeeId
+      : application_id;
     const record = {
       ...data,
       isCredit,
