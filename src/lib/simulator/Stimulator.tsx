@@ -62,8 +62,7 @@ const Stimulator = (props: IStimulatorProps) => {
     setIsTransactionExecuted,
   } = props;
 
-  const { application_id } = credentials;
-  const __token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUzYWM2M2VhLTA1OGMtNDQ5NS1hZDE3LTVjODNiYzZkZDU1OSIsImlhdCI6MTc1NjEwMjUyOCwiZXhwIjoxNzU2NzA3MzI4fQ.rmnAF_emv0jw4GT7ZPSpfDoN0_AaB_dqNQOaM0_ses0'
+  const { application_id, __token } = credentials;
 
   // const token = props.__token
   const fetchTypes = useCallback(async () => {
@@ -760,7 +759,6 @@ task.resume()`,
                           <li>
                             <label>Payer Name :</label>
                             <input
-                              disabled={isFieldDisabled("payerName")}
                               value={props.defaultValues?.payerName}
                               {...form.register("payerName")}
                             />
@@ -770,7 +768,6 @@ task.resume()`,
                           <li>
                             <label>Payee Name :</label>
                             <input
-                              disabled={isFieldDisabled("payeeName")}
                               value={props.defaultValues?.payeeName}
                               {...form.register("payeeName")}
                             />
