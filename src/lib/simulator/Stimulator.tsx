@@ -403,7 +403,7 @@ task.resume()`,
         return true;
       case 3:
         if (isFieldVisible("payerId")) {
-          return payerId && fromWallet;
+          return payerId ;
         }
         return fromWallet;
       case 4:
@@ -519,7 +519,7 @@ task.resume()`,
                             </label>
                             <select
                               name="transactionType"
-                              value={props.defaultValues?.transactionType}
+                              defaultValue={props.defaultValues?.transactionType}
                               {...form.register("transactionType", {
                                 required: true,
                               })}
@@ -545,7 +545,7 @@ task.resume()`,
                             </label>
                             <input
                               name="amount"
-                              value={props.defaultValues?.amount}
+                              defaultValue={props.defaultValues?.amount}
                               {...form.register("amount")}
                               required
                             />
@@ -559,7 +559,7 @@ task.resume()`,
 
                             <select
                               name="currency"
-                              value={props.defaultValues?.currency}
+                              defaultValue={props.defaultValues?.currency}
                               {...form.register("currency", {
                                 required: true,
                               })}
@@ -580,7 +580,7 @@ task.resume()`,
                           <li>
                             <label>Virtual Value :</label>
                             <input
-                              value={props.defaultValues?.virtualValue}
+                              defaultValue={props.defaultValues?.virtualValue}
                               {...form.register("virtualValue")}
                             />
                           </li>
@@ -635,7 +635,7 @@ task.resume()`,
                           <li>
                             <label>Payment Method :</label>
                             <input
-                              value={props.defaultValues?.paymentMethod}
+                              defaultValue={props.defaultValues?.paymentMethod}
                               {...form.register("paymentMethod")}
                             />
                           </li>
@@ -644,7 +644,7 @@ task.resume()`,
                           <li>
                             <label>SKU :</label>
                             <input
-                              value={props.defaultValues?.sku}
+                              defaultValue={props.defaultValues?.sku}
                               {...form.register("sku")}
                             />
                           </li>
@@ -653,7 +653,7 @@ task.resume()`,
                           <li>
                             <label>Remark:</label>
                             <input
-                              value={props.defaultValues?.remark}
+                              defaultValue={props.defaultValues?.remark}
                               {...form.register("remark")}
                             />
                           </li>
@@ -662,7 +662,7 @@ task.resume()`,
                           <li>
                             <label>Description :</label>
                             <input
-                              value={props.defaultValues?.description}
+                              defaultValue={props.defaultValues?.description}
                               {...form.register("description")}
                             />
                           </li>
@@ -671,7 +671,7 @@ task.resume()`,
                           <li>
                             <label>Product Id :</label>
                             <input
-                              value={props.defaultValues?.productId}
+                              defaultValue={props.defaultValues?.productId}
                               {...form.register("productId")}
                             />
                           </li>
@@ -680,7 +680,7 @@ task.resume()`,
                           <li>
                             <label>Product Name :</label>
                             <input
-                              value={props.defaultValues?.productName}
+                              defaultValue={props.defaultValues?.productName}
                               {...form.register("productName")}
                             />
                           </li>
@@ -695,7 +695,7 @@ task.resume()`,
                               Payer Id <sup className="requiredStar">*</sup> :
                             </label>
                             <input
-                              value={props.defaultValues?.payerId}
+                              defaultValue={props.defaultValues?.payerId}
                               {...form.register("payerId")}
                               required
                               disabled={isFieldDisabled("payerId")}
@@ -709,7 +709,7 @@ task.resume()`,
                               Payee Id <sup className="requiredStar">*</sup> :
                             </label>
                             <input
-                              value={props.defaultValues?.payeeId}
+                              defaultValue={props.defaultValues?.payeeId}
                               {...form.register("payeeId")}
                               disabled={isFieldDisabled("payeeId")}
                             />
@@ -719,7 +719,7 @@ task.resume()`,
                           <li>
                             <label>Service :</label>
                             <input
-                              value={props.defaultValues?.service}
+                              defaultValue={props.defaultValues?.service}
                               {...form.register("service")}
                               required
                             />
@@ -729,7 +729,7 @@ task.resume()`,
                           <li>
                             <label>Provider :</label>
                             <input
-                              value={props.defaultValues?.provider}
+                              defaultValue={props.defaultValues?.provider}
                               {...form.register("provider")}
                               required
                             />
@@ -739,7 +739,7 @@ task.resume()`,
                           <li>
                             <label>Vendor :</label>
                             <input
-                              value={props.defaultValues?.vendor}
+                              defaultValue={props.defaultValues?.vendor}
                               {...form.register("vendor")}
                               required
                             />
@@ -748,11 +748,11 @@ task.resume()`,
                         {isFieldVisible("fromWallet") && (
                           <li>
                             <label>
-                              From Wallet <sup className="requiredStar">*</sup>{" "}
+                              From Wallet {" "}
                               :
                             </label>
                             <input
-                              value={props.defaultValues?.fromWallet}
+                              defaultValue={props.defaultValues?.fromWallet}
                               {...form.register("fromWallet")}
                               required
                             />
@@ -766,7 +766,7 @@ task.resume()`,
                           <li>
                             <label>Payer Name :</label>
                             <input
-                              value={props.defaultValues?.payerName}
+                              defaultValue={props.defaultValues?.payerName}
                               {...form.register("payerName")}
                             />
                           </li>
@@ -775,7 +775,7 @@ task.resume()`,
                           <li>
                             <label>Payee Name :</label>
                             <input
-                              value={props.defaultValues?.payeeName}
+                              defaultValue={props.defaultValues?.payeeName}
                               {...form.register("payeeName")}
                             />
                           </li>
@@ -784,7 +784,7 @@ task.resume()`,
                           <li>
                             <label>On Behalf Of Id :</label>
                             <input
-                              value={props.defaultValues?.onBehalfOfId}
+                              defaultValue={props.defaultValues?.onBehalfOfId}
                               {...form.register("onBehalfOfId")}
                             />
                           </li>
@@ -793,7 +793,7 @@ task.resume()`,
                           <li>
                             <label>On Behalf Of Name :</label>
                             <input
-                              value={props.defaultValues?.onBehalfOfName}
+                              defaultValue={props.defaultValues?.onBehalfOfName}
                               {...form.register("onBehalfOfName")}
                             />
                           </li>
@@ -802,7 +802,7 @@ task.resume()`,
                           <li>
                             <label>Additional Data :</label>
                             <input
-                              value={props.defaultValues?.additionalData}
+                              defaultValue={props.defaultValues?.additionalData}
                               {...form.register("additionalData")}
                             />
                           </li>
@@ -811,7 +811,7 @@ task.resume()`,
                           <li>
                             <label>Base Transaction :</label>
                             <input
-                              value={props.defaultValues?.baseTransaction}
+                              defaultValue={props.defaultValues?.baseTransaction}
                               {...form.register("baseTransaction")}
                             />
                           </li>
@@ -824,7 +824,7 @@ task.resume()`,
                           <li>
                             <label>Execute Commission For:</label>
                             <input
-                              value={props.defaultValues?.executeCommissionFor}
+                              defaultValue={props.defaultValues?.executeCommissionFor}
                               {...form.register("executeCommissionFor")}
                             />
                           </li>
@@ -833,7 +833,7 @@ task.resume()`,
                           <li>
                             <label>Execute Commission Amount:</label>
                             <input
-                              value={
+                              defaultValue={
                                 props.defaultValues?.executeCommissionAmount
                               }
                               {...form.register("executeCommissionAmount")}
@@ -844,7 +844,7 @@ task.resume()`,
                           <li>
                             <label>Metadata :</label>
                             <input
-                              value={props.defaultValues?.metadata}
+                              defaultValue={props.defaultValues?.metadata}
                               {...form.register("metadata")}
                             />
                           </li>
@@ -857,7 +857,7 @@ task.resume()`,
                           <li>
                             <label>Achiever Id :</label>
                             <input
-                              value={props.defaultValues?.achieverId}
+                              defaultValue={props.defaultValues?.achieverId}
                               {...form.register("achieverId")}
                             />
                           </li>
@@ -866,7 +866,7 @@ task.resume()`,
                           <li>
                             <label>Achievement Identifier :</label>
                             <input
-                              value={props.defaultValues?.action}
+                              defaultValue={props.defaultValues?.action}
                               {...form.register("action")}
                             />
                           </li>
@@ -875,7 +875,7 @@ task.resume()`,
                           <li>
                             <label>Value :</label>
                             <input
-                              value={props.defaultValues?.value}
+                              defaultValue={props.defaultValues?.value}
                               {...form.register("value")}
                             />
                           </li>
