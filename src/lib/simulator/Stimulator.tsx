@@ -122,9 +122,9 @@ const Stimulator = (props: IStimulatorProps) => {
     const isCredit = data.isCredit === true || data.isCredit === "true";
     const payerId = isCredit
       ? application_id
-      : props.defaultValues.payerId || data.payerId;
+      : data.payerId || props.defaultValues.payerId;
     const payeeId = isCredit
-      ? props.defaultValues.payeeId || data.payeeId
+      ? data.payeeId || props.defaultValues.payeeId
       : application_id;
 
     const record = {
@@ -311,13 +311,14 @@ task.resume()`,
   };
 
   const handleDoTransaction = async (data: any) => {
-    const isCredit = data.isCredit === true;
+    const isCredit = data.isCredit === true || data.isCredit === "true";
     const payerId = isCredit
       ? application_id
       : data.payerId || props.defaultValues.payerId;
     const payeeId = isCredit
       ? data.payeeId || props.defaultValues.payeeId
       : application_id;
+
     const record = {
       ...data,
       isCredit,
