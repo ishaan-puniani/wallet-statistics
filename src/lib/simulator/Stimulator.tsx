@@ -406,10 +406,10 @@ task.resume()`,
         if (isFieldVisible("payerId") && isFieldVisible("payeeId")) {
           return (
             (payerId || props.defaultValues?.payerId) &&
-            (props.defaultValues?.payeeId || payeeId)
+            (payeeId || props.defaultValues?.payeeId)
           );
         } else if (isFieldVisible("payeeId")) {
-          return props.defaultValues?.payeeId || payeeId;
+          return payeeId || props.defaultValues?.payeeId;
         } else if (isFieldVisible("payerId")) {
           return payerId || props.defaultValues?.payerId;
         }
