@@ -123,10 +123,9 @@ const Stimulator = (props: IStimulatorProps) => {
     const payerId = isCredit
       ? application_id
       : data.payerId || props.defaultValues.payerId;
-    const payeeId = isCredit
-      ? data.payeeId || props.defaultValues.payeeId
-      : application_id;
-
+    const payeeId = !isCredit
+      ? application_id
+      : data.payeeId || props.defaultValues.payeeId;
     const record = {
       ...data,
       isCredit,
