@@ -18,8 +18,8 @@ export interface IStimulatorProps {
 }
 
 const IS_CREDIT_LIST = [
-  { id: true, label: "Add to Wallet" },
-  { id: false, label: "Debit from Wallet" },
+  { id: "true", label: "Add to Wallet" },
+  { id: "false", label: "Debit from Wallet" },
 ];
 
 const CODE_SNIPPET_OPTIONS = [
@@ -108,13 +108,11 @@ const Stimulator = (props: IStimulatorProps) => {
     fetchCurrencies();
   }, []);
 
-
   useEffect(() => {
     if (props.defaultValues) {
       form.reset({ ...props.defaultValues });
     }
   }, [props.defaultValues, form]);
-
 
   useEffect(() => {
     if (!props.defaultValues) return;
@@ -127,7 +125,7 @@ const Stimulator = (props: IStimulatorProps) => {
   }, [transactionTypes, currencyList, props.defaultValues, form]);
 
   const onSubmit = async (data: any) => {
-    const isCredit = data.isCredit === "debit" ? false : true;
+    const isCredit = data.isCredit === true || data.isCredit === "true";
     const payerId = isCredit
       ? application_id
       : props.defaultValues.payerId || data.payerId;
@@ -319,7 +317,7 @@ task.resume()`,
   };
 
   const handleDoTransaction = async (data: any) => {
-    const isCredit = data.isCredit === "debit" ? false : true;
+    const isCredit = data.isCredit === true;
     const payerId = isCredit
       ? application_id
       : data.payerId || props.defaultValues.payerId;
@@ -619,26 +617,28 @@ task.resume()`,
                               Is Credit <sup className="requiredStar">*</sup> :
                             </label>
                             <RadioGroup>
-                              {IS_CREDIT_LIST.map((isCredit: any) => (
-                                <RadioOption key={isCredit.id}>
-                                  <input
-                                    type="radio"
-                                    id={isCredit.id}
-                                    name="isCredit"
-                                    value={isCredit.id}
-                                    defaultChecked={
-                                      props.defaultValues?.isCredit ===
-                                      isCredit.id
-                                    }
-                                    {...form.register("isCredit", {
-                                      required: true,
-                                    })}
-                                  />
-                                  <label htmlFor={isCredit.id}>
-                                    {isCredit.label}
-                                  </label>
-                                </RadioOption>
-                              ))}
+                              {IS_CREDIT_LIST.map((opt: any) => {
+                                const inputId = `isCredit-${opt.id}`;
+                                return (
+                                  <RadioOption key={opt.id}>
+                                    <input
+                                      type="radio"
+                                      id={inputId}
+                                      name="isCredit"
+                                      value={opt.id}
+                                      defaultChecked={
+                                        props.defaultValues?.isCredit === opt.id
+                                      }
+                                      {...form.register("isCredit", {
+                                        required: true,
+                                        setValueAs: (v) =>
+                                          v === true || v === "true",
+                                      })}
+                                    />
+                                    <label htmlFor={inputId}>{opt.label}</label>
+                                  </RadioOption>
+                                );
+                              })}
                             </RadioGroup>
                           </li>
                         )}
