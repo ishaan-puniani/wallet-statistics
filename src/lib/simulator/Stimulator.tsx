@@ -18,8 +18,8 @@ export interface IStimulatorProps {
 }
 
 const IS_CREDIT_LIST = [
-  { id: "credit", label: "Add to Wallet" },
-  { id: "debit", label: "Debit from Wallet" },
+  { id: "true", label: "Add to Wallet" },
+  { id: "false", label: "Debit from Wallet" },
 ];
 
 const CODE_SNIPPET_OPTIONS = [
@@ -41,7 +41,7 @@ const Stimulator = (props: IStimulatorProps) => {
   const [payload, setPayload] = useState<any>({});
   const [snippet, setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
-  const form = useForm();
+  const form = useForm({ defaultValues: props.defaultValues || {} });
   const [transactionTypes, setTransactionTypes] = useState<any>();
   const [currencyList, setCurrencyList] = useState<any>();
 
@@ -107,6 +107,24 @@ const Stimulator = (props: IStimulatorProps) => {
     fetchTypes();
     fetchCurrencies();
   }, []);
+
+
+  useEffect(() => {
+    if (props.defaultValues) {
+      form.reset({ ...props.defaultValues });
+    }
+  }, [props.defaultValues, form]);
+
+
+  useEffect(() => {
+    if (!props.defaultValues) return;
+    if (transactionTypes && props.defaultValues.transactionType) {
+      form.setValue("transactionType", props.defaultValues.transactionType);
+    }
+    if (currencyList && props.defaultValues.currency) {
+      form.setValue("currency", props.defaultValues.currency);
+    }
+  }, [transactionTypes, currencyList, props.defaultValues, form]);
 
   const onSubmit = async (data: any) => {
     const isCredit = data.isCredit === "debit" ? false : true;
@@ -630,7 +648,7 @@ task.resume()`,
                               Reference <sup className="requiredStar">*</sup> :
                             </label>
                             <input
-                              value={props.defaultValues?.reference}
+                              defaultValue={props.defaultValues?.reference}
                               {...form.register("reference")}
                               required
                             />
