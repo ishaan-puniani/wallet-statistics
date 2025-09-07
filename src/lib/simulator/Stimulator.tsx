@@ -109,12 +109,6 @@ const Stimulator = (props: IStimulatorProps) => {
   }, []);
 
   useEffect(() => {
-    if (props.defaultValues) {
-      form.reset({ ...props.defaultValues });
-    }
-  }, [props.defaultValues, form]);
-
-  useEffect(() => {
     if (!props.defaultValues) return;
     if (transactionTypes && props.defaultValues.transactionType) {
       form.setValue("transactionType", props.defaultValues.transactionType);
