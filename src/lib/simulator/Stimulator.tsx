@@ -18,8 +18,8 @@ export interface IStimulatorProps {
 }
 
 const IS_CREDIT_LIST = [
-  { id: "true", label: "Add to Wallet" },
-  { id: "false", label: "Debit from Wallet" },
+  { id: true, label: "Add to Wallet" },
+  { id: false, label: "Debit from Wallet" },
 ];
 
 const CODE_SNIPPET_OPTIONS = [
