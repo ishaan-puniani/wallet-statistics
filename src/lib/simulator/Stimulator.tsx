@@ -391,6 +391,7 @@ task.resume()`,
     currency,
     isCredit,
     payerId,
+    payeeId,
     fromWallet,
     reference,
   } = form.watch();
@@ -402,8 +403,15 @@ task.resume()`,
       case 2:
         return true;
       case 3:
-        if (isFieldVisible("payerId")) {
-          return payerId;
+        if (isFieldVisible("payerId") && isFieldVisible("payeeId")) {
+          return (
+            (payerId || props.defaultValues?.payerId) &&
+            (props.defaultValues?.payeeId || payeeId)
+          );
+        } else if (isFieldVisible("payeeId")) {
+          return props.defaultValues?.payeeId || payeeId;
+        } else if (isFieldVisible("payerId")) {
+          return payerId || props.defaultValues?.payerId;
         }
         return fromWallet;
       case 4:
