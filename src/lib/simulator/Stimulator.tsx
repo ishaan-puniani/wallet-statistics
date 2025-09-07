@@ -304,9 +304,9 @@ task.resume()`,
     const isCredit = data.isCredit === "debit" ? false : true;
     const payerId = isCredit
       ? application_id
-      : props.defaultValues.payerId || data.payerId;
+      : data.payerId || props.defaultValues.payerId;
     const payeeId = isCredit
-      ? props.defaultValues.payeeId || data.payeeId
+      ? data.payeeId || props.defaultValues.payeeId
       : application_id;
     const record = {
       ...data,
@@ -403,7 +403,7 @@ task.resume()`,
         return true;
       case 3:
         if (isFieldVisible("payerId")) {
-          return payerId ;
+          return payerId;
         }
         return fromWallet;
       case 4:
@@ -519,7 +519,9 @@ task.resume()`,
                             </label>
                             <select
                               name="transactionType"
-                              defaultValue={props.defaultValues?.transactionType}
+                              defaultValue={
+                                props.defaultValues?.transactionType
+                              }
                               {...form.register("transactionType", {
                                 required: true,
                               })}
@@ -747,10 +749,7 @@ task.resume()`,
                         )}
                         {isFieldVisible("fromWallet") && (
                           <li>
-                            <label>
-                              From Wallet {" "}
-                              :
-                            </label>
+                            <label>From Wallet :</label>
                             <input
                               defaultValue={props.defaultValues?.fromWallet}
                               {...form.register("fromWallet")}
@@ -811,7 +810,9 @@ task.resume()`,
                           <li>
                             <label>Base Transaction :</label>
                             <input
-                              defaultValue={props.defaultValues?.baseTransaction}
+                              defaultValue={
+                                props.defaultValues?.baseTransaction
+                              }
                               {...form.register("baseTransaction")}
                             />
                           </li>
@@ -824,7 +825,9 @@ task.resume()`,
                           <li>
                             <label>Execute Commission For:</label>
                             <input
-                              defaultValue={props.defaultValues?.executeCommissionFor}
+                              defaultValue={
+                                props.defaultValues?.executeCommissionFor
+                              }
                               {...form.register("executeCommissionFor")}
                             />
                           </li>
