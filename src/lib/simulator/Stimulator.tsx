@@ -116,56 +116,10 @@ const Stimulator = (props: IStimulatorProps) => {
     if (currencyList && props.defaultValues.currency) {
       form.setValue("currency", props.defaultValues.currency);
     }
-  }, [transactionTypes, currencyList, props.defaultValues, form]);
-
-  const onSubmit = async (data: any) => {
-    const isCredit = data.isCredit === true || data.isCredit === "true";
-    const payerId = isCredit
-      ? application_id
-      : data.payerId || props.defaultValues.payerId;
-    const payeeId = !isCredit
-      ? application_id
-      : data.payeeId || props.defaultValues.payeeId;
-    const record = {
-      ...data,
-      isCredit,
-      payerId: payerId,
-      payeeId: payeeId,
-      achievements: [
-        {
-          achieverId: data.achieverId,
-          action: data.action,
-          value: data.value || 0,
-        },
-      ],
-    };
-    debugger;
-    try {
-      const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
-        {
-          data: record,
-        }
-      );
-
-      setRecord(fetchBalance.data);
-      setView(!view);
-
-      if (showApiSnippets) {
-        const curlCommand = `curl -X POST "${API_HOST}/tenant/${
-          props.credentials.application_id
-        }/simulate-currency-transaction" \
-        -H "Authorization: Bearer ${__token}" \
-        -H "Content-Type: application/json" \
-        -d '${JSON.stringify({ data: record })}'`;
-        setPayload({ data: record });
-        setSnippet({ curl: curlCommand });
-      }
-    } catch (err: any) {
-      console.log(err?.response?.data);
-      alert(err?.response?.data);
+    if (props.defaultValues.isCredit) {
+      form.setValue("isCredit", `${props.defaultValues.isCredit}`);
     }
-  };
+  }, [transactionTypes, currencyList, props.defaultValues, form]);
 
   const handleSnippetChange = (val: any) => {
     setSelected(val);
@@ -309,14 +263,75 @@ task.resume()`,
     }
   };
 
-  const handleDoTransaction = async (data: any) => {
+  const onSubmit = async (data: any) => {
     const isCredit = data.isCredit === true || data.isCredit === "true";
-    const payerId = isCredit
+    let payerId = isCredit
       ? application_id
       : data.payerId || props.defaultValues.payerId;
-    const payeeId = !isCredit
+    let payeeId = !isCredit
       ? application_id
       : data.payeeId || props.defaultValues.payeeId;
+
+    if (!isCredit) {
+      const id = payerId;
+      payerId = payeeId;
+      payeeId = id;
+    }
+    const record = {
+      ...data,
+      isCredit,
+      payerId: payerId,
+      payeeId: payeeId,
+      achievements: [
+        {
+          achieverId: data.achieverId,
+          action: data.action,
+          value: data.value || 0,
+        },
+      ],
+    };
+    debugger;
+    try {
+      const fetchBalance = await axios.post(
+        `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+        {
+          data: record,
+        }
+      );
+
+      setRecord(fetchBalance.data);
+      setView(!view);
+
+      if (showApiSnippets) {
+        const curlCommand = `curl -X POST "${API_HOST}/tenant/${
+          props.credentials.application_id
+        }/simulate-currency-transaction" \
+        -H "Authorization: Bearer ${__token}" \
+        -H "Content-Type: application/json" \
+        -d '${JSON.stringify({ data: record })}'`;
+        setPayload({ data: record });
+        setSnippet({ curl: curlCommand });
+      }
+    } catch (err: any) {
+      console.log(err?.response?.data);
+      alert(err?.response?.data);
+    }
+  };
+
+  const handleDoTransaction = async (data: any) => {
+    const isCredit = data.isCredit === true || data.isCredit === "true";
+    let payerId = isCredit
+      ? application_id
+      : data.payerId || props.defaultValues.payerId;
+    let payeeId = !isCredit
+      ? application_id
+      : data.payeeId || props.defaultValues.payeeId;
+
+    if (!isCredit) {
+      const id = payerId;
+      payerId = payeeId;
+      payeeId = id;
+    }
 
     const record = {
       ...data,
