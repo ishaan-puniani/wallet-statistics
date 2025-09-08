@@ -41,7 +41,10 @@ const Stimulator = (props: IStimulatorProps) => {
   const [payload, setPayload] = useState<any>({});
   const [snippet, setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
-  const form = useForm({ defaultValues: props.defaultValues || {} });
+  const form = useForm({
+    defaultValues: props.defaultValues || {},
+    shouldUnregister: false,
+  });
   const [transactionTypes, setTransactionTypes] = useState<any>();
   const [currencyList, setCurrencyList] = useState<any>();
 
@@ -63,8 +66,7 @@ const Stimulator = (props: IStimulatorProps) => {
   } = props;
 
   const { application_id, __token } = credentials;
-
-  // const token = props.__token
+  
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
@@ -116,8 +118,8 @@ const Stimulator = (props: IStimulatorProps) => {
     if (currencyList && props.defaultValues.currency) {
       form.setValue("currency", props.defaultValues.currency);
     }
-    if (props.defaultValues.isCredit) {
-      form.setValue("isCredit", `${props.defaultValues.isCredit}`);
+    if (props.defaultValues?.isCredit !== undefined) {
+      form.setValue("isCredit", String(props.defaultValues.isCredit));
     }
   }, [transactionTypes, currencyList, props.defaultValues, form]);
 
@@ -263,20 +265,26 @@ task.resume()`,
     }
   };
 
-  const onSubmit = async (data: any) => {
-    const isCredit = data.isCredit === true || data.isCredit === "true";
-    let payerId = isCredit
-      ? application_id
-      : data.payerId || props.defaultValues.payerId;
-    let payeeId = !isCredit
-      ? application_id
-      : data.payeeId || props.defaultValues.payeeId;
+  const resolveParticipants = (data: any) => {
+    const isCredit =
+      data.isCredit === true ||
+      data.isCredit === "true" ||
+      data.isCredit === "True";
 
-    if (!isCredit) {
-      const id = payerId;
-      payerId = payeeId;
-      payeeId = id;
+    const rawPayerId =
+      data.payerId ?? props.defaultValues?.payerId ?? undefined;
+
+    const rawPayeeId =
+      data.payeeId ?? props.defaultValues?.payeeId ?? undefined;
+
+    if (isCredit) {
+      return { payerId: rawPayerId, payeeId: rawPayeeId, isCredit: true };
     }
+    return { payerId: rawPayeeId, payeeId: rawPayerId, isCredit: false };
+  };
+
+  const onSubmit = async (data: any) => {
+    const { payerId, payeeId, isCredit } = resolveParticipants(data);
     const record = {
       ...data,
       isCredit,
@@ -319,19 +327,7 @@ task.resume()`,
   };
 
   const handleDoTransaction = async (data: any) => {
-    const isCredit = data.isCredit === true || data.isCredit === "true";
-    let payerId = isCredit
-      ? application_id
-      : data.payerId || props.defaultValues.payerId;
-    let payeeId = !isCredit
-      ? application_id
-      : data.payeeId || props.defaultValues.payeeId;
-
-    if (!isCredit) {
-      const id = payerId;
-      payerId = payeeId;
-      payeeId = id;
-    }
+    const { payerId, payeeId, isCredit } = resolveParticipants(data);
 
     const record = {
       ...data,
@@ -423,8 +419,17 @@ task.resume()`,
 
   const handleDisable = () => {
     switch (step) {
-      case 1:
-        return transactionType && amount && currency && isCredit && reference;
+      case 1: {
+        const isCreditValue = form.getValues("isCredit");
+        return (
+          transactionType &&
+          amount &&
+          currency &&
+          isCreditValue !== undefined &&
+          isCreditValue !== "" &&
+          reference
+        );
+      }
       case 2:
         return true;
       case 3:
@@ -635,13 +640,8 @@ task.resume()`,
                                       id={inputId}
                                       name="isCredit"
                                       value={opt.id}
-                                      defaultChecked={
-                                        props.defaultValues?.isCredit === opt.id
-                                      }
                                       {...form.register("isCredit", {
                                         required: true,
-                                        setValueAs: (v) =>
-                                          v === true || v === "true",
                                       })}
                                     />
                                     <label htmlFor={inputId}>{opt.label}</label>
