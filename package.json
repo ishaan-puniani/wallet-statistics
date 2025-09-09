@@ -63,7 +63,7 @@
     "babel-preset-react-app": "10.0.1",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.2.2",
-    "echarts": "^5.4.0",
+    "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.2",
     "eslint": "^8.26.0",
     "eslint-plugin-storybook": "^0.6.6",
