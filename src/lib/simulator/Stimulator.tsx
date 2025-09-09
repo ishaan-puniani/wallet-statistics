@@ -66,7 +66,7 @@ const Stimulator = (props: IStimulatorProps) => {
   } = props;
 
   const { application_id, __token } = credentials;
-  
+
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
@@ -123,145 +123,79 @@ const Stimulator = (props: IStimulatorProps) => {
     }
   }, [transactionTypes, currencyList, props.defaultValues, form]);
 
-  const handleSnippetChange = (val: any) => {
-    setSelected(val);
-    let url = "";
-    if (defaultAction === "SIMULATE") {
-      url = `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
-    } else {
-      url = `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
-    }
-    switch (val) {
+  const buildSnippet = (
+    lang: string,
+    payloadObj: any,
+    url: string,
+    token: string
+  ) => {
+    switch (lang) {
       case "curl":
-        setSnippet({
-          curl: `curl -X POST "${url}" \
-        -H "Authorization: Bearer ${__token}" \
-        -H "Content-Type: application/json" \
-        -d '${JSON.stringify(payload)}'`,
-        });
-        break;
+        return `curl -X POST "${url}" \
+  -H "Authorization: Bearer ${token}" \
+  -H "Content-Type: application/json" \
+  -d '${JSON.stringify(payloadObj)}'`;
       case "axios":
-        setSnippet({
-          axios: `await axios.post(
-  "${url}", 
-  ${JSON.stringify(payload)}, 
-  { 
-    headers: { 
-      "Authorization": "Bearer ${__token}",
-      "Content-Type": "application/json" } 
-  })
-  .then(response => console.log(response.data)
-);`,
-        });
-        break;
+        return `await axios.post("${url}", ${JSON.stringify(
+          payloadObj
+        )}, { headers:{ Authorization:"Bearer ${token}", "Content-Type":"application/json"} });`;
       case "fetch":
-        setSnippet({
-          fetch: `fetch(
-  "${url}",
-  {
-    method: "POST",
-    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },
-    body: ${JSON.stringify(payload)}
-  })
-  .then(response => response.json())\n.then(data => console.log(data));`,
-        });
-        break;
+        return `fetch("${url}", {method:"POST", headers:{Authorization:"Bearer ${token}","Content-Type":"application/json"}, body:${JSON.stringify(
+          payloadObj
+        )}}).then(r=>r.json()).then(console.log);`;
       case "python":
-        setSnippet({
-          python: `import requests
-headers = { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" }
-response = requests.post("${url}", json=${JSON.stringify(
-            payload
-          )}, headers=headers)
-print(response.json())`,
-        });
-        break;
+        return `import requests
+headers={"Authorization":"Bearer ${token}","Content-Type":"application/json"}
+r=requests.post("${url}", json=${JSON.stringify(payloadObj)}, headers=headers)
+print(r.json())`;
       case "java":
-        setSnippet({
-          java: `import okhttp3.*;
-OkHttpClient client = new OkHttpClient();
-RequestBody body = RequestBody.create(MediaType.parse("application/json"),${JSON.stringify(
-            payload
-          )});
-Request request = new Request.Builder().url("${url}")
-  .post(body).header("Authorization", "Bearer ${__token}").build();
-Response response = client.newCall(request).execute();\nSystem.out.println(response.body().string());`,
-        });
-        break;
+        return `OkHttpClient client=new OkHttpClient();
+RequestBody body=RequestBody.create(MediaType.parse("application/json"), ${JSON.stringify(
+          payloadObj
+        )});
+Request request=new Request.Builder().url("${url}")
+  .post(body).header("Authorization","Bearer ${token}")
+  .header("Content-Type","application/json").build();`;
       case "dart":
-        setSnippet({
-          dart: `import 'package:http/http.dart' as http;
-void postData() async {
-  var response = await http.post(Uri.parse("${url}"),
-    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },\n    body: jsonEncode(${JSON.stringify(
-            payload
-          )})
-  );
-  print(response.body);
-}`,
-        });
-        break;
+        return `var r=await http.post(Uri.parse("${url}"),
+ headers:{"Authorization":"Bearer ${token}","Content-Type":"application/json"},
+ body:jsonEncode(${JSON.stringify(payloadObj)}));`;
       case "go":
-        setSnippet({
-          go: `package main
-import (
-  "fmt"
-  "bytes"
-  "net/http"
-  "io/ioutil"
-)
-func main() {
-  payload := strings.NewReader("${JSON.stringify(payload)}")
-  req, _ := http.NewRequest("POST", "${url}", bytes.NewBuffer(jsonBody))
-  req.Header.Set("Authorization", "Bearer ${__token}")
-  req.Header.Set("Content-Type", "application/json")
-  client := &http.Client{}\n  res, _ := client.Do(req)
-  body, _ := ioutil.ReadAll(res.Body)
-  fmt.Println(string(body))
-}`,
-        });
-        break;
+        return `req,_:=http.NewRequest("POST","${url}", bytes.NewBuffer([]byte(${JSON.stringify(
+          JSON.stringify(payloadObj)
+        )})))
+req.Header.Set("Authorization","Bearer ${token}")
+req.Header.Set("Content-Type","application/json")`;
       case "php":
-        setSnippet({
-          php: `
-<?php
-  $ch = curl_init("${url}");
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Authorization: Bearer ${__token}",
-    "Content-Type: application/json"
-  ]);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, ${JSON.stringify(payload)});
-  $response = curl_exec($ch);\ncurl_close($ch);
-?>`,
-        });
-        break;
+        return `<?php $ch=curl_init("${url}");
+curl_setopt_array($ch,[CURLOPT_POST=>1,CURLOPT_HTTPHEADER=>["Authorization: Bearer ${token}","Content-Type: application/json"],CURLOPT_POSTFIELDS=>${JSON.stringify(
+          payloadObj
+        )}]); $r=curl_exec($ch); curl_close($ch);`;
       case "swift":
-        let p: any = JSON.stringify(payload);
-        p = p.replaceAll("{", "[").replaceAll("}", "]");
-        setSnippet({
-          swift: `import Foundation
-let url = URL(string: "${url}")!
-var request = URLRequest(url: url)
-request.httpMethod = "POST"
-request.setValue("Bearer ${__token}", forHTTPHeaderField: "Authorization")
-request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-request.httpBody = try? JSONSerialization.data(withJSONObject:${p}, options: [])
-let task = URLSession.shared.dataTask(with: request) { data, response, error in
-  if let data = data {
-    print(String(data: data, encoding: .utf8)!)
-  }
-}
-task.resume()`,
-        });
-        break;
+        return `var req=URLRequest(url: URL(string:"${url}")!)
+req.httpMethod="POST"
+req.setValue("Bearer ${token}", forHTTPHeaderField:"Authorization")
+req.setValue("application/json", forHTTPHeaderField:"Content-Type")
+req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
+          payloadObj
+        )})`;
       default:
-        setSnippet({
-          curl: `curl -X POST "${url}" \
-          -H "Authorization: Bearer ${__token}" \
-          -H "Content-Type: application/json" \
-          -d '${JSON.stringify(payload)}'`,
-        });
+        return "";
+    }
+  };
+
+  const handleSnippetChange = (val: string) => {
+    setSelected(val);
+
+    if (payload && Object.keys(payload).length) {
+      const url =
+        defaultAction === "SIMULATE"
+          ? `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`
+          : `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+      setSnippet((prev: any) => ({
+        ...prev,
+        [val]: buildSnippet(val, payload, url, __token),
+      }));
     }
   };
 
@@ -311,14 +245,14 @@ task.resume()`,
       setView(!view);
 
       if (showApiSnippets) {
-        const curlCommand = `curl -X POST "${API_HOST}/tenant/${
-          props.credentials.application_id
-        }/simulate-currency-transaction" \
-        -H "Authorization: Bearer ${__token}" \
-        -H "Content-Type: application/json" \
-        -d '${JSON.stringify({ data: record })}'`;
-        setPayload({ data: record });
-        setSnippet({ curl: curlCommand });
+        const newPayload = { data: record };
+        setPayload(newPayload);
+        const url = `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
+        const all: any = {};
+        CODE_SNIPPET_OPTIONS.forEach((opt) => {
+          all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
+        });
+        setSnippet(all);
       }
     } catch (err: any) {
       console.log(err?.response?.data);
@@ -363,17 +297,14 @@ task.resume()`,
       // setView(!view);
 
       if (showApiSnippets) {
-        const curlCommand = `curl -X POST "${API_HOST}/tenant/${
-          props.credentials.application_id
-        }/execute-currency-transaction" \
-        -H "Authorization: Bearer ${__token}" \
-        -H "Content-Type: application/json" \
-        -d '${JSON.stringify({ data: record, ...props.credentials })}'`;
-        setPayload({
-          data: record,
-          ...props.credentials,
+        const newPayload = { data: record, ...props.credentials };
+        setPayload(newPayload);
+        const url = `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+        const all: any = {};
+        CODE_SNIPPET_OPTIONS.forEach((opt) => {
+          all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
         });
-        setSnippet({ curl: curlCommand });
+        setSnippet(all);
       }
     } catch (err: any) {
       console.log(err?.response?.data);
