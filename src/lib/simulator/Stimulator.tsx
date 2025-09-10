@@ -205,11 +205,9 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
       data.isCredit === "true" ||
       data.isCredit === "True";
 
-    const partnerId =
-      data.partnerId ?? props.defaultValues?.partnerId ?? undefined;
+    const partnerId = data.payerId ?? props.defaultValues?.payerId ?? undefined;
 
-    const tenantId =
-      data.tenantId ?? props.defaultValues?.tenantId ?? undefined;
+    const tenantId = data.payeeId ?? props.defaultValues?.payeeId ?? undefined;
 
     if (isCredit) {
       return { payerId: tenantId, payeeId: partnerId, isCredit: true };
