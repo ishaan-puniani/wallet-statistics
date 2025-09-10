@@ -205,16 +205,16 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
       data.isCredit === "true" ||
       data.isCredit === "True";
 
-    const rawPayerId =
-      data.payerId ?? props.defaultValues?.payerId ?? undefined;
+    const partnerId =
+      data.partnerId ?? props.defaultValues?.partnerId ?? undefined;
 
-    const rawPayeeId =
-      data.payeeId ?? props.defaultValues?.payeeId ?? undefined;
+    const tenantId =
+      data.tenantId ?? props.defaultValues?.tenantId ?? undefined;
 
     if (isCredit) {
-      return { payerId: rawPayerId, payeeId: rawPayeeId, isCredit: true };
+      return { payerId: tenantId, payeeId: partnerId, isCredit: true };
     }
-    return { payerId: rawPayeeId, payeeId: rawPayerId, isCredit: false };
+    return { payerId: partnerId, payeeId: tenantId, isCredit: false };
   };
 
   const onSubmit = async (data: any) => {
@@ -660,7 +660,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                         {isFieldVisible("payerId") && (
                           <li>
                             <label>
-                              Payer Id <sup className="requiredStar">*</sup> :
+                              Partner Id <sup className="requiredStar">*</sup> :
                             </label>
                             <input
                               defaultValue={props.defaultValues?.payerId}
