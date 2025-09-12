@@ -661,7 +661,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                         <li
                           style={{
                             display: `${
-                              isFieldVisible("payerId") ? "block" : "none"
+                              isFieldVisible("payerId") ? "" : "none"
                             }`,
                           }}
                         >
@@ -679,7 +679,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                         <li
                           style={{
                             display: `${
-                              isFieldVisible("payeeId") ? "block" : "none"
+                              isFieldVisible("payeeId") ? "" : "none"
                             }`,
                           }}
                         >
