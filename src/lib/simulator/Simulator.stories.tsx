@@ -38,4 +38,5 @@ TransactionSimulator.args = {
   tabsToShow: [],
   defaultAction:'COMMIT_TRANSACTION',
   showApiSnippets:false,
+  isDuplicate: false
 };

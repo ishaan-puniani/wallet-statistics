@@ -15,6 +15,7 @@ export interface IStimulatorProps {
   defaultValues?: Record<string, any>;
   __token: string;
   setIsTransactionExecuted: React.Dispatch<React.SetStateAction<boolean>>;
+  isDuplicate?: boolean;
 }
 
 const IS_CREDIT_LIST = [
@@ -63,6 +64,7 @@ const Stimulator = (props: IStimulatorProps) => {
     defaultAction,
     showApiSnippets,
     setIsTransactionExecuted,
+    isDuplicate = false,
   } = props;
 
   const { application_id, __token } = credentials;
@@ -207,9 +209,10 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
 
     const partnerId = data.payerId ?? props.defaultValues?.payerId ?? undefined;
 
-    const tenantId = data.payeeId ?? props.defaultValues?.payeeId ?? application_id;
+    const tenantId =
+      data.payeeId ?? props.defaultValues?.payeeId ?? application_id;
 
-    if (isCredit) {
+    if (isCredit && !isDuplicate) {
       return { payerId: tenantId, payeeId: partnerId, isCredit: true };
     }
     return { payerId: partnerId, payeeId: tenantId, isCredit: false };
@@ -655,40 +658,41 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                     )}
                     {step === 3 && (
                       <>
-                        {isFieldVisible("payerId") && (
-                          <li>
-                            <label>
-                              Partner Id <sup className="requiredStar">*</sup> :
-                            </label>
-                            <input
-                              defaultValue={
-                                props.defaultValues.isCredit
-                                  ? props.defaultValues?.payeeId
-                                  : props.defaultValues?.payerId
-                              }
-                              {...form.register("payerId")}
-                              required
-                              disabled={isFieldDisabled("payerId")}
-                            />
-                          </li>
-                        )}
+                        <li
+                          style={{
+                            display: `${
+                              isFieldVisible("payerId") ? "block" : "none"
+                            }`,
+                          }}
+                        >
+                          <label>
+                            Partner Id <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            defaultValue={props.defaultValues?.payerId}
+                            {...form.register("payerId")}
+                            required
+                            disabled={isFieldDisabled("payerId")}
+                          />
+                        </li>
 
-                        {isFieldVisible("payeeId") && (
-                          <li>
-                            <label>
-                              Payee Id <sup className="requiredStar">*</sup> :
-                            </label>
-                            <input
-                              defaultValue={
-                                props.defaultValues.isCredit
-                                  ? props.defaultValues?.payerId
-                                  : props.defaultValues?.payeeId
-                              }
-                              {...form.register("payeeId")}
-                              disabled={isFieldDisabled("payeeId")}
-                            />
-                          </li>
-                        )}
+                        <li
+                          style={{
+                            display: `${
+                              isFieldVisible("payeeId") ? "block" : "none"
+                            }`,
+                          }}
+                        >
+                          <label>
+                            Payee Id <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            defaultValue={props.defaultValues?.payeeId}
+                            {...form.register("payeeId")}
+                            disabled={isFieldDisabled("payeeId")}
+                          />
+                        </li>
+
                         {isFieldVisible("service") && (
                           <li>
                             <label>Service :</label>
