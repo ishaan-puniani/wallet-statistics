@@ -207,7 +207,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
 
     const partnerId = data.payerId ?? props.defaultValues?.payerId ?? undefined;
 
-    const tenantId = data.payeeId ?? props.defaultValues?.payeeId ?? undefined;
+    const tenantId = data.payeeId ?? props.defaultValues?.payeeId ?? application_id;
 
     if (isCredit) {
       return { payerId: tenantId, payeeId: partnerId, isCredit: true };
@@ -661,7 +661,11 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                               Partner Id <sup className="requiredStar">*</sup> :
                             </label>
                             <input
-                              defaultValue={props.defaultValues?.payerId}
+                              defaultValue={
+                                props.defaultValues.isCredit
+                                  ? props.defaultValues?.payeeId
+                                  : props.defaultValues?.payerId
+                              }
                               {...form.register("payerId")}
                               required
                               disabled={isFieldDisabled("payerId")}
@@ -675,7 +679,11 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                               Payee Id <sup className="requiredStar">*</sup> :
                             </label>
                             <input
-                              defaultValue={props.defaultValues?.payeeId}
+                              defaultValue={
+                                props.defaultValues.isCredit
+                                  ? props.defaultValues?.payerId
+                                  : props.defaultValues?.payeeId
+                              }
                               {...form.register("payeeId")}
                               disabled={isFieldDisabled("payeeId")}
                             />
