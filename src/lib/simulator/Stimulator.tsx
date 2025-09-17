@@ -9,44 +9,49 @@ export interface IStimulatorProps {
   credentials?: any;
   tabsToShow?: number[];
   fieldsToHide?: string[];
+  fieldsToDisable?: string[];
   defaultAction?: "COMMIT_TRANSACTION" | "SIMULATE";
   showApiSnippets?: false;
   defaultValues?: Record<string, any>;
   __token: string;
   setIsTransactionExecuted: React.Dispatch<React.SetStateAction<boolean>>;
+  isDuplicate?: boolean;
 }
 
 const IS_CREDIT_LIST = [
-  { id: "debit", label: "Debit" },
-  { id: "credit", label: "Credit" },
+  { id: "true", label: "Add to Wallet" },
+  { id: "false", label: "Debit from Wallet" },
 ];
 
 const CODE_SNIPPET_OPTIONS = [
-  {id:"curl",label:"cURL"},
-  {id:"axios",label:"Axios"},
-  {id:"fetch",label:"Fetch"},
-  {id:"python",label:"Python"},
-  {id:"java",label:"Java/Android"},
-  {id:"dart",label:"Dart/Flutter"},
-  {id:"go",label:"Go"},
-  {id:"php",label:"Php"},
-  {id:"swift",label:"Swift"},
-]
+  { id: "curl", label: "cURL" },
+  { id: "axios", label: "Axios" },
+  { id: "fetch", label: "Fetch" },
+  { id: "python", label: "Python" },
+  { id: "java", label: "Java/Android" },
+  { id: "dart", label: "Dart/Flutter" },
+  { id: "go", label: "Go" },
+  { id: "php", label: "Php" },
+  { id: "swift", label: "Swift" },
+];
 
 const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
   const [view, setView] = useState(false);
   const [record, setRecord] = useState<any>({});
   const [payload, setPayload] = useState<any>({});
-  const [snippet,setSnippet] = useState<any>({});
+  const [snippet, setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
-  const form = useForm();
+  const form = useForm({
+    defaultValues: props.defaultValues || {},
+    shouldUnregister: false,
+  });
   const [transactionTypes, setTransactionTypes] = useState<any>();
   const [currencyList, setCurrencyList] = useState<any>();
 
   const [selected, setSelected] = useState("curl");
 
-  const copyToClipboard = (e:any) => {
+  const copyToClipboard = (e: any) => {
     e.preventDefault();
     navigator.clipboard.writeText(snippet[selected]);
   };
@@ -55,19 +60,20 @@ const Stimulator = (props: IStimulatorProps) => {
     credentials,
     tabsToShow,
     fieldsToHide,
+    fieldsToDisable,
     defaultAction,
     showApiSnippets,
     setIsTransactionExecuted,
+    isDuplicate = false,
   } = props;
 
-  const { application_id,__token } = credentials;
+  const { application_id, __token } = credentials;
 
-  // const token = props.__token
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${credentials.host || API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
+        `${API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
@@ -86,7 +92,7 @@ const Stimulator = (props: IStimulatorProps) => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${credentials.host || API_HOST}/tenant/${application_id}/currency/autocomplete`,
+        `${API_HOST}/tenant/${application_id}/currency/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
@@ -106,11 +112,114 @@ const Stimulator = (props: IStimulatorProps) => {
     fetchCurrencies();
   }, []);
 
-  const onSubmit = async (data: any) => {
-    const isCredit = data.isCredit === "debit" ? false : true;
-    const payerId = isCredit ? application_id : data.payerId;
-    const payeeId = isCredit ? data.payerId : application_id;
+  useEffect(() => {
+    if (!props.defaultValues) return;
+    if (transactionTypes && props.defaultValues.transactionType) {
+      form.setValue("transactionType", props.defaultValues.transactionType);
+    }
+    if (currencyList && props.defaultValues.currency) {
+      form.setValue("currency", props.defaultValues.currency);
+    }
+    if (props.defaultValues?.isCredit !== undefined) {
+      form.setValue("isCredit", String(props.defaultValues.isCredit));
+    }
+  }, [transactionTypes, currencyList, props.defaultValues, form]);
 
+  const buildSnippet = (
+    lang: string,
+    payloadObj: any,
+    url: string,
+    token: string
+  ) => {
+    switch (lang) {
+      case "curl":
+        return `curl -X POST "${url}" \
+  -H "Authorization: Bearer ${token}" \
+  -H "Content-Type: application/json" \
+  -d '${JSON.stringify(payloadObj)}'`;
+      case "axios":
+        return `await axios.post("${url}", ${JSON.stringify(
+          payloadObj
+        )}, { headers:{ Authorization:"Bearer ${token}", "Content-Type":"application/json"} });`;
+      case "fetch":
+        return `fetch("${url}", {method:"POST", headers:{Authorization:"Bearer ${token}","Content-Type":"application/json"}, body:${JSON.stringify(
+          payloadObj
+        )}}).then(r=>r.json()).then(console.log);`;
+      case "python":
+        return `import requests
+headers={"Authorization":"Bearer ${token}","Content-Type":"application/json"}
+r=requests.post("${url}", json=${JSON.stringify(payloadObj)}, headers=headers)
+print(r.json())`;
+      case "java":
+        return `OkHttpClient client=new OkHttpClient();
+RequestBody body=RequestBody.create(MediaType.parse("application/json"), ${JSON.stringify(
+          payloadObj
+        )});
+Request request=new Request.Builder().url("${url}")
+  .post(body).header("Authorization","Bearer ${token}")
+  .header("Content-Type","application/json").build();`;
+      case "dart":
+        return `var r=await http.post(Uri.parse("${url}"),
+ headers:{"Authorization":"Bearer ${token}","Content-Type":"application/json"},
+ body:jsonEncode(${JSON.stringify(payloadObj)}));`;
+      case "go":
+        return `req,_:=http.NewRequest("POST","${url}", bytes.NewBuffer([]byte(${JSON.stringify(
+          JSON.stringify(payloadObj)
+        )})))
+req.Header.Set("Authorization","Bearer ${token}")
+req.Header.Set("Content-Type","application/json")`;
+      case "php":
+        return `<?php $ch=curl_init("${url}");
+curl_setopt_array($ch,[CURLOPT_POST=>1,CURLOPT_HTTPHEADER=>["Authorization: Bearer ${token}","Content-Type: application/json"],CURLOPT_POSTFIELDS=>${JSON.stringify(
+          payloadObj
+        )}]); $r=curl_exec($ch); curl_close($ch);`;
+      case "swift":
+        return `var req=URLRequest(url: URL(string:"${url}")!)
+req.httpMethod="POST"
+req.setValue("Bearer ${token}", forHTTPHeaderField:"Authorization")
+req.setValue("application/json", forHTTPHeaderField:"Content-Type")
+req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
+          payloadObj
+        )})`;
+      default:
+        return "";
+    }
+  };
+
+  const handleSnippetChange = (val: string) => {
+    setSelected(val);
+
+    if (payload && Object.keys(payload).length) {
+      const url =
+        defaultAction === "SIMULATE"
+          ? `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`
+          : `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+      setSnippet((prev: any) => ({
+        ...prev,
+        [val]: buildSnippet(val, payload, url, __token),
+      }));
+    }
+  };
+
+  const resolveParticipants = (data: any) => {
+    const isCredit =
+      data.isCredit === true ||
+      data.isCredit === "true" ||
+      data.isCredit === "True";
+
+    const partnerId = data.payerId ?? props.defaultValues?.payerId ?? undefined;
+
+    const tenantId =
+      data.payeeId ?? props.defaultValues?.payeeId ?? application_id;
+
+    if (isCredit && !isDuplicate) {
+      return { payerId: tenantId, payeeId: partnerId, isCredit: true };
+    }
+    return { payerId: partnerId, payeeId: tenantId, isCredit: false };
+  };
+
+  const onSubmit = async (data: any) => {
+    const { payerId, payeeId, isCredit } = resolveParticipants(data);
     const record = {
       ...data,
       isCredit,
@@ -124,10 +233,10 @@ const Stimulator = (props: IStimulatorProps) => {
         },
       ],
     };
-    
+    debugger;
     try {
       const fetchBalance = await axios.post(
-        `${credentials.host || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+        `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
         {
           data: record,
         }
@@ -136,166 +245,24 @@ const Stimulator = (props: IStimulatorProps) => {
       setRecord(fetchBalance.data);
       setView(!view);
 
-      if(showApiSnippets){
-        const curlCommand=`curl -X POST "${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction" \
-        -H "Authorization: Bearer ${__token}" \
-        -H "Content-Type: application/json" \
-        -d '${JSON.stringify({data: record})}'`;
-        setPayload({data:record});
-        setSnippet({curl:curlCommand});
+      if (showApiSnippets) {
+        const newPayload = { data: record };
+        setPayload(newPayload);
+        const url = `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
+        const all: any = {};
+        CODE_SNIPPET_OPTIONS.forEach((opt) => {
+          all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
+        });
+        setSnippet(all);
       }
-      
     } catch (err: any) {
       console.log(err?.response?.data);
       alert(err?.response?.data);
     }
   };
-  
-  const handleSnippetChange = (val:any)=>{
-    setSelected(val);
-    let url="";
-    if(defaultAction==="SIMULATE"){
-      url=`${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
-    }else{
-      url=`${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
-    }
-    switch(val){
-      case "curl":
-        setSnippet({curl:`curl -X POST "${url}" \
-        -H "Authorization: Bearer ${__token}" \
-        -H "Content-Type: application/json" \
-        -d '${JSON.stringify(payload)}'`});
-        break;
-      case "axios":
-        setSnippet({
-          axios:
-`await axios.post(
-  "${url}", 
-  ${JSON.stringify(payload)}, 
-  { 
-    headers: { 
-      "Authorization": "Bearer ${__token}",
-      "Content-Type": "application/json" } 
-  })
-  .then(response => console.log(response.data)
-);`
-        });
-        break;
-      case "fetch":
-        setSnippet({
-          fetch:
-`fetch(
-  "${url}",
-  {
-    method: "POST",
-    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },
-    body: ${JSON.stringify(payload)}
-  })
-  .then(response => response.json())\n.then(data => console.log(data));`
-        });
-        break;
-      case "python":
-        setSnippet({
-          python:
-`import requests
-headers = { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" }
-response = requests.post("${url}", json=${JSON.stringify(payload)}, headers=headers)
-print(response.json())`
-        });
-        break;
-      case "java":
-        setSnippet({
-          java:
-`import okhttp3.*;
-OkHttpClient client = new OkHttpClient();
-RequestBody body = RequestBody.create(MediaType.parse("application/json"),${JSON.stringify(payload)});
-Request request = new Request.Builder().url("${url}")
-  .post(body).header("Authorization", "Bearer ${__token}").build();
-Response response = client.newCall(request).execute();\nSystem.out.println(response.body().string());`
-        });
-        break;
-      case "dart":
-        setSnippet({
-          dart:
-`import 'package:http/http.dart' as http;
-void postData() async {
-  var response = await http.post(Uri.parse("${url}"),
-    headers: { "Authorization": "Bearer ${__token}", "Content-Type": "application/json" },\n    body: jsonEncode(${JSON.stringify(payload)})
-  );
-  print(response.body);
-}`
-        });
-        break;
-      case "go":
-        setSnippet({
-          go:
-`package main
-import (
-  "fmt"
-  "bytes"
-  "net/http"
-  "io/ioutil"
-)
-func main() {
-  payload := strings.NewReader("${JSON.stringify(payload)}")
-  req, _ := http.NewRequest("POST", "${url}", bytes.NewBuffer(jsonBody))
-  req.Header.Set("Authorization", "Bearer ${__token}")
-  req.Header.Set("Content-Type", "application/json")
-  client := &http.Client{}\n  res, _ := client.Do(req)
-  body, _ := ioutil.ReadAll(res.Body)
-  fmt.Println(string(body))
-}`
-        });
-        break;
-      case "php":
-        setSnippet({
-          php:`
-<?php
-  $ch = curl_init("${url}");
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Authorization: Bearer ${__token}",
-    "Content-Type: application/json"
-  ]);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, ${JSON.stringify(payload)});
-  $response = curl_exec($ch);\ncurl_close($ch);
-?>`
-        });        
-        break;
-      case "swift":
-        let p :any= JSON.stringify(payload);
-        p = p.replaceAll("{","[").replaceAll("}","]");
-        setSnippet({
-          swift:
-`import Foundation
-let url = URL(string: "${url}")!
-var request = URLRequest(url: url)
-request.httpMethod = "POST"
-request.setValue("Bearer ${__token}", forHTTPHeaderField: "Authorization")
-request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-request.httpBody = try? JSONSerialization.data(withJSONObject:${p}, options: [])
-let task = URLSession.shared.dataTask(with: request) { data, response, error in
-  if let data = data {
-    print(String(data: data, encoding: .utf8)!)
-  }
-}
-task.resume()`
-        });
-        break;
-      default:
-       
-        setSnippet({curl:`curl -X POST "${url}" \
-          -H "Authorization: Bearer ${__token}" \
-          -H "Content-Type: application/json" \
-          -d '${JSON.stringify(payload)}'`});
-    
-    }
-  }
 
   const handleDoTransaction = async (data: any) => {
-    const isCredit = data.isCredit === "debit" ? false : true;
-    const payerId = isCredit ? application_id : data.payerId;
-    const payeeId = isCredit ? data.payerId : application_id;
+    const { payerId, payeeId, isCredit } = resolveParticipants(data);
 
     const record = {
       ...data,
@@ -310,9 +277,10 @@ task.resume()`
         },
       ],
     };
+    debugger;
     try {
       const response = await axios.post(
-        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
+        `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
         {
           data: record,
           ...props.credentials,
@@ -329,16 +297,15 @@ task.resume()`
       // setRecord(response.data);
       // setView(!view);
 
-      if(showApiSnippets){
-        const curlCommand=`curl -X POST "${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction" \
-        -H "Authorization: Bearer ${__token}" \
-        -H "Content-Type: application/json" \
-        -d '${JSON.stringify({data: record,...props.credentials})}'`;
-        setPayload({
-          data: record,
-          ...props.credentials,
+      if (showApiSnippets) {
+        const newPayload = { data: record, ...props.credentials };
+        setPayload(newPayload);
+        const url = `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+        const all: any = {};
+        CODE_SNIPPET_OPTIONS.forEach((opt) => {
+          all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
         });
-        setSnippet({curl:curlCommand});
+        setSnippet(all);
       }
     } catch (err: any) {
       console.log(err?.response?.data);
@@ -377,19 +344,36 @@ task.resume()`
     currency,
     isCredit,
     payerId,
+    payeeId,
     fromWallet,
     reference,
   } = form.watch();
 
   const handleDisable = () => {
     switch (step) {
-      case 1:
-        return transactionType && amount && currency && isCredit && reference;
+      case 1: {
+        const isCreditValue = form.getValues("isCredit");
+        return (
+          transactionType &&
+          amount &&
+          currency &&
+          isCreditValue !== undefined &&
+          isCreditValue !== "" &&
+          reference
+        );
+      }
       case 2:
         return true;
       case 3:
-        if (isFieldVisible("payerId")) {
-          return payerId && fromWallet;
+        if (isFieldVisible("payerId") && isFieldVisible("payeeId")) {
+          return (
+            (payerId || props.defaultValues?.payerId) &&
+            (payeeId || props.defaultValues?.payeeId)
+          );
+        } else if (isFieldVisible("payeeId")) {
+          return payeeId || props.defaultValues?.payeeId;
+        } else if (isFieldVisible("payerId")) {
+          return payerId || props.defaultValues?.payerId;
         }
         return fromWallet;
       case 4:
@@ -410,6 +394,13 @@ task.resume()`
       return true;
     }
   };
+  const isFieldDisabled = (field: any) => {
+    if (fieldsToDisable?.length) {
+      return fieldsToDisable.includes(field);
+    } else {
+      return false;
+    }
+  };
   const isStepVisible = (stepIndex: any) => {
     if (tabsToShow?.length) {
       return tabsToShow.includes(stepIndex);
@@ -424,7 +415,7 @@ task.resume()`
     <>
       <StimulatorWrapper>
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form>
             <h1>
               {defaultAction === "SIMULATE" ? (
                 <>Transaction Simulator</>
@@ -498,10 +489,13 @@ task.resume()`
                             </label>
                             <select
                               name="transactionType"
-                              value={props.defaultValues?.transactionType}
+                              defaultValue={
+                                props.defaultValues?.transactionType
+                              }
                               {...form.register("transactionType", {
                                 required: true,
                               })}
+                              disabled={isFieldDisabled("transactionType")}
                               required
                             >
                               <StyledOption value="">
@@ -523,7 +517,7 @@ task.resume()`
                             </label>
                             <input
                               name="amount"
-                              value={props.defaultValues?.amount}
+                              defaultValue={props.defaultValues?.amount}
                               {...form.register("amount")}
                               required
                             />
@@ -537,7 +531,7 @@ task.resume()`
 
                             <select
                               name="currency"
-                              value={props.defaultValues?.currency}
+                              defaultValue={props.defaultValues?.currency}
                               {...form.register("currency", {
                                 required: true,
                               })}
@@ -558,7 +552,7 @@ task.resume()`
                           <li>
                             <label>Virtual Value :</label>
                             <input
-                              value={props.defaultValues?.virtualValue}
+                              defaultValue={props.defaultValues?.virtualValue}
                               {...form.register("virtualValue")}
                             />
                           </li>
@@ -568,25 +562,25 @@ task.resume()`
                             <label>
                               Is Credit <sup className="requiredStar">*</sup> :
                             </label>
-                            <select
-                              name="isCredit"
-                              value={props.defaultValues?.isCredit}
-                              {...form.register("isCredit", {
-                                required: true,
+                            <RadioGroup>
+                              {IS_CREDIT_LIST.map((opt: any) => {
+                                const inputId = `isCredit-${opt.id}`;
+                                return (
+                                  <RadioOption key={opt.id}>
+                                    <input
+                                      type="radio"
+                                      id={inputId}
+                                      name="isCredit"
+                                      value={opt.id}
+                                      {...form.register("isCredit", {
+                                        required: true,
+                                      })}
+                                    />
+                                    <label htmlFor={inputId}>{opt.label}</label>
+                                  </RadioOption>
+                                );
                               })}
-                            >
-                              <StyledOption value="">
-                                Select IsCredit
-                              </StyledOption>
-                              {IS_CREDIT_LIST.map((isCredit: any) => (
-                                <StyledOption
-                                  key={isCredit.id}
-                                  value={isCredit.id}
-                                >
-                                  {isCredit.label}
-                                </StyledOption>
-                              ))}
-                            </select>
+                            </RadioGroup>
                           </li>
                         )}
                         {isFieldVisible("reference") && (
@@ -595,7 +589,7 @@ task.resume()`
                               Reference <sup className="requiredStar">*</sup> :
                             </label>
                             <input
-                              value={props.defaultValues?.reference}
+                              defaultValue={props.defaultValues?.reference}
                               {...form.register("reference")}
                               required
                             />
@@ -610,7 +604,7 @@ task.resume()`
                           <li>
                             <label>Payment Method :</label>
                             <input
-                              value={props.defaultValues?.paymentMethod}
+                              defaultValue={props.defaultValues?.paymentMethod}
                               {...form.register("paymentMethod")}
                             />
                           </li>
@@ -619,7 +613,7 @@ task.resume()`
                           <li>
                             <label>SKU :</label>
                             <input
-                              value={props.defaultValues?.sku}
+                              defaultValue={props.defaultValues?.sku}
                               {...form.register("sku")}
                             />
                           </li>
@@ -628,7 +622,7 @@ task.resume()`
                           <li>
                             <label>Remark:</label>
                             <input
-                              value={props.defaultValues?.remark}
+                              defaultValue={props.defaultValues?.remark}
                               {...form.register("remark")}
                             />
                           </li>
@@ -637,7 +631,7 @@ task.resume()`
                           <li>
                             <label>Description :</label>
                             <input
-                              value={props.defaultValues?.description}
+                              defaultValue={props.defaultValues?.description}
                               {...form.register("description")}
                             />
                           </li>
@@ -646,7 +640,7 @@ task.resume()`
                           <li>
                             <label>Product Id :</label>
                             <input
-                              value={props.defaultValues?.productId}
+                              defaultValue={props.defaultValues?.productId}
                               {...form.register("productId")}
                             />
                           </li>
@@ -655,7 +649,7 @@ task.resume()`
                           <li>
                             <label>Product Name :</label>
                             <input
-                              value={props.defaultValues?.productName}
+                              defaultValue={props.defaultValues?.productName}
                               {...form.register("productName")}
                             />
                           </li>
@@ -664,35 +658,46 @@ task.resume()`
                     )}
                     {step === 3 && (
                       <>
-                        {isFieldVisible("payerId") && (
-                          <li>
-                            <label>
-                              Payer Id <sup className="requiredStar">*</sup> :
-                            </label>
-                            <input
-                              value={props.defaultValues?.payerId}
-                              {...form.register("payerId")}
-                              required
-                            />
-                          </li>
-                        )}
+                        <li
+                          style={{
+                            display: `${
+                              isFieldVisible("payerId") ? "" : "none"
+                            }`,
+                          }}
+                        >
+                          <label>
+                            Partner Id <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            defaultValue={props.defaultValues?.payerId}
+                            {...form.register("payerId")}
+                            required
+                            disabled={isFieldDisabled("payerId")}
+                          />
+                        </li>
 
-                        {isFieldVisible("payeeId") && (
-                          <li>
-                            <label>
-                              Payee Id <sup className="requiredStar">*</sup> :
-                            </label>
-                            <input
-                              value={props.defaultValues?.payeeId}
-                              {...form.register("payeeId")}
-                            />
-                          </li>
-                        )}
+                        <li
+                          style={{
+                            display: `${
+                              isFieldVisible("payeeId") ? "" : "none"
+                            }`,
+                          }}
+                        >
+                          <label>
+                            Payee Id <sup className="requiredStar">*</sup> :
+                          </label>
+                          <input
+                            defaultValue={props.defaultValues?.payeeId}
+                            {...form.register("payeeId")}
+                            disabled={isFieldDisabled("payeeId")}
+                          />
+                        </li>
+
                         {isFieldVisible("service") && (
                           <li>
                             <label>Service :</label>
                             <input
-                              value={props.defaultValues?.service}
+                              defaultValue={props.defaultValues?.service}
                               {...form.register("service")}
                               required
                             />
@@ -702,7 +707,7 @@ task.resume()`
                           <li>
                             <label>Provider :</label>
                             <input
-                              value={props.defaultValues?.provider}
+                              defaultValue={props.defaultValues?.provider}
                               {...form.register("provider")}
                               required
                             />
@@ -712,7 +717,7 @@ task.resume()`
                           <li>
                             <label>Vendor :</label>
                             <input
-                              value={props.defaultValues?.vendor}
+                              defaultValue={props.defaultValues?.vendor}
                               {...form.register("vendor")}
                               required
                             />
@@ -720,12 +725,9 @@ task.resume()`
                         )}
                         {isFieldVisible("fromWallet") && (
                           <li>
-                            <label>
-                              From Wallet <sup className="requiredStar">*</sup>{" "}
-                              :
-                            </label>
+                            <label>From Wallet :</label>
                             <input
-                              value={props.defaultValues?.fromWallet}
+                              defaultValue={props.defaultValues?.fromWallet}
                               {...form.register("fromWallet")}
                               required
                             />
@@ -739,7 +741,7 @@ task.resume()`
                           <li>
                             <label>Payer Name :</label>
                             <input
-                              value={props.defaultValues?.payerName}
+                              defaultValue={props.defaultValues?.payerName}
                               {...form.register("payerName")}
                             />
                           </li>
@@ -748,7 +750,7 @@ task.resume()`
                           <li>
                             <label>Payee Name :</label>
                             <input
-                              value={props.defaultValues?.payeeName}
+                              defaultValue={props.defaultValues?.payeeName}
                               {...form.register("payeeName")}
                             />
                           </li>
@@ -757,7 +759,7 @@ task.resume()`
                           <li>
                             <label>On Behalf Of Id :</label>
                             <input
-                              value={props.defaultValues?.onBehalfOfId}
+                              defaultValue={props.defaultValues?.onBehalfOfId}
                               {...form.register("onBehalfOfId")}
                             />
                           </li>
@@ -766,7 +768,7 @@ task.resume()`
                           <li>
                             <label>On Behalf Of Name :</label>
                             <input
-                              value={props.defaultValues?.onBehalfOfName}
+                              defaultValue={props.defaultValues?.onBehalfOfName}
                               {...form.register("onBehalfOfName")}
                             />
                           </li>
@@ -775,7 +777,7 @@ task.resume()`
                           <li>
                             <label>Additional Data :</label>
                             <input
-                              value={props.defaultValues?.additionalData}
+                              defaultValue={props.defaultValues?.additionalData}
                               {...form.register("additionalData")}
                             />
                           </li>
@@ -784,7 +786,9 @@ task.resume()`
                           <li>
                             <label>Base Transaction :</label>
                             <input
-                              value={props.defaultValues?.baseTransaction}
+                              defaultValue={
+                                props.defaultValues?.baseTransaction
+                              }
                               {...form.register("baseTransaction")}
                             />
                           </li>
@@ -797,7 +801,9 @@ task.resume()`
                           <li>
                             <label>Execute Commission For:</label>
                             <input
-                              value={props.defaultValues?.executeCommissionFor}
+                              defaultValue={
+                                props.defaultValues?.executeCommissionFor
+                              }
                               {...form.register("executeCommissionFor")}
                             />
                           </li>
@@ -806,7 +812,7 @@ task.resume()`
                           <li>
                             <label>Execute Commission Amount:</label>
                             <input
-                              value={
+                              defaultValue={
                                 props.defaultValues?.executeCommissionAmount
                               }
                               {...form.register("executeCommissionAmount")}
@@ -817,7 +823,7 @@ task.resume()`
                           <li>
                             <label>Metadata :</label>
                             <input
-                              value={props.defaultValues?.metadata}
+                              defaultValue={props.defaultValues?.metadata}
                               {...form.register("metadata")}
                             />
                           </li>
@@ -830,7 +836,7 @@ task.resume()`
                           <li>
                             <label>Achiever Id :</label>
                             <input
-                              value={props.defaultValues?.achieverId}
+                              defaultValue={props.defaultValues?.achieverId}
                               {...form.register("achieverId")}
                             />
                           </li>
@@ -839,7 +845,7 @@ task.resume()`
                           <li>
                             <label>Achievement Identifier :</label>
                             <input
-                              value={props.defaultValues?.action}
+                              defaultValue={props.defaultValues?.action}
                               {...form.register("action")}
                             />
                           </li>
@@ -848,7 +854,7 @@ task.resume()`
                           <li>
                             <label>Value :</label>
                             <input
-                              value={props.defaultValues?.value}
+                              defaultValue={props.defaultValues?.value}
                               {...form.register("value")}
                             />
                           </li>
@@ -894,26 +900,35 @@ task.resume()`
                       </tr>
                     ))}
                   </table>
-                  {showApiSnippets &&
-                    (<Container>
-                      <Dropdown value={selected} onChange={(e)=>handleSnippetChange(e.target.value)}>
+                  {showApiSnippets && (
+                    <Container>
+                      <Dropdown
+                        value={selected}
+                        onChange={(e) => handleSnippetChange(e.target.value)}
+                      >
                         {CODE_SNIPPET_OPTIONS.map((item: any) => (
-                                <option value={item.id}>{item.label}</option>
+                          <option value={item.id}>{item.label}</option>
                         ))}
                       </Dropdown>
-                      
+
                       <CodeContainer>
                         <CopyButton onClick={copyToClipboard}>
                           {/* <Copy size={16} /> */}
                           COPY
                         </CopyButton>
-                        <Highlight language="javascript" code={snippet[selected]||""}>
+                        <Highlight
+                          language="javascript"
+                          code={snippet[selected] || ""}
+                        >
                           {({ style, tokens, getLineProps, getTokenProps }) => (
                             <pre style={style}>
                               {tokens.map((line, i) => (
                                 <div key={i} {...getLineProps({ line })}>
                                   {line.map((token, key) => (
-                                    <span key={key} {...getTokenProps({ token })} />
+                                    <span
+                                      key={key}
+                                      {...getTokenProps({ token })}
+                                    />
                                   ))}
                                 </div>
                               ))}
@@ -921,7 +936,8 @@ task.resume()`
                           )}
                         </Highlight>
                       </CodeContainer>
-                    </Container>)}
+                    </Container>
+                  )}
                 </div>
                 {record && record[0]?.achievements?.length > 0 && (
                   <>
@@ -1024,6 +1040,7 @@ task.resume()`
                         <button
                           className="submitBtn"
                           type="submit"
+                          onClick={form.handleSubmit(onSubmit)}
                           disabled={!handleDisable()}
                         >
                           Simulate
@@ -1032,6 +1049,7 @@ task.resume()`
                       {defaultAction === "COMMIT_TRANSACTION" && (
                         <button
                           className="submitBtn"
+                          type="submit"
                           onClick={form.handleSubmit(handleDoTransaction)}
                         >
                           Commit Transaction
@@ -1243,6 +1261,46 @@ const CopyButton = styled.button`
   cursor: pointer;
   &:hover {
     background: #666;
+  }
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 330px;
+  @media screen and (max-width: 845px) {
+    width: 315px;
+  }
+  @media screen and (max-width: 425px) {
+    width: 220px;
+  }
+`;
+
+const RadioOption = styled.div`
+  width: 150px !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  input[type="radio"] {
+    width: 15px !important;
+    height: 16px !important;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  label {
+    margin: 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+  }
+
+  &:hover {
+    label {
+      color: #000;
+    }
   }
 `;
 

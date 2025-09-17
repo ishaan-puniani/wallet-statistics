@@ -312,12 +312,43 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
       if (fetchId === fetchIdRef.current) {
         const startRow = pageSize * pageIndex;
         //   const endRow = startRow + pageSize
-        const filterMap = getFilterMapFromArray(filters);
+
+        const filterMap = props.filtersPreset ? { ...props.filtersPreset } : {};
+        if (filters) {
+          const filterArray = Array.isArray(filters) ? filters : [];
+          const validFilters = filterArray.filter(
+            (filter) =>
+              filter &&
+              typeof filter === "object" &&
+              "id" in filter &&
+              "value" in filter &&
+              filter.value !== undefined &&
+              filter.value !== ""
+          );
+          if (validFilters.length > 0) {
+            Object.assign(filterMap, getFilterMapFromArray(validFilters));
+          }
+        }
+        if (searchText) {
+          filterMap.globalSearch = searchText;
+        }
+        if (
+          !filterMap.transactionDateRange &&
+          !props.filtersPreset?.transactionDateRange
+        ) {
+          filterMap.createdAtRange = [moment().subtract(30, "days"), moment()];
+        }
+
         const transactionsData = await _fetchTransactions(
           props.credentials,
           pageSize,
           startRow,
-          { ...filterMap, ...props.filtersPreset }
+          {
+            ...filterMap,
+            ...props.filtersPreset,
+            payerId: props?.userId,
+            payeeId: props?.userId,
+          }
         );
 
         if (transactionsData) {
@@ -334,13 +365,14 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
         setLoading(false);
       }
     },
-    []
+    [props.credentials, props.filtersPreset, moment]
   );
 
   const columns = [
     {
       Header: "Id",
       accessor: "id",
+      disableFilters: true,
     },
     {
       Header: "Date",
@@ -348,19 +380,25 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
       Cell: ({ value }: any) => {
         return <>{moment(value).format("DD-MM-YYYY  HH:mm")}</>;
       },
+      Filter: ColumnFilter,
     },
     {
       Header: "Product Id",
       accessor: "productId",
+      Filter: ColumnFilter,
     },
-    { Header: "Payee Name", accessor: "payeeName" },
-
+    {
+      Header: "Payee Name",
+      accessor: "payeeName",
+      Filter: ColumnFilter,
+    },
     {
       Header: "Currency",
       accessor: "currency",
       Cell: ({ value }: any) => {
         return <ThemedSpan type={"currencies"} value={value} />;
       },
+      Filter: ColumnFilter,
     },
     {
       Header: "Transaction Type",
@@ -370,6 +408,7 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
           <ThemedSpan type={"transactionTypes"} value={value?.identifier} />
         );
       },
+      Filter: ColumnFilter,
     },
     {
       Header: "Amount",
@@ -383,18 +422,22 @@ const TransactionTable = (props: IPartnerTransactionTable) => {
           />
         );
       },
+      Filter: ColumnFilter,
     },
     {
       Header: "Virtual Value",
       accessor: "virtualValue",
+      Filter: ColumnFilter,
     },
     {
       Header: "Partner Level",
       accessor: "partnerLevelTypeIdentifier",
+      Filter: ColumnFilter,
     },
     {
       Header: "Reference",
       accessor: "reference",
+      Filter: ColumnFilter,
     },
     {
       Header: "Actions",

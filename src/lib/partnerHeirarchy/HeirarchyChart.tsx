@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 // @ts-ignore
-import OrgChart from "@unicef/react-org-chart";
+// import OrgChart from "@unicef/react-org-chart";
 import styled from "styled-components";
 import { API_HOST } from "../../constants";
 import axios from "axios";
@@ -169,7 +169,7 @@ const HeirarchyChart = ({
             </button>
             {downloadingChart && <div>Downloading chart</div>}
           </div>
-          <OrgChart
+          {/* <OrgChart
             tree={tree}
             downloadImageId={downloadImageId}
             downloadPdfId={downloadPdfId}
@@ -189,7 +189,7 @@ const HeirarchyChart = ({
               const childrenData = getChild(d.id);
               return childrenData;
             }}
-          />
+          /> */}
         </>
       )}
     </HeirarchyChartWrapper>
