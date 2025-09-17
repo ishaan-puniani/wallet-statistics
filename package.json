@@ -1,6 +1,6 @@
 {
-  "name": "wapas-js",
-  "version": "0.0.228",
+  "name": "@ishaan-puniani/wallet-statistics",
+  "version": "0.0.258",
   "description": "",
   "main": "build/index.js",
   "types": "build/types/index.d.ts",
