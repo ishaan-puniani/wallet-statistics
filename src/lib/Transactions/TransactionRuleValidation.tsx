@@ -24,7 +24,9 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
     const fetchTransactionData = async () => {
       // setLoading(true);
       const fetchTransactionData = await axios.post(
-        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-transaction-type-autocomplete`,
+        `${props.credentials.host || API_HOST}/tenant/${
+          props.credentials.application_id
+        }/get-transaction-type-autocomplete`,
         {
           ...props.credentials,
         }
@@ -38,7 +40,9 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
     const fetchCurrencyData = async () => {
       // setLoading(true);
       const fetchCurrencyTypes = await axios.post(
-        `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/get-currency-autocomplete`,
+        `${props.credentials.host || API_HOST}/tenant/${
+          props.credentials.application_id
+        }/get-currency-autocomplete`,
         {
           ...props.credentials,
         }
@@ -55,7 +59,9 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
 
   const onSubmit = async (data: any) => {
     const validate = await axios.post(
-      `${props.credentials.host || API_HOST}/tenant/${props.credentials.application_id}/validate-transaction-rule`,
+      `${props.credentials.host || API_HOST}/tenant/${
+        props.credentials.application_id
+      }/validate-transaction-rule`,
       {
         data,
       }
@@ -90,11 +96,7 @@ const TransactionRuleValidation = (props: ITransactionRuleValidation) => {
             </li>
             <li>
               <label>Currency : </label>
-              <select
-                {...register("currency")}
-                defaultValue={null}
-                placeholder="Select Currency"
-              >
+              <select {...register("currency")} defaultValue={null}>
                 <option>Select Currency</option>
                 {currencyData?.length > 0 &&
                   currencyData.map((cur: any) => (

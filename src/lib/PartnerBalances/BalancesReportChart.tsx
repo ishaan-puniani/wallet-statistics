@@ -105,7 +105,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
             date: string;
           }) => {
             allDate.push(item.date);
-            const amounts = item[props.reportKey];
+            const amounts = (item as Record<string, any>)[props.reportKey];
             // if (props.amountType === "amount") {
             //   amounts = item.amounts;
             // }
