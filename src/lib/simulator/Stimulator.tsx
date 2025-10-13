@@ -53,8 +53,13 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const copyToClipboard = (e: any) => {
     e.preventDefault();
-    navigator.clipboard.writeText(snippet[selected]);
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(snippet[selected]);
+    } else {
+      console.warn('Clipboard API not available');
+    }
   };
+
 
   const {
     credentials,
@@ -660,9 +665,8 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       <>
                         <li
                           style={{
-                            display: `${
-                              isFieldVisible("payerId") ? "" : "none"
-                            }`,
+                            display: `${isFieldVisible("payerId") ? "" : "none"
+                              }`,
                           }}
                         >
                           <label>
@@ -678,9 +682,8 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
 
                         <li
                           style={{
-                            display: `${
-                              isFieldVisible("payeeId") ? "" : "none"
-                            }`,
+                            display: `${isFieldVisible("payeeId") ? "" : "none"
+                              }`,
                           }}
                         >
                           <label>

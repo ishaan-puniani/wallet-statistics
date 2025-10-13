@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import ReportChart from "./ReportChart";
 import ReportBalanceChart from "./ReportBalanceChart";
 import MiniTransactionTypeCard from "./MiniTransactionTypeCard";
@@ -19,100 +19,167 @@ import CountPerPartnerTypePieChart from "./CountPerPartnerTypePieChart";
 import CountPerAchievementsTypePieChart from "./CountPerAchievementsTypePieChart";
 import CountPerAchievementsLogsTypePieChart from "./CountPerAchievementsLogsTypePieChart";
 
+// Store roots to prevent multiple root creation
+const roots = new WeakMap();
+
+const getOrCreateRoot = (container: any) => {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    console.warn('DOM not available - skipping render');
+    return null;
+  }
+  
+  if (!roots.has(container)) {
+    roots.set(container, createRoot(container));
+  }
+  return roots.get(container);
+};
+
 export const _renderReportChart = (container: any, props: any) => {
-  ReactDOM.render(<ReportChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<ReportChart {...props} />);
+  }
 };
 
 export const _renderReportBalanceChart = (container: any, props: any) => {
-  ReactDOM.render(<ReportBalanceChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<ReportBalanceChart {...props} />);
+  }
 };
 
 export const _renderMiniTransactionTypeCard = (container: any, props: any) => {
-  ReactDOM.render(<MiniTransactionTypeCard {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<MiniTransactionTypeCard {...props} />);
+  }
 };
 
 export const _renderGroupReportChart = (container: any, props: any) => {
-  ReactDOM.render(<GroupReportChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<GroupReportChart {...props} />);
+  }
 };
 
 export const _renderRecentTransactionTable = (container: any, props: any) => {
-  ReactDOM.render(<RecentTransactionTable {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<RecentTransactionTable {...props} />);
+  }
 };
 
 export const _renderMiniCard = (container: any, props: any) => {
-  ReactDOM.render(<MiniCard {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<MiniCard {...props} />);
+  }
 };
 
 export const _renderTransactionCount = (container: any, props: any) => {
-  ReactDOM.render(<TransactionsCount {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<TransactionsCount {...props} />);
+  }
 };
 
 export const _renderTransactionCountLineChart = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(<TransactionCountLineChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<TransactionCountLineChart {...props} />);
+  }
 };
 
 export const _renderCountPerTransactionTypePieChart = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(<CountPerTransactionTypePieChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<CountPerTransactionTypePieChart {...props} />);
+  }
 };
 
 export const _renderPartnersCount = (container: any, props: any) => {
-  ReactDOM.render(<PartnersCount {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<PartnersCount {...props} />);
+  }
 };
 
 export const _renderUserAchievementsCount = (container: any, props: any) => {
-  ReactDOM.render(<UserAchievementsCount {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<UserAchievementsCount {...props} />);
+  }
 };
+
 export const _renderUserAchievementsLogsCount = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(<UserAchievementsLogsCount {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<UserAchievementsLogsCount {...props} />);
+  }
 };
 
 export const _renderPartnersCountLineChart = (container: any, props: any) => {
-  ReactDOM.render(<PartnersCountLineChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<PartnersCountLineChart {...props} />);
+  }
 };
 
 export const _renderUserAchievementsCountLineChart = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(<UserAchievementsCountLineChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<UserAchievementsCountLineChart {...props} />);
+  }
 };
 
 export const _renderUserAchievementsLogsCountLineChart = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(<UserAchievementsLogsCountLineChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<UserAchievementsLogsCountLineChart {...props} />);
+  }
 };
 
 export const _renderCountPerPartnerTypePieChart = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(<CountPerPartnerTypePieChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<CountPerPartnerTypePieChart {...props} />);
+  }
 };
 
 export const _renderCountPerAchievementsTypePieChart = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(<CountPerAchievementsTypePieChart {...props} />, container);
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<CountPerAchievementsTypePieChart {...props} />);
+  }
 };
 
 export const _renderCountPerAchievementsLogsTypePieChart = (
   container: any,
   props: any
 ) => {
-  ReactDOM.render(
-    <CountPerAchievementsLogsTypePieChart {...props} />,
-    container
-  );
+  const root = getOrCreateRoot(container);
+  if (root) {
+    root.render(<CountPerAchievementsLogsTypePieChart {...props} />);
+  }
 };
