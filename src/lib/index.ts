@@ -70,6 +70,7 @@ import {
   stimulateMultiTransactions,
 } from "./services/stimulator";
 import { renderCouponValidate, renderTransactionRule } from "./Transactions";
+
 class WalletStatistics {
   constructor() {
     console.log("Library constructor loaded");

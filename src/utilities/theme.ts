@@ -5,18 +5,24 @@ export const getTheme = () => {
   if (THEME) {
     return THEME;
   }
-  const themeFromStorage = localStorage.getItem(THEME_KEY);
-  if (themeFromStorage && themeFromStorage.length > 5) {
-    THEME = JSON.parse(themeFromStorage);
+  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    const themeFromStorage = localStorage.getItem(THEME_KEY);
+    if (themeFromStorage && themeFromStorage.length > 5) {
+      THEME = JSON.parse(themeFromStorage);
+    }
   }
   return THEME;
 };
 
 export const loadTheme = async (themeConfig: any) => {
-  localStorage.setItem(THEME_KEY, JSON.stringify(themeConfig));
+  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    localStorage.setItem(THEME_KEY, JSON.stringify(themeConfig));
+  }
 };
 export const resetTheme = async ()=>{
-  localStorage.removeItem(THEME_KEY);
+  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    localStorage.removeItem(THEME_KEY);
+  }
 }
 export const makeRandomColor = () =>
   "#" + (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0");

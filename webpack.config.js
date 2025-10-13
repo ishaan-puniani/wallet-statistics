@@ -89,5 +89,10 @@ module.exports = {
   ],
   resolve: {
     extensions: [".ts", ".js", ".tsx", ".jsx", ".json"],
+    fallback: {
+      "fs": false,
+      "path": false,
+      "os": false
+    }
   },
 };
