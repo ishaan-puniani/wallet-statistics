@@ -32,7 +32,8 @@ module.exports = {
     path: path.resolve(__dirname, "build"),
     library: "WalletStatistics",
     libraryTarget: "umd",
-    globalObject: "this",
+    globalObject: "typeof self !== 'undefined' ? self : this",
+    umdNamedDefine: true,
     clean: true,
   },
   externals: {
@@ -52,7 +53,15 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserPlugin({ extractComments: false }),
+      new TerserPlugin({ 
+        extractComments: false,
+        terserOptions: {
+          compress: {
+            drop_console: false,
+          },
+          mangle: true,
+        },
+      }),
       new CssMinimizerPlugin(),
     ],
   },
@@ -84,6 +93,13 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({
       filename: "css/index.css",
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+      'typeof window': 'typeof window',
+      'typeof document': 'typeof document',
+      'typeof global': 'typeof global',
+      'typeof self': 'typeof self',
     }),
     new webpack.BannerPlugin(banner),
   ],
