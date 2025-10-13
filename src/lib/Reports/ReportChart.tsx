@@ -34,7 +34,8 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     CanvasRenderer,
     PieChart,
     LegendComponent,
-]);
+  ]);
+}
 
 // const chartThemeConfig = {
 //   AMOUNT: "blue",
