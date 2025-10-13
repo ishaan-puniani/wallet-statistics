@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // @ts-ignore
-import OrgChart from "@unicef/react-org-chart";
 import styled from "styled-components";
 import { API_HOST } from "../../constants";
 import axios from "axios";
@@ -169,27 +168,7 @@ const HeirarchyChart = ({
             </button>
             {downloadingChart && <div>Downloading chart</div>}
           </div>
-          <OrgChart
-            tree={tree}
-            downloadImageId={downloadImageId}
-            downloadPdfId={downloadPdfId}
-            onConfigChange={handleOnChangeConfig}
-            loadConfig={handleLoadConfig}
-            downlowdedOrgChart={(d: any) => {
-              handleDownload();
-            }}
-            loadImage={(d: any) => {
-              return Promise.resolve(avatarPersonnel);
-            }}
-            loadParent={(d: any) => {
-              const parentData = getParent(d);
-              return parentData;
-            }}
-            loadChildren={(d: any) => {
-              const childrenData = getChild(d.id);
-              return childrenData;
-            }}
-          />
+          <h1>TEMPORARY REMOVED</h1>
         </>
       )}
     </HeirarchyChartWrapper>
