@@ -24,14 +24,16 @@ import { _fetchBalanceHistory } from "../services/balances";
 import moment from "moment";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 
-// Register the required components
-echarts.use([
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  LineChart,
-  CanvasRenderer,
-]);
+// Register the required components only in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  echarts.use([
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    LineChart,
+    CanvasRenderer,
+  ]);
+}
 
 export interface BalanceReportChartFilterProps {
   endDate: Date;

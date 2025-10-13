@@ -7,6 +7,11 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 
+// Set app element for Modal only in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  Modal.setAppElement('body');
+}
+
 export interface ITransactionDetails {
   credentials: any;
   transactionId: string;

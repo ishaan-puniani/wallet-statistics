@@ -16,16 +16,18 @@ import { _fetchReportTransactionsCount } from "../services/balances";
 import styled from "styled-components";
 import Loader from "./Loader";
 
-// Register the required components
-echarts.use([
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  BarChart,
-  CanvasRenderer,
-  PieChart,
-  LegendComponent,
-]);
+// Register the required components only in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  echarts.use([
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    BarChart,
+    CanvasRenderer,
+    PieChart,
+    LegendComponent,
+  ]);
+}
 
 export interface ICountPerTransactionTypePieChart {
   credentials: any;

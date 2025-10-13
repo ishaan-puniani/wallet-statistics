@@ -21,6 +21,11 @@ import ThemedSpan from "../components/ThemedSpan";
 import { _fetchTransactions } from "../services/transactions";
 import moment from "moment";
 
+// Set app element for Modal only in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  Modal.setAppElement('body');
+}
+
 const ColumnFilter = ({ column }: any) => {
   const { filterValue, setFilter } = column;
   const [value, setValue] = useState(filterValue);

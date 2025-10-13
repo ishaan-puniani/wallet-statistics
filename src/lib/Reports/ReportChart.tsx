@@ -24,15 +24,16 @@ import { _fetchGetBalances } from "../services/balances";
 import { makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
 
-// Register the required components
-echarts.use([
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  BarChart,
-  CanvasRenderer,
-  PieChart,
-  LegendComponent,
+// Register the required components only in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  echarts.use([
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    BarChart,
+    CanvasRenderer,
+    PieChart,
+    LegendComponent,
 ]);
 
 // const chartThemeConfig = {

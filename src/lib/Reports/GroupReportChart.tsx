@@ -26,16 +26,18 @@ import moment from "moment";
 import styled from "styled-components";
 import Loader from "./Loader";
 
-// Register the required components
-echarts.use([
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  BarChart,
-  CanvasRenderer,
-  PieChart,
-  LegendComponent,
-]);
+// Register the required components only in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  echarts.use([
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    BarChart,
+    CanvasRenderer,
+    PieChart,
+    LegendComponent,
+  ]);
+}
 
 // const chartThemeConfig = {
 //   AMOUNT: "blue",

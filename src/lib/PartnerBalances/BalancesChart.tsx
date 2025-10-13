@@ -23,16 +23,18 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchBalance } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 
-// Register the required components
-echarts.use([
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  BarChart,
-  CanvasRenderer,
-  PieChart,
-  LegendComponent,
-]);
+// Register the required components only in browser environment
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  echarts.use([
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    BarChart,
+    CanvasRenderer,
+    PieChart,
+    LegendComponent,
+  ]);
+}
 
 export interface IPartnerBalancesPieChartProps {
   userId: string;
