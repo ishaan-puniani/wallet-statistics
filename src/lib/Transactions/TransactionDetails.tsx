@@ -32,7 +32,7 @@ const TransactionDetails = (props: ITransactionDetails) => {
     const fetchLinkedTransactionsData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction?filter[baseTransaction]=${props.transactionId}&filter[createdAtRange]=${props.transactionDateRange.start}&filter[createdAtRange]=${props.transactionDateRange.end}`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/get-transaction?filter[baseTransaction]=${props.transactionId}&filter[createdAtRange]=${props.transactionDateRange.start}&filter[createdAtRange]=${props.transactionDateRange.end}`,
         {
           ...props.credentials,
         }
@@ -54,7 +54,7 @@ const TransactionDetails = (props: ITransactionDetails) => {
     const fetchUserAchievementsData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-user-achievement-trace?filter[baseTransaction]=${props.transactionId}`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/get-user-achievement-trace?filter[baseTransaction]=${props.transactionId}`,
         {
           ...props.credentials,
         }
@@ -76,7 +76,7 @@ const TransactionDetails = (props: ITransactionDetails) => {
     const fetchData = async () => {
       setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction/${props.transactionId}`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/get-transaction/${props.transactionId}`,
         {
           ...props.credentials,
         }
@@ -100,7 +100,7 @@ const TransactionDetails = (props: ITransactionDetails) => {
       productId:  "SIMULATED_" + transactionData.productId,
     };
     const stimulateTransaction = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+      `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
       {
         data,
       }
@@ -118,7 +118,7 @@ const TransactionDetails = (props: ITransactionDetails) => {
     };
     // data.productId =  "SIMULATED_" + data.productId;
     const stimulateTransaction = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction/multiple`,
+      `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction/multiple`,
       {
         data,
       }
@@ -140,7 +140,7 @@ const TransactionDetails = (props: ITransactionDetails) => {
   const onSubmit = async (data: any) => {
     setLoading(true);
     const fetchBalance = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/get-transaction/${data.transactionId}`,
+      `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/get-transaction/${data.transactionId}`,
       {
         ...props.credentials,
       }

@@ -19,7 +19,7 @@ const AcknowledgeAchievement = (props: IAcknowledgeAchievement) => {
       // setLoading(true);
       const fetchBalance = await axios.post(
         // `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-achievement?limit=100&offset=0`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/get-achievement?limit=100&offset=0`,
         {
           ...props.credentials,
         }
@@ -36,7 +36,7 @@ const AcknowledgeAchievement = (props: IAcknowledgeAchievement) => {
   const onSubmit = async (data: any) => {
     try {
       const response = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/user-achievements/acknowledge/${props.achieverId}/${props.achievementId}`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/user-achievements/acknowledge/${props.achieverId}/${props.achievementId}`,
         {
           data,
         }

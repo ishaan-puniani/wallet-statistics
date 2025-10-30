@@ -17,7 +17,7 @@ const UnacknowledgedAchievement = (props: IUnacknowledgedAchievement) => {
   const onSubmit = async (data: any) => {
     try {
       const response = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/user-achievements/get-unacknowledged/${props.achieverId}`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/user-achievements/get-unacknowledged/${props.achieverId}`,
         {
           data,
         }

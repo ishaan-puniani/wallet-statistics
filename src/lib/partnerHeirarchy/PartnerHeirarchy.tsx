@@ -36,7 +36,7 @@ const PartnerHeirarchy = ({
     const fetchData = async () => {
       setLoading(true);
       const heirarchyResponse = await axios.post(
-        `${API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
+        `${credentials.API_HOST || API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${partnerId}`,
         {
           ...credentials,
           data: {

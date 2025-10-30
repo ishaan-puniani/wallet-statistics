@@ -63,7 +63,7 @@ const HeirarchyChart = ({
     _orderByRank: string
   ) => {
     const heirarchyResponse: any = await axios.post(
-      `${API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${requestedPartnerId}`,
+      `${credentials.API_HOST || API_HOST}/tenant/${credentials.application_id}/partners-hierarchy/${requestedPartnerId}`,
       {
         ...credentials,
         data: {

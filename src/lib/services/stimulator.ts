@@ -3,7 +3,7 @@ import { API_HOST } from "../../constants";
 
 export const stimulateTransaction = async (credentials: any, data: any) => {
   const stimulateTransaction = await axios.post(
-    `${API_HOST}/tenant/${credentials.application_id}/simulate-currency-transaction/`,
+    `${credentials.API_HOST || API_HOST}/tenant/${credentials.application_id}/simulate-currency-transaction/`,
     {
       data,
     }
@@ -13,7 +13,7 @@ export const stimulateTransaction = async (credentials: any, data: any) => {
 
 export const stimulateMultiTransactions = async (credentials: any, data: any) => {
     const stimulateTransaction = await axios.post(
-      `${API_HOST}/tenant/${credentials.application_id}/simulate-currency-transaction/multiple`,
+      `${credentials.API_HOST || API_HOST}/tenant/${credentials.application_id}/simulate-currency-transaction/multiple`,
       {
         data,
       }

@@ -78,7 +78,7 @@ const Stimulator = (props: IStimulatorProps) => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
+        `${credentials.API_HOST || API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
@@ -97,7 +97,7 @@ const Stimulator = (props: IStimulatorProps) => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${API_HOST}/tenant/${application_id}/currency/autocomplete`,
+        `${credentials.API_HOST || API_HOST}/tenant/${application_id}/currency/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
@@ -197,8 +197,8 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
     if (payload && Object.keys(payload).length) {
       const url =
         defaultAction === "SIMULATE"
-          ? `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`
-          : `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+          ? `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`
+          : `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
       setSnippet((prev: any) => ({
         ...prev,
         [val]: buildSnippet(val, payload, url, __token),
@@ -238,10 +238,9 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
         },
       ],
     };
-    debugger;
     try {
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
         {
           data: record,
         }
@@ -253,7 +252,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
       if (showApiSnippets) {
         const newPayload = { data: record };
         setPayload(newPayload);
-        const url = `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
+        const url = `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
         const all: any = {};
         CODE_SNIPPET_OPTIONS.forEach((opt) => {
           all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
@@ -282,10 +281,9 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
         },
       ],
     };
-    debugger;
     try {
       const response = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
         {
           data: record,
           ...props.credentials,
@@ -305,7 +303,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
       if (showApiSnippets) {
         const newPayload = { data: record, ...props.credentials };
         setPayload(newPayload);
-        const url = `${API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+        const url = `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
         const all: any = {};
         CODE_SNIPPET_OPTIONS.forEach((opt) => {
           all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);

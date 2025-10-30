@@ -45,7 +45,7 @@ const Simulator = (props: ISimulatorProps) => {
   const onSubmit = async (data: any) => {
     // debugger;
     const fetchBalance = await axios.post(
-      `${API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+      `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
       {
         data,
       }

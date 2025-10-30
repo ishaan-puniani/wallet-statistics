@@ -20,7 +20,7 @@ const PartnerBalances = (props: IPartnerBalancesProps) => {
     const fetchData = async () => {
       // setLoading(true);
       const fetchBalance = await axios.post(
-        `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
         {
           ...props.credentials,
         }

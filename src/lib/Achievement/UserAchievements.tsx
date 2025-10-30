@@ -17,7 +17,7 @@ const UserAchievement = (props: UserAchievementsFilter) => {
       setLoading(true);
       const fetchBalance = await axios.post(
         // `${API_HOST}/tenant/${props.credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${props.userId}&filter[currency]=${props.currency}`,
-        `${API_HOST}/tenant/${props.credentials.application_id}/user-achievements/get-active/${props.achieverId}`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/user-achievements/get-active/${props.achieverId}`,
         {
           ...props.credentials,
         }
