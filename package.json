@@ -101,7 +101,7 @@
   },
   "dependencies": {
     "axios": "^1.1.3",
-    "caniuse-lite": "^1.0.30001565",
+    "caniuse-lite": "^1.0.30001754",
     "moment": "^2.29.4",
     "multiselect-react-dropdown": "^2.0.25",
     "prism-react-renderer": "^2.4.1",
