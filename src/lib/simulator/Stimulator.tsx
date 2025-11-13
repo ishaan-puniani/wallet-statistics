@@ -385,6 +385,8 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
         return true;
       case 6:
         return true;
+      case 7:
+        return true;
       default:
         return false;
     }
@@ -474,6 +476,14 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       <li
                         onClick={() => handleStep(6)}
                         className={`${step === 6 ? "activeStep" : ""}`}
+                      >
+                        Promotions
+                      </li>
+                    )}
+                    {isStepVisible(7) && (
+                      <li
+                        onClick={() => handleStep(7)}
+                        className={`${step === 7 ? "activeStep" : ""}`}
                       >
                         Achievement Rewards
                       </li>
@@ -833,6 +843,19 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                     )}
                     {step === 6 && (
                       <>
+                        {isFieldVisible("couponCode") && (
+                          <li>
+                            <label>Coupon Code :</label>
+                            <input
+                              defaultValue={props.defaultValues?.couponCode}
+                              {...form.register("couponCode")}
+                            />
+                          </li>
+                        )}
+                      </>
+                    )}
+                    {step === 7 && (
+                      <>
                         {isFieldVisible("achieverId") && (
                           <li>
                             <label>Achiever Id :</label>
@@ -1025,7 +1048,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       Previous
                     </button>
                   )}
-                  {step !== 6 && (
+                  {step !== 7 && (
                     <button
                       className="submitBtn"
                       type="button"
@@ -1035,7 +1058,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       Next
                     </button>
                   )}{" "}
-                  {step === 6 && (
+                  {step === 7 && (
                     <>
                       {defaultAction === "SIMULATE" && (
                         <button
