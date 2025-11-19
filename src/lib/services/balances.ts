@@ -80,16 +80,18 @@ export const _fetchReportTransactions = async (
   startDate?: string,
   endDate?: string,
   suspense?: boolean,
-  limit?: string
+  limit?: string,
+  offset?: string
 ) => {
   const filterQuery = getFilterQueryString({ filter: filterMap });
   const startingDate = startDate ? `&filter[CreatedAtRange]=${startDate}` : `&`;
   const endingDate = endDate ? `&filter[CreatedAtRange]=${endDate}` : `&`;
   const suspensed = suspense ? `&suspense=${suspense}` : `&`;
   const limitValue = limit ? `&Limit=${limit}` : `&`;
+  const offsetValue = offset ? `&Offset=${offset}` : `&`;
 
   const getGroupedBalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/transactions/?${filterQuery}${startingDate}${endingDate}${suspensed}${limitValue}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/transactions/?${filterQuery}${startingDate}${endingDate}${suspensed}${limitValue}${offsetValue}`,
     {
       ...credentials,
     }
