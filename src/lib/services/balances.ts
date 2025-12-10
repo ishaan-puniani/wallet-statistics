@@ -118,7 +118,7 @@ export const _validateCoupon = async (credentials: any, data: any) => {
       data,
     }
   );
-  return validate;
+  return validate.data;
 };
 
 export const _fetchReportTransactionsCount = async (
