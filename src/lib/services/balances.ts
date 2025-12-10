@@ -8,7 +8,9 @@ export const _fetchBalance = async (
   currency: string
 ) => {
   const balanceResponse = await axios.post(
-    `${credentials.API_HOST || API_HOST}/tenant/${credentials.application_id}/get-current-balances-for-transaction-types?filter[userId]=${userId}&filter[currency]=${currency}`,
+    `${credentials.API_HOST || API_HOST}/tenant/${
+      credentials.application_id
+    }/get-current-balances-for-transaction-types?filter[userId]=${userId}&filter[currency]=${currency}`,
     {
       ...credentials,
     }
@@ -25,7 +27,9 @@ export const _fetchBalanceHistory = async (
 ) => {
   const balnceHistory = await axios.post(
     // `${API_HOST}/tenant/${props.credentials.application_id}/reports/get-partner-balances-report-by-date?dateRange[]='10-03-2023'`,
-    `${credentials.API_HOST || API_HOST}/tenant/${credentials.application_id}/reports/get-partner-balances-report-by-date?filter[userId]=${userId}&filter[currency]=${currency}&filter[dateRange][]=${startDate}&filter[dateRange][]=${endDate}`,
+    `${credentials.API_HOST || API_HOST}/tenant/${
+      credentials.application_id
+    }/reports/get-partner-balances-report-by-date?filter[userId]=${userId}&filter[currency]=${currency}&filter[dateRange][]=${startDate}&filter[dateRange][]=${endDate}`,
     {
       ...credentials,
     }
@@ -44,7 +48,9 @@ export const _fetchGetBalances = async (
   includeToday: boolean
 ) => {
   const getbalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/getbalances?filter[PartnerId]=${userId}&filter[currency]=${currency}&filter[DateRange]=${startDate}&filter[DateRange]=${endDate}&group=${group}&includePrevious=${includePrevious}&includeToday=${includeToday}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${
+      credentials.application_id
+    }/reports/getbalances?filter[PartnerId]=${userId}&filter[currency]=${currency}&filter[DateRange]=${startDate}&filter[DateRange]=${endDate}&group=${group}&includePrevious=${includePrevious}&includeToday=${includeToday}`,
     {
       ...credentials,
     }
@@ -66,7 +72,9 @@ export const _fetchTransactionGroupedBalances = async (
   const flaged = flag ? `&flag=${flag}` : `&`;
 
   const getGroupedBalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/balances?${filterQuery}&filter[CreatedAtRange]=${startDate}&filter[CreatedAtRange]=${endDate}&OrderBy=${orderBy}${bookmarked}${flaged}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${
+      credentials.application_id
+    }/reports/transactions/grouped/balances?${filterQuery}&filter[CreatedAtRange]=${startDate}&filter[CreatedAtRange]=${endDate}&OrderBy=${orderBy}${bookmarked}${flaged}`,
     {
       ...credentials,
     }
@@ -91,7 +99,9 @@ export const _fetchReportTransactions = async (
   const offsetValue = offset ? `&Offset=${offset}` : `&`;
 
   const getGroupedBalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/transactions/?${filterQuery}${startingDate}${endingDate}${suspensed}${limitValue}${offsetValue}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${
+      credentials.application_id
+    }/transactions/?${filterQuery}${startingDate}${endingDate}${suspensed}${limitValue}${offsetValue}`,
     {
       ...credentials,
     }
@@ -99,12 +109,26 @@ export const _fetchReportTransactions = async (
   return getGroupedBalances.data;
 };
 
+export const _validateCoupon = async (credentials: any, data: any) => {
+  const validate = await axios.post(
+    `${credentials.API_HOST || API_HOST}/tenant/${
+      credentials.application_id
+    }/validate-coupon`,
+    {
+      data,
+    }
+  );
+  return validate;
+};
+
 export const _fetchReportTransactionsCount = async (
   credentials: any,
   group: string
 ) => {
   const getGroupedBalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/transactions/grouped/count/?Group=${group}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${
+      credentials.application_id
+    }/reports/transactions/grouped/count/?Group=${group}`,
     {
       ...credentials,
     }
@@ -117,7 +141,9 @@ export const _fetchReportUserAchievementsCount = async (
   group: string
 ) => {
   const getGroupedBalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/userachievements/grouped/count/?Group=${group}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${
+      credentials.application_id
+    }/reports/userachievements/grouped/count/?Group=${group}`,
     {
       ...credentials,
     }
@@ -130,7 +156,9 @@ export const _fetchReportUserAchievementsLogsCount = async (
   group: string
 ) => {
   const getGroupedBalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/userachievements/logs/grouped/count/?Group=${group}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${
+      credentials.application_id
+    }/reports/userachievements/logs/grouped/count/?Group=${group}`,
     {
       ...credentials,
     }
@@ -143,7 +171,9 @@ export const _fetchReportPartnersCount = async (
   group: string
 ) => {
   const getGroupedBalances = await axios.post(
-    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${credentials.application_id}/reports/partners/grouped/count/?Group=${group}`,
+    `${credentials.REPORTING_API_HOST || REPORTING_API_HOST}/tenant/${
+      credentials.application_id
+    }/reports/partners/grouped/count/?Group=${group}`,
     {
       ...credentials,
     }

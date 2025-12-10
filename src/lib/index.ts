@@ -59,6 +59,7 @@ import {
   _fetchReportUserAchievementsCount,
   _fetchReportUserAchievementsLogsCount,
   _fetchReportPartnersCount,
+  _validateCoupon,
 } from "./services/balances";
 import { _fetchTransactions, _fetchTransaction } from "./services/transactions";
 import {
@@ -100,6 +101,7 @@ class WalletStatistics {
     stimulateMultiTransactions: stimulateMultiTransactions,
     fetchTransactionGroupedBalances: _fetchTransactionGroupedBalances,
     fetchReportTransactions: _fetchReportTransactions,
+    validateCoupon: _validateCoupon,
     fetchReportTransactionsCount: _fetchReportTransactionsCount,
     fetchReportUserAchievementsCount: _fetchReportUserAchievementsCount,
     fetchReportUserAchievementsLogsCount: _fetchReportUserAchievementsLogsCount,
