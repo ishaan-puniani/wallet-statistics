@@ -131,7 +131,7 @@ export const _getCoupons = async (credentials: any) => {
     }
   );
 
-  return coupon;
+  return coupon.data;
 };
 
 export const _fetchReportTransactionsCount = async (
