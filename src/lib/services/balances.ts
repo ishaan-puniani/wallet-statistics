@@ -118,7 +118,20 @@ export const _validateCoupon = async (credentials: any, data: any) => {
       data,
     }
   );
-  return validate.data;
+  return validate;
+};
+
+export const _getCoupons = async (credentials: any) => {
+  const coupon = await axios.post(
+    `${credentials.API_HOST || API_HOST}/tenant/${
+      credentials.application_id
+    }/get-coupons`,
+    {
+      ...credentials,
+    }
+  );
+
+  return coupon;
 };
 
 export const _fetchReportTransactionsCount = async (
