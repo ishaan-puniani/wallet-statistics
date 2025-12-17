@@ -103,7 +103,7 @@ class WalletStatistics {
     fetchTransactionGroupedBalances: _fetchTransactionGroupedBalances,
     fetchReportTransactions: _fetchReportTransactions,
     validateCoupon: _validateCoupon,
-    getCoupons: _getCoupons,
+    getCouponsList: _getCoupons,
     fetchReportTransactionsCount: _fetchReportTransactionsCount,
     fetchReportUserAchievementsCount: _fetchReportUserAchievementsCount,
     fetchReportUserAchievementsLogsCount: _fetchReportUserAchievementsLogsCount,
