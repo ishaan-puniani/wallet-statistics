@@ -62,7 +62,7 @@ import {
   _validateCoupon,
   _getCoupons,
 } from "./services/balances";
-import { _fetchTransactions, _fetchTransaction, _pmsFetchTransactions } from "./services/transactions";
+import { _fetchTransactions, _fetchTransaction } from "./services/transactions";
 import {
   _fetchAchievementsLogs,
   _fetchUserAchievementsLogs,
@@ -95,7 +95,6 @@ class WalletStatistics {
     fetchBalanceHistory: _fetchBalanceHistory,
     fetchGetBalances: _fetchGetBalances,
     fetchTransactions: _fetchTransactions,
-    PMSProxyFetchTransactions: _pmsFetchTransactions,
     fetchTransaction: _fetchTransaction,
     fetchAchievementLogs: _fetchAchievementsLogs,
     fetchUserAchievementLogs: _fetchUserAchievementsLogs,
