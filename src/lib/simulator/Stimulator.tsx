@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, set } from "react-hook-form";
 import { API_HOST } from "../../constants";
 import styled from "styled-components";
 import { Highlight } from "prism-react-renderer";
@@ -42,6 +42,9 @@ const Stimulator = (props: IStimulatorProps) => {
   const [payload, setPayload] = useState<any>({});
   const [snippet, setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
+  const [executionType, setExecutionType] = useState<
+    "SIMULATE" | "COMMIT_TRANSACTION"
+  >(props.defaultAction || "SIMULATE");
   const form = useForm({
     defaultValues: props.defaultValues || {},
     shouldUnregister: false,
@@ -53,13 +56,12 @@ const Stimulator = (props: IStimulatorProps) => {
 
   const copyToClipboard = (e: any) => {
     e.preventDefault();
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(snippet[selected]);
     } else {
-      console.warn('Clipboard API not available');
+      console.warn("Clipboard API not available");
     }
   };
-
 
   const {
     credentials,
@@ -78,12 +80,14 @@ const Stimulator = (props: IStimulatorProps) => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${credentials.API_HOST || API_HOST}/tenant/${application_id}/transaction-type/autocomplete`,
+        `${
+          credentials.API_HOST || API_HOST
+        }/tenant/${application_id}/transaction-type/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
           },
-        }
+        },
       );
 
       setTransactionTypes(types.data);
@@ -97,12 +101,14 @@ const Stimulator = (props: IStimulatorProps) => {
     try {
       // need to move this api in common area
       const types = await axios.get(
-        `${credentials.API_HOST || API_HOST}/tenant/${application_id}/currency/autocomplete`,
+        `${
+          credentials.API_HOST || API_HOST
+        }/tenant/${application_id}/currency/autocomplete`,
         {
           headers: {
             Authorization: `Bearer ${__token}`,
           },
-        }
+        },
       );
 
       setCurrencyList(types.data);
@@ -134,7 +140,7 @@ const Stimulator = (props: IStimulatorProps) => {
     lang: string,
     payloadObj: any,
     url: string,
-    token: string
+    token: string,
   ) => {
     switch (lang) {
       case "curl":
@@ -144,11 +150,11 @@ const Stimulator = (props: IStimulatorProps) => {
   -d '${JSON.stringify(payloadObj)}'`;
       case "axios":
         return `await axios.post("${url}", ${JSON.stringify(
-          payloadObj
+          payloadObj,
         )}, { headers:{ Authorization:"Bearer ${token}", "Content-Type":"application/json"} });`;
       case "fetch":
         return `fetch("${url}", {method:"POST", headers:{Authorization:"Bearer ${token}","Content-Type":"application/json"}, body:${JSON.stringify(
-          payloadObj
+          payloadObj,
         )}}).then(r=>r.json()).then(console.log);`;
       case "python":
         return `import requests
@@ -158,7 +164,7 @@ print(r.json())`;
       case "java":
         return `OkHttpClient client=new OkHttpClient();
 RequestBody body=RequestBody.create(MediaType.parse("application/json"), ${JSON.stringify(
-          payloadObj
+          payloadObj,
         )});
 Request request=new Request.Builder().url("${url}")
   .post(body).header("Authorization","Bearer ${token}")
@@ -169,14 +175,14 @@ Request request=new Request.Builder().url("${url}")
  body:jsonEncode(${JSON.stringify(payloadObj)}));`;
       case "go":
         return `req,_:=http.NewRequest("POST","${url}", bytes.NewBuffer([]byte(${JSON.stringify(
-          JSON.stringify(payloadObj)
+          JSON.stringify(payloadObj),
         )})))
 req.Header.Set("Authorization","Bearer ${token}")
 req.Header.Set("Content-Type","application/json")`;
       case "php":
         return `<?php $ch=curl_init("${url}");
 curl_setopt_array($ch,[CURLOPT_POST=>1,CURLOPT_HTTPHEADER=>["Authorization: Bearer ${token}","Content-Type: application/json"],CURLOPT_POSTFIELDS=>${JSON.stringify(
-          payloadObj
+          payloadObj,
         )}]); $r=curl_exec($ch); curl_close($ch);`;
       case "swift":
         return `var req=URLRequest(url: URL(string:"${url}")!)
@@ -184,7 +190,7 @@ req.httpMethod="POST"
 req.setValue("Bearer ${token}", forHTTPHeaderField:"Authorization")
 req.setValue("application/json", forHTTPHeaderField:"Content-Type")
 req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
-          payloadObj
+          payloadObj,
         )})`;
       default:
         return "";
@@ -197,8 +203,12 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
     if (payload && Object.keys(payload).length) {
       const url =
         defaultAction === "SIMULATE"
-          ? `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`
-          : `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+          ? `${props.credentials.API_HOST || API_HOST}/tenant/${
+              props.credentials.application_id
+            }/simulate-currency-transaction`
+          : `${props.credentials.API_HOST || API_HOST}/tenant/${
+              props.credentials.application_id
+            }/execute-currency-transaction`;
       setSnippet((prev: any) => ({
         ...prev,
         [val]: buildSnippet(val, payload, url, __token),
@@ -240,10 +250,12 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
     };
     try {
       const fetchBalance = await axios.post(
-        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${
+          props.credentials.application_id
+        }/simulate-currency-transaction`,
         {
           data: record,
-        }
+        },
       );
 
       setRecord(fetchBalance.data);
@@ -252,7 +264,9 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
       if (showApiSnippets) {
         const newPayload = { data: record };
         setPayload(newPayload);
-        const url = `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/simulate-currency-transaction`;
+        const url = `${props.credentials.API_HOST || API_HOST}/tenant/${
+          props.credentials.application_id
+        }/simulate-currency-transaction`;
         const all: any = {};
         CODE_SNIPPET_OPTIONS.forEach((opt) => {
           all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
@@ -283,11 +297,13 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
     };
     try {
       const response = await axios.post(
-        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`,
+        `${props.credentials.API_HOST || API_HOST}/tenant/${
+          props.credentials.application_id
+        }/execute-currency-transaction`,
         {
           data: record,
           ...props.credentials,
-        }
+        },
       );
       if (response.status === 200) {
         if (setIsTransactionExecuted) {
@@ -303,7 +319,9 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
       if (showApiSnippets) {
         const newPayload = { data: record, ...props.credentials };
         setPayload(newPayload);
-        const url = `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/execute-currency-transaction`;
+        const url = `${props.credentials.API_HOST || API_HOST}/tenant/${
+          props.credentials.application_id
+        }/execute-currency-transaction`;
         const all: any = {};
         CODE_SNIPPET_OPTIONS.forEach((opt) => {
           all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
@@ -663,8 +681,9 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       <>
                         <li
                           style={{
-                            display: `${isFieldVisible("payerId") ? "" : "none"
-                              }`,
+                            display: `${
+                              isFieldVisible("payerId") ? "" : "none"
+                            }`,
                           }}
                         >
                           <label>
@@ -680,8 +699,9 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
 
                         <li
                           style={{
-                            display: `${isFieldVisible("payeeId") ? "" : "none"
-                              }`,
+                            display: `${
+                              isFieldVisible("payeeId") ? "" : "none"
+                            }`,
                           }}
                         >
                           <label>
@@ -903,6 +923,33 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                   </table>
                   {showApiSnippets && (
                     <Container>
+                      <div style={{ marginBottom: "15px" }}>
+                        <div style={{ marginBottom: "10px" }}>
+                          <label
+                            style={{ fontWeight: "bold", marginRight: "10px" }}
+                          >
+                            Excution Type
+                          </label>
+                          <select
+                            value={executionType}
+                            onChange={(e) =>
+                              setExecutionType(
+                                e.target.value as
+                                  | "COMMIT_TRANSACTION"
+                                  | "SIMULATE",
+                              )
+                            }
+                            style={{ marginRight: "10px", padding: "5px" }}
+                          >
+                            <option value="SIMULATE">
+                              Simulate Transaction
+                            </option>
+                            <option value="COMMIT_TRANSACTION">
+                              Execute Transaction
+                            </option>
+                          </select>
+                        </div>
+                      </div>
                       <Dropdown
                         value={selected}
                         onChange={(e) => handleSnippetChange(e.target.value)}
@@ -922,7 +969,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                           code={snippet[selected] || ""}
                         >
                           {({ style, tokens, getLineProps, getTokenProps }) => (
-                            <pre style={style}>
+                            <div style={style}>
                               {tokens.map((line, i) => (
                                 <div key={i} {...getLineProps({ line })}>
                                   {line.map((token, key) => (
@@ -933,7 +980,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                                   ))}
                                 </div>
                               ))}
-                            </pre>
+                            </div>
                           )}
                         </Highlight>
                       </CodeContainer>
@@ -1227,7 +1274,6 @@ const StyledOption = styled.option`
 
 //for snippet
 const Container = styled.div`
-  max-width: 600px;
   padding: 16px;
 `;
 
