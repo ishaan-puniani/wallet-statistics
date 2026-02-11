@@ -72,7 +72,7 @@ const Stimulator = (props: IStimulatorProps) => {
     isDuplicate = false,
   } = props;
 
-  const { application_id, _token  } = credentials;
+  const { application_id, __token  } = credentials;
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
