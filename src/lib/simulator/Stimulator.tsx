@@ -42,9 +42,7 @@ const Stimulator = (props: IStimulatorProps) => {
   const [payload, setPayload] = useState<any>({});
   const [snippet, setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
-  const [executionType, setExecutionType] = useState<
-    "SIMULATE" | "COMMIT_TRANSACTION"
-  >(props.defaultAction || "SIMULATE");
+  const [executionType, setExecutionType] = useState<any>(props.defaultAction || "SIMULATE");
   const form = useForm({
     defaultValues: props.defaultValues || {},
     shouldUnregister: false,
@@ -74,8 +72,8 @@ const Stimulator = (props: IStimulatorProps) => {
     isDuplicate = false,
   } = props;
 
-  const { application_id, __token } = credentials;
-
+  const { application_id,  } = credentials;
+const __token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUzYWM2M2VhLTA1OGMtNDQ5NS1hZDE3LTVjODNiYzZkZDU1OSIsImlhdCI6MTc3MDcwNDgwNSwiZXhwIjoxNzcxMzA5NjA1fQ.7rsb1lVZFnN-qOUT4XTKUhTR8p7GrUHzHxy8laxfAr0"
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
