@@ -42,7 +42,9 @@ const Stimulator = (props: IStimulatorProps) => {
   const [payload, setPayload] = useState<any>({});
   const [snippet, setSnippet] = useState<any>({});
   const [step, setStep] = useState<any>(1);
-  const [executionType, setExecutionType] = useState<any>(props.defaultAction || "SIMULATE");
+  const [executionType, setExecutionType] = useState<any>(
+    props.defaultAction || "SIMULATE",
+  );
   const form = useForm({
     defaultValues: props.defaultValues || {},
     shouldUnregister: false,
@@ -72,7 +74,7 @@ const Stimulator = (props: IStimulatorProps) => {
     isDuplicate = false,
   } = props;
 
-  const { application_id, __token  } = credentials;
+  const { application_id, __token } = credentials;
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
@@ -199,7 +201,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
 
     if (payload && Object.keys(payload).length) {
       const url =
-        defaultAction === "SIMULATE"
+        executionType === "SIMULATE"
           ? `${props.credentials.API_HOST || API_HOST}/tenant/${
               props.credentials.application_id
             }/simulate-currency-transaction`
@@ -952,13 +954,14 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                           </label>
                           <select
                             value={executionType}
-                            onChange={(e) =>
-                              setExecutionType(
+                            onChange={async(e) => {
+                              await setExecutionType(
                                 e.target.value as
                                   | "COMMIT_TRANSACTION"
                                   | "SIMULATE",
-                              )
-                            }
+                              );
+                             await handleSnippetChange(selected);
+                            }}
                             style={{ marginRight: "10px", padding: "5px" }}
                           >
                             <option value="SIMULATE">
