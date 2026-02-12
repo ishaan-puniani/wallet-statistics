@@ -81,8 +81,7 @@ const Stimulator = (props: IStimulatorProps) => {
     isDuplicate = false,
   } = props;
 
-  const { application_id } = credentials;
-  const __token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUzYWM2M2VhLTA1OGMtNDQ5NS1hZDE3LTVjODNiYzZkZDU1OSIsImlhdCI6MTc3MDgyMTc4MSwiZXhwIjoxNzcxNDI2NTgxfQ.zOcgx5khUM8PUwndB3R21ji_LSTAw8RowLI2GZ0vSqg`;
+  const { application_id,__token } = credentials;
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
@@ -169,7 +168,11 @@ const Stimulator = (props: IStimulatorProps) => {
     switch (lang) {
       case "curl":
         return `curl -X POST "${url}" \\
-  -H "Content-Type: application/json" \\
+  ${
+    authorizationType === "autoToken"
+      ? `-H "Authorization: Bearer ${token}" \\\n+  `
+      : ""
+  }-H "Content-Type: application/json" \\
   -d '${JSON.stringify(finalPayload)}'`;
       case "axios":
         return `await axios.post("${url}", ${JSON.stringify(
@@ -1004,33 +1007,40 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       <th>Currency </th>
                       <th>Amount </th>
                     </tr>
-                    {record.length >0 && record.map((transaction: any) => (
-                      <tr>
-                        <td>
-                          <p>
-                            {transaction?.isCredit
-                              ? transaction?.payeeId
-                              : transaction?.payerId}
-                          </p>
-                        </td>
-                        <td>
-                          <p>{transaction?.isCredit ? "true" : "false"}</p>
-                        </td>
-                        <td>
-                          <p>{transaction?.transactionTypeIdentifier}</p>
-                        </td>
-                        <td>
-                          <p>{transaction?.currency}</p>
-                        </td>
-                        <td>
-                          <p>{transaction?.amount}</p>
-                        </td>
-                      </tr>
-                    ))}
+                    {record.length > 0 &&
+                      record.map((transaction: any) => (
+                        <tr>
+                          <td>
+                            <p>
+                              {transaction?.isCredit
+                                ? transaction?.payeeId
+                                : transaction?.payerId}
+                            </p>
+                          </td>
+                          <td>
+                            <p>{transaction?.isCredit ? "true" : "false"}</p>
+                          </td>
+                          <td>
+                            <p>{transaction?.transactionTypeIdentifier}</p>
+                          </td>
+                          <td>
+                            <p>{transaction?.currency}</p>
+                          </td>
+                          <td>
+                            <p>{transaction?.amount}</p>
+                          </td>
+                        </tr>
+                      ))}
                   </table>
                   {showApiSnippets && (
                     <Container>
-                      <div style={{ marginBottom: "15px",display:"flex",gap:"50px" }}>
+                      <div
+                        style={{
+                          marginBottom: "15px",
+                          display: "flex",
+                          gap: "50px",
+                        }}
+                      >
                         <div style={{ marginBottom: "10px" }}>
                           <label
                             style={{ fontWeight: "bold", marginRight: "10px" }}
