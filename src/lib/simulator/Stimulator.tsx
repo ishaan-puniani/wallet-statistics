@@ -35,6 +35,11 @@ const CODE_SNIPPET_OPTIONS = [
   { id: "swift", label: "Swift" },
 ];
 
+const AUTH_TYPE_OPTIONS = [
+  { id: "autoToken", label: "Auto Token (Bearer)" },
+  { id: "serviceAccount", label: "Service Account" },
+];
+
 const Stimulator = (props: IStimulatorProps) => {
   console.log("REACHED");
   const [view, setView] = useState(false);
@@ -53,6 +58,8 @@ const Stimulator = (props: IStimulatorProps) => {
   const [currencyList, setCurrencyList] = useState<any>();
 
   const [selected, setSelected] = useState("curl");
+  const [authType, setAuthType] =
+    useState<"autoToken" | "serviceAccount">("autoToken");
 
   const copyToClipboard = (e: any) => {
     e.preventDefault();
@@ -74,7 +81,8 @@ const Stimulator = (props: IStimulatorProps) => {
     isDuplicate = false,
   } = props;
 
-  const { application_id, __token } = credentials;
+  const { application_id } = credentials;
+  const __token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUzYWM2M2VhLTA1OGMtNDQ5NS1hZDE3LTVjODNiYzZkZDU1OSIsImlhdCI6MTc3MDgyMTc4MSwiZXhwIjoxNzcxNDI2NTgxfQ.zOcgx5khUM8PUwndB3R21ji_LSTAw8RowLI2GZ0vSqg`;
   const fetchTypes = useCallback(async () => {
     try {
       // need to move this api in common area
@@ -140,78 +148,143 @@ const Stimulator = (props: IStimulatorProps) => {
     payloadObj: any,
     url: string,
     token: string,
+    authorizationType: "autoToken" | "serviceAccount" = "autoToken",
   ) => {
+    const serviceAccountCredentials = {
+      client_id: credentials?.client_id || "<YOUR_CLIENT_ID>",
+      client_secret: credentials?.client_secret || "<YOUR_CLIENT_SECRET>",
+      application_id: credentials?.application_id || "<YOUR_APPLICATION_ID>",
+    };
+
+    const finalPayload =
+      authorizationType === "serviceAccount"
+        ? {
+            ...payloadObj,
+            client_id: serviceAccountCredentials.client_id,
+            client_secret: serviceAccountCredentials.client_secret,
+            application_id: serviceAccountCredentials.application_id,
+          }
+        : payloadObj;
+
     switch (lang) {
       case "curl":
-        return `curl -X POST "${url}" \
-  -H "Authorization: Bearer ${token}" \
-  -H "Content-Type: application/json" \
-  -d '${JSON.stringify(payloadObj)}'`;
+        return `curl -X POST "${url}" \\
+  -H "Content-Type: application/json" \\
+  -d '${JSON.stringify(finalPayload)}'`;
       case "axios":
         return `await axios.post("${url}", ${JSON.stringify(
-          payloadObj,
-        )}, { headers:{ Authorization:"Bearer ${token}", "Content-Type":"application/json"} });`;
+          finalPayload,
+        )}, { headers:{ ${
+          authorizationType === "autoToken"
+            ? `Authorization:"Bearer ${token}", `
+            : ""
+        }"Content-Type":"application/json"} });`;
       case "fetch":
-        return `fetch("${url}", {method:"POST", headers:{Authorization:"Bearer ${token}","Content-Type":"application/json"}, body:${JSON.stringify(
-          payloadObj,
-        )}}).then(r=>r.json()).then(console.log);`;
+        return `fetch("${url}", {method:"POST", headers:{${
+          authorizationType === "autoToken"
+            ? `Authorization:"Bearer ${token}",`
+            : ""
+        }"Content-Type":"application/json"}, body:JSON.stringify(${JSON.stringify(
+          finalPayload,
+        )})}).then(r=>r.json()).then(console.log);`;
       case "python":
         return `import requests
-headers={"Authorization":"Bearer ${token}","Content-Type":"application/json"}
-r=requests.post("${url}", json=${JSON.stringify(payloadObj)}, headers=headers)
+headers={${
+          authorizationType === "autoToken"
+            ? `"Authorization":"Bearer ${token}",`
+            : ""
+        }"Content-Type":"application/json"}
+r=requests.post("${url}", json=${JSON.stringify(finalPayload)}, headers=headers)
 print(r.json())`;
       case "java":
         return `OkHttpClient client=new OkHttpClient();
 RequestBody body=RequestBody.create(MediaType.parse("application/json"), ${JSON.stringify(
-          payloadObj,
+          JSON.stringify(finalPayload),
         )});
 Request request=new Request.Builder().url("${url}")
-  .post(body).header("Authorization","Bearer ${token}")
+  .post(body)${
+    authorizationType === "autoToken"
+      ? `.header("Authorization","Bearer ${token}")`
+      : ""
+  }
   .header("Content-Type","application/json").build();`;
       case "dart":
         return `var r=await http.post(Uri.parse("${url}"),
- headers:{"Authorization":"Bearer ${token}","Content-Type":"application/json"},
- body:jsonEncode(${JSON.stringify(payloadObj)}));`;
+ headers:{${
+   authorizationType === "autoToken" ? `"Authorization":"Bearer ${token}",` : ""
+ }"Content-Type":"application/json"},
+ body:jsonEncode(${JSON.stringify(finalPayload)}));`;
       case "go":
         return `req,_:=http.NewRequest("POST","${url}", bytes.NewBuffer([]byte(${JSON.stringify(
-          JSON.stringify(payloadObj),
+          JSON.stringify(finalPayload),
         )})))
-req.Header.Set("Authorization","Bearer ${token}")
-req.Header.Set("Content-Type","application/json")`;
+${
+  authorizationType === "autoToken"
+    ? `req.Header.Set("Authorization","Bearer ${token}")\n`
+    : ""
+}req.Header.Set("Content-Type","application/json")`;
       case "php":
         return `<?php $ch=curl_init("${url}");
-curl_setopt_array($ch,[CURLOPT_POST=>1,CURLOPT_HTTPHEADER=>["Authorization: Bearer ${token}","Content-Type: application/json"],CURLOPT_POSTFIELDS=>${JSON.stringify(
-          payloadObj,
+curl_setopt_array($ch,[CURLOPT_POST=>1,CURLOPT_HTTPHEADER=>[${
+          authorizationType === "autoToken"
+            ? `"Authorization: Bearer ${token}",`
+            : ""
+        }"Content-Type: application/json"],CURLOPT_POSTFIELDS=>${JSON.stringify(
+          JSON.stringify(finalPayload),
         )}]); $r=curl_exec($ch); curl_close($ch);`;
       case "swift":
         return `var req=URLRequest(url: URL(string:"${url}")!)
 req.httpMethod="POST"
-req.setValue("Bearer ${token}", forHTTPHeaderField:"Authorization")
-req.setValue("application/json", forHTTPHeaderField:"Content-Type")
+${
+  authorizationType === "autoToken"
+    ? `req.setValue("Bearer ${token}", forHTTPHeaderField:"Authorization")\n`
+    : ""
+}req.setValue("application/json", forHTTPHeaderField:"Content-Type")
 req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
-          payloadObj,
+          finalPayload,
         )})`;
       default:
         return "";
     }
   };
 
-  const handleSnippetChange = (val: string) => {
+  const handleSnippetChange = (
+    val: string,
+    execType?: string,
+    authorizationType?: "autoToken" | "serviceAccount",
+  ) => {
     setSelected(val);
+    const currentExecutionType = execType || executionType;
+    const currentAuthType = authorizationType || authType;
 
     if (payload && Object.keys(payload).length) {
       const url =
-        executionType === "SIMULATE"
+        currentExecutionType === "SIMULATE"
           ? `${props.credentials.API_HOST || API_HOST}/tenant/${
               props.credentials.application_id
             }/simulate-currency-transaction`
           : `${props.credentials.API_HOST || API_HOST}/tenant/${
               props.credentials.application_id
             }/execute-currency-transaction`;
-      setSnippet((prev: any) => ({
-        ...prev,
-        [val]: buildSnippet(val, payload, url, __token),
-      }));
+
+      if (execType !== undefined || authorizationType !== undefined) {
+        const all: any = {};
+        CODE_SNIPPET_OPTIONS.forEach((opt) => {
+          all[opt.id] = buildSnippet(
+            opt.id,
+            payload,
+            url,
+            __token,
+            currentAuthType,
+          );
+        });
+        setSnippet(all);
+      } else {
+        setSnippet((prev: any) => ({
+          ...prev,
+          [val]: buildSnippet(val, payload, url, __token, currentAuthType),
+        }));
+      }
     }
   };
 
@@ -268,7 +341,13 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
         }/simulate-currency-transaction`;
         const all: any = {};
         CODE_SNIPPET_OPTIONS.forEach((opt) => {
-          all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
+          all[opt.id] = buildSnippet(
+            opt.id,
+            newPayload,
+            url,
+            __token,
+            authType,
+          );
         });
         setSnippet(all);
       }
@@ -323,7 +402,13 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
         }/execute-currency-transaction`;
         const all: any = {};
         CODE_SNIPPET_OPTIONS.forEach((opt) => {
-          all[opt.id] = buildSnippet(opt.id, newPayload, url, __token);
+          all[opt.id] = buildSnippet(
+            opt.id,
+            newPayload,
+            url,
+            __token,
+            authType,
+          );
         });
         setSnippet(all);
       }
@@ -919,7 +1004,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       <th>Currency </th>
                       <th>Amount </th>
                     </tr>
-                    {record.map((transaction: any) => (
+                    {record.length >0 && record.map((transaction: any) => (
                       <tr>
                         <td>
                           <p>
@@ -945,7 +1030,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                   </table>
                   {showApiSnippets && (
                     <Container>
-                      <div style={{ marginBottom: "15px" }}>
+                      <div style={{ marginBottom: "15px",display:"flex",gap:"50px" }}>
                         <div style={{ marginBottom: "10px" }}>
                           <label
                             style={{ fontWeight: "bold", marginRight: "10px" }}
@@ -954,13 +1039,12 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                           </label>
                           <select
                             value={executionType}
-                            onChange={async(e) => {
-                              await setExecutionType(
-                                e.target.value as
-                                  | "COMMIT_TRANSACTION"
-                                  | "SIMULATE",
-                              );
-                             await handleSnippetChange(selected);
+                            onChange={(e) => {
+                              const newType = e.target.value as
+                                | "COMMIT_TRANSACTION"
+                                | "SIMULATE";
+                              setExecutionType(newType);
+                              handleSnippetChange(selected, newType);
                             }}
                             style={{ marginRight: "10px", padding: "5px" }}
                           >
@@ -970,6 +1054,34 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                             <option value="COMMIT_TRANSACTION">
                               Execute Transaction
                             </option>
+                          </select>
+                        </div>
+                        <div style={{ marginBottom: "10px" }}>
+                          <label
+                            style={{ fontWeight: "bold", marginRight: "10px" }}
+                          >
+                            Authorization
+                          </label>
+                          <select
+                            value={authType}
+                            onChange={(e) => {
+                              const newAuthType = e.target.value as
+                                | "autoToken"
+                                | "serviceAccount";
+                              setAuthType(newAuthType);
+                              handleSnippetChange(
+                                selected,
+                                undefined,
+                                newAuthType,
+                              );
+                            }}
+                            style={{ marginRight: "10px", padding: "5px" }}
+                          >
+                            {AUTH_TYPE_OPTIONS.map((opt) => (
+                              <option key={opt.id} value={opt.id}>
+                                {opt.label}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       </div>
@@ -983,10 +1095,7 @@ req.httpBody = try? JSONSerialization.data(withJSONObject:${JSON.stringify(
                       </Dropdown>
 
                       <CodeContainer>
-                        <CopyButton onClick={copyToClipboard}>
-                          {/* <Copy size={16} /> */}
-                          COPY
-                        </CopyButton>
+                        <CopyButton onClick={copyToClipboard}>COPY</CopyButton>
                         <Highlight
                           language="javascript"
                           code={snippet[selected] || ""}
