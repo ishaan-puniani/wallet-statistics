@@ -137,8 +137,22 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
 
       setRawData(balances);
 
+      const localChartOptions: any = {
+        ...chartOptions,
+        xAxis: Array.isArray(chartOptions.xAxis) ? [...chartOptions.xAxis] : [{ ...option.xAxis[0] }],
+      };
+
+      const xAxisData = balances.map((row: any) => {
+        return row && row.date ? moment(row.date).format("YYYY-MM-DD") : "";
+      });
+
+      localChartOptions.xAxis[0] = {
+        ...(localChartOptions.xAxis[0] || {}),
+        data: xAxisData,
+      };
+
       if (transactionTypes.length) {
-        chartOptions.series = transactionTypes?.map((dataType: any) => {
+        localChartOptions.series = transactionTypes?.map((dataType: any) => {
           return {
             name: dataType.label,
             type: chartType,
@@ -209,7 +223,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         });
       }
 
-      setChartOption(chartOptions);
+      setChartOption(localChartOptions);
       setLoading(false);
       if (props?.setChartLoading) {
         props?.setChartLoading(false);
