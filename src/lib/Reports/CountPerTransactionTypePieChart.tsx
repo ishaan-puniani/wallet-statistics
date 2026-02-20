@@ -1,3 +1,20 @@
+/**
+ * CountPerTransactionTypePieChart
+ *
+ * Purpose:
+ * Renders a pie chart showing counts of transactions per transaction type.
+ * Expects a report-style response from the backend (see `_fetchReportTransactionsCount`).
+ *
+ * Props:
+ * - `credentials` (required): forwarded to the report service.
+ * - `showRaw` (optional): when true prints raw response for debugging.
+ *
+ * Integration:
+ * The `fe-wallet-and-bonus` project uses a wrapper that either calls this
+ * component directly or calls `WalletStatistics.renderReportChart(div, options)`
+ * to render charts into a DOM node. Keep prop names stable or update the
+ * widget wrappers accordingly.
+ */
 import React, { useEffect, useState } from "react";
 import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";
@@ -138,7 +155,7 @@ const CountPerTransactionTypePieChart = (
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px", height: "100%" }}>
+        <div style={{ height: "100%" }}>
           {!loading && chartOption && (
             <>
               <PeriodToogle group={group} groupHandler={handleGroupChange} />

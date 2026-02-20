@@ -1,3 +1,19 @@
+/**
+ * MiniCard
+ *
+ * Purpose:
+ * Compact summary card showing an amount (or debit/credit) and percent change.
+ * It fetches grouped balances via `_fetchGetBalances` and reads the appropriate
+ * grouped fields depending on `volume` and `amountType` props.
+ *
+ * Props (common):
+ * - `credentials`, `userId`, `currency`, `startDate`, `endDate`, `group`
+ * - `transactionType`, `amountType`, `volume`, `includePrevious`, `includeToday`
+ *
+ * Integration:
+ * Used by dashboard widgets; wrappers should forward credentials and date
+ * range. Use `showRaw` to debug backend response shapes.
+ */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { _fetchGetBalances } from "../services/balances";
@@ -34,9 +50,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
   const [transaction, setTransaction] = useState(0);
   const [previousTransaction, setPreviousTransaction] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [group, setGroup] = useState<Group>(
-    (props.group as Group) || "monthly",
-  );
+  const group =(props.group as Group) || "monthly";
+
   const transactionType = props.transactionType || "AMOUNT";
   const volume = props.volume || "group";
   const includeToday = props.includeToday || false;
@@ -286,12 +301,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
       (previousTransaction === 0 ? 1 : previousTransaction)) *
     100;
 
-  const handleGroupChange = (group: Group) => {
-    setGroup(group);
-  };
   return (
     <Wrapper>
-      <PeriodToogle group={group} groupHandler={handleGroupChange} />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label}</div>

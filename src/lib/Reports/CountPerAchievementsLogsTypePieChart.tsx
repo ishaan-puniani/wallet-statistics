@@ -1,3 +1,17 @@
+/**
+ * CountPerAchievementsLogsTypePieChart
+ *
+ * Purpose:
+ * Pie chart for achievement-log types. Reads `countPerType` from
+ * `_fetchReportUserAchievementsLogsCount` and visualizes the distribution.
+ *
+ * Props:
+ * - `credentials` (required)
+ * - `showRaw` (optional)
+ *
+ * Integration:
+ * Keep widget wrappers in sync in `fe-wallet-and-bonus` when changing props.
+ */
 import React, { useEffect, useState } from "react";
 import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";
@@ -137,7 +151,7 @@ const CountPerAchievementsLogsTypePieChart = (
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px", height: "100%" }}>
+        <div style={{ height: "100%" }}>
           {!loading && chartOption && (
             <>
               <PeriodToogle group={group} groupHandler={handleGroupChange} />

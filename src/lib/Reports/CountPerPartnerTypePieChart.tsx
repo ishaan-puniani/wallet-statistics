@@ -1,3 +1,18 @@
+/**
+ * CountPerPartnerTypePieChart
+ *
+ * Purpose:
+ * Renders a pie chart showing counts grouped by partner type.
+ * Uses `_fetchReportPartnersCount` to obtain `countPerType` shape.
+ *
+ * Props:
+ * - `credentials` (required)
+ * - `showRaw` (optional) — prints raw response for debugging
+ *
+ * Integration:
+ * Update the corresponding widget in `fe-wallet-and-bonus/src/view/widgets`
+ * if prop names or expected data shape change.
+ */
 import React, { useEffect, useState } from "react";
 import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";
@@ -136,7 +151,7 @@ const CountPerPartnerTypePieChart = (props: ICountPerPartnerTypePieChart) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px", height: "100%" }}>
+        <div style={{  height: "100%" }}>
           {!loading && chartOption && (
             <>
               <PeriodToogle group={group} groupHandler={handleGroupChange} />

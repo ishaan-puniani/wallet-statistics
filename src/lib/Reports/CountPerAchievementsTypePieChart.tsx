@@ -1,3 +1,17 @@
+/**
+ * CountPerAchievementsTypePieChart
+ *
+ * Purpose:
+ * Shows a categorical breakdown of user achievements count.
+ * Data source: `_fetchReportUserAchievementsCount` returning `countPerType`.
+ *
+ * Props:
+ * - `credentials` (required)
+ * - `showRaw` (optional)
+ *
+ * Integration:
+ * These pie charts are used by dashboard widgets in `fe-wallet-and-bonus`.
+ */
 import React, { useEffect, useState } from "react";
 import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";
@@ -138,7 +152,7 @@ const CountPerAchievementsTypePieChart = (
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px", height: "100%" }}>
+        <div style={{ height: "100%" }}>
           {!loading && chartOption && (
             <>
               <PeriodToogle group={group} groupHandler={handleGroupChange} />

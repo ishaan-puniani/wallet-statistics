@@ -1,3 +1,19 @@
+/**
+ * PartnersCount
+ *
+ * Purpose:
+ * Small summary card component that shows partner counts and percent
+ * changes. It queries `_fetchReportPartnersCount` and offers options to
+ * display total, grouped, or per-type counts.
+ *
+ * Props (common):
+ * - `credentials`, `startDate`, `endDate`, `group` and configuration flags
+ * - `transactionCountType` to select which field to read from the response
+ *
+ * Integration:
+ * Use this component inside widgets; wrapper code in `fe-wallet-and-bonus`
+ * should pass `credentials` and the desired grouping/date-range.
+ */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { _fetchReportPartnersCount } from "../services/balances";
@@ -124,13 +140,10 @@ const PartnersCount = (props: IPartnersCount) => {
     setPercentChange(percent);
   }, [count, startDate, group]);
 
-  const handleGroupChange = (group: Group) => {
-    setGroup(group);
-  };
   if (totalCount) {
     return (
       <Wrapper>
-        <PeriodToogle group={group} groupHandler={handleGroupChange} />
+        {" "}
         <div className="total-count">
           <div>{label ?? "Total Partners"}</div>
           <div>{loading ? <Loader /> : count?.totalCount}</div>
@@ -141,7 +154,6 @@ const PartnersCount = (props: IPartnersCount) => {
 
   return (
     <Wrapper>
-      <PeriodToogle group={group} groupHandler={handleGroupChange} />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label ?? "Partners"}</div>

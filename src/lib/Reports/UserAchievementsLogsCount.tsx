@@ -37,9 +37,7 @@ const UserAchievementsLogsCount = (props: IUserAchievementsLogsCount) => {
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState<any>();
   const [percentChange, setPercentChange] = useState(0);
-  const [group, setGroup] = useState<Group>(
-    (props.group as Group) || "monthly",
-  );
+  const group = (props.group as Group) || "monthly";
   const transactionCountType = getTypeValue(
     props.transactionCountType ?? type.groupedPeriod,
   );
@@ -136,12 +134,9 @@ const UserAchievementsLogsCount = (props: IUserAchievementsLogsCount) => {
       </Wrapper>
     );
   }
-  const handleGroupChange = (group: Group) => {
-    setGroup(group);
-  };
+
   return (
     <Wrapper>
-      <PeriodToogle group={group} groupHandler={handleGroupChange} />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label ?? "Achievements Logs"}</div>

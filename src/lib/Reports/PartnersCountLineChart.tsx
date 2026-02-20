@@ -1,3 +1,19 @@
+/**
+ * PartnersCountLineChart
+ *
+ * Purpose:
+ * Time-series line chart that shows counts for partner-related metrics over
+ * time. It expects `countGroupedPeriodAndType` from `_fetchReportPartnersCount`
+ * and maps those into an xAxis and a series per `transactionTypes`.
+ *
+ * Props:
+ * - `credentials`, `startDate`, `endDate`, `group`, `transactionTypes`
+ * - `showRaw` to inspect raw response.
+ *
+ * Integration:
+ * This pattern is mirrored in `fe-wallet-and-bonus` where wrappers build the
+ * `transactionTypes` array and pass credentials/date-range to the chart.
+ */
 import React, { useEffect, useState } from "react";
 import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";

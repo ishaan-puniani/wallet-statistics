@@ -1,3 +1,19 @@
+/**
+ * TransactionCountLineChart
+ *
+ * Purpose:
+ * Generic time-series line chart for transaction counts. It fetches
+ * `countGroupedPeriodAndType` via `_fetchReportTransactionsCount` and builds
+ * one series per `transactionTypes` prop.
+ *
+ * Props:
+ * - `credentials`, `startDate`, `endDate`, `group`, `transactionTypes`
+ * - `showRaw` to print raw response rows.
+ *
+ * Integration:
+ * The `fe-wallet-and-bonus` wrapper constructs `transactionTypes` and passes
+ * the options into the chart or into `WalletStatistics.renderReportChart`.
+ */
 import React, { useEffect, useState } from "react";
 import ReactEChartsCore from "echarts-for-react/lib/core";
 import * as echarts from "echarts/core";

@@ -98,45 +98,110 @@ const option: any = {
 /**
  * ReportChart
  *
- * A reusable ECharts-based chart component that fetches grouped balance data
- * and renders it as a time-series chart. The component fetches data via
- * `_fetchGetBalances` using `props.credentials`, `props.userId`, `props.currency`,
- * and the selected `group`/date range, then maps the returned `balances` into
- * ECharts `xAxis` and `series` values.
+ * Purpose
+ * -------
+ * A general-purpose time-series chart wrapper around ECharts that fetches
+ * grouped balances (via `_fetchGetBalances`) and renders them as chart series.
+ * This file provides the core mapping logic from the backend grouped response
+ * into ECharts `xAxis` and `series` payloads. Other report components (pie
+ * charts, mini-cards and line charts) reuse the same shape of data or the
+ * helper services used here.
  *
- * Props (shape defined by `IPartnerBalancesPieChartProps`):
- * - userId: string (required) - user identifier used when fetching balances.
- * - currency: string (required) - currency code used when fetching balances.
- * - credentials: any (required) - service credentials passed to `_fetchGetBalances`.
- * - startDate: Date (required) - start of the date range for the fetch.
- * - endDate: Date (required) - end of the date range for the fetch.
- * - group: string ('daily'|'weekly'|'monthly') - initial grouping granularity.
- * - transactionTypes: Array<{ type, label, transactionType }> - list of series
- *   descriptors. Each object should include `type` ('debit'|'credit'|'balance'),
- *   `label` (display name used in legend/series.name) and `transactionType`
- *   (key used to read grouped values from the fetched rows).
- * - chartType: string - ECharts series type (e.g. 'bar' or 'line').
- * - chartOptions: any - base ECharts option object to merge/override defaults.
- * - themeConfig: Record<string, string> - optional mapping of series labels to
- *   colors; if absent a random color is used per series.
- * - showRaw: boolean - when true the component renders the raw `balances`
- *   JSON rather than the chart (useful for debugging).
- * - includePrevious / includeToday: boolean - flags forwarded to the fetch to
- *   include previous-period or today data.
- * - amountType: 'amount'|'virtual' - selects which grouped fields to use from
- *   the fetched rows (e.g. `groupedDebitAmounts` vs `groupedDebitVirtualValues`).
- * - absolute: boolean - when true the numeric values are converted to
- *   `Math.abs(...)` before rendering (useful for plotting magnitudes).
- * - setChartLoading: (loading: boolean) => void - optional callback invoked
- *   with loading state changes so a parent can control global loading UX.
+ * Key responsibilities
+ * --------------------
+ * - Fetch balances for `userId` + `currency` over a date range and grouping
+ *   granularity (`daily|weekly|monthly`).
+ * - Convert fetched rows into `xAxis.data` (YYYY-MM-DD strings) and one
+ *   or more `series` entries according to `transactionTypes` prop.
+ * - Respect `amountType` (real `amount` vs `virtual`), `absolute` (abs value)
+ *   and `themeConfig` (color overrides for series by label).
+ * - Expose a debug mode (`showRaw`) that prints the raw rows for troubleshooting.
  *
- * Behavior summary:
- * - Fetches balances on mount and whenever relevant props change.
- * - Builds `xAxis` from fetched rows (formatted as 'YYYY-MM-DD').
- * - Builds `series` using `transactionTypes`, applying `themeConfig` colors or
- *   a random color per series; supports `absolute` and `amountType` options.
- * - Shows a local loading indicator while fetching and calls `setChartLoading`
- *   if provided.
+ * Props (see `IPartnerBalancesPieChartProps` interface below)
+ * -----------------------------------------------------------
+ * - `userId` (string) required: identity used by the balances service.
+ * - `currency` (string) required: currency code to fetch balances for.
+ * - `credentials` (any) required: authorization/credentials object forwarded
+ *    to `_fetchGetBalances`.
+ * - `startDate`, `endDate` (Date) required: inclusive range to query.
+ * - `group` ('daily'|'weekly'|'monthly') optional: grouping of returned rows.
+ * - `transactionTypes` (Array<{type,label,transactionType}>) optional: controls
+ *    which series are produced. Each item must include:
+ *      - `type`: 'debit' | 'credit' | 'balance' (selects which grouped field)
+ *      - `label`: series display name (legend + series.name)
+ *      - `transactionType`: key used to read the grouped value off the row
+ *        (for example, `AMOUNT`).
+ * - `chartType` (string) optional: ECharts series type, e.g. 'bar' or 'line'.
+ * - `chartOptions` (object) optional: base option object merged with defaults.
+ * - `themeConfig` (object) optional: mapping `{ [label]: '#hex' }` to fix colors.
+ * - `includePrevious`, `includeToday` (boolean) optional: forwarded to fetch.
+ * - `amountType` 'amount'|'virtual' optional: switches to grouped*Virtual*.
+ * - `absolute` (boolean) optional: plot magnitudes (absolute values).
+ * - `setChartLoading` ((boolean) => void) optional: notify parent about loading.
+ * - `showRaw` (boolean) optional: render JSON instead of chart for debugging.
+ *
+ * Example usage (fe-wallet-and-bonus integration)
+ * -----------------------------------------------
+ * In `fe-wallet-and-bonus` the chart is rendered by creating a
+ * `WalletStatistics` instance and calling `renderReportChart(div, options)`.
+ * This component is not always used directly as JSX in that repo; instead
+ * the wrapper provides a div ref and passes an options object similar to:
+ *
+ * const walletStatistics = new WalletStatistics();
+ * walletStatistics.renderReportChart(domElement, {
+ *   credentials: { application_id: application_id },
+ *   userId: configuration.partnerId,
+ *   currency: configuration.currency.id,
+ *   transactionTypes: configuration.transactionTypesConfig
+ *     ? JSON.parse(configuration.transactionTypesConfig)
+ *     : [{ type: 'debit', label: 'Amount', transactionType: 'AMOUNT' }],
+ *   themeConfig: configuration.chartThemeConfig
+ *     ? JSON.parse(configuration.chartThemeConfig)
+ *     : { AMOUNT: '#87E05D' },
+ *   amountType: configuration.amountType || 'amount',
+ *   chartType: configuration.chartType || 'bar',
+ *   chartOptions: configuration.chartType === 'line' ? lineChartOption : barChartOption,
+ *   startDate: configuration.startDate,
+ *   endDate: configuration.endDate,
+ *   group: configuration.group || 'monthly',
+ *   includePrevious: false,
+ *   includeToday: true,
+ * });
+ *
+ * Notes for integrators (fe-wallet-and-bonus mapping)
+ * -----------------------------------------------------
+ * The front-end application `fe-wallet-and-bonus` extracts and wraps many of
+ * these report components to create widgets. Example mappings in that repo:
+ * - This core chart -> src/view/widgets/PartnerReportChart.tsx
+ * - Report balance pie chart -> src/view/widgets/PartnerReportBalancePieChart.tsx
+ * - Mini/summary cards in `Reports/MiniCard.tsx` -> PartnerReportMiniBalanceCard.tsx
+ * - Line charts in this folder -> PartnerCountLineChart.tsx, TransactionCountLineChart.tsx
+ *
+ * When adding or changing props here, update the corresponding wrapper in
+ * `fe-wallet-and-bonus/src/view/widgets/*` so the integration keeps the same
+ * prop names and behavior.
+ *
+ * Implementation details
+ * ----------------------
+ * - The component expects `_fetchGetBalances` to return an array of rows with
+ *   the following (typical) fields for grouped responses:
+ *     - `date` (ISO string) used for xAxis values
+ *     - `groupedAmounts`, `groupedDebitAmounts`, `groupedCreditAmounts`
+ *     - `groupedVirtualValues`, `groupedDebitVirtualValues`, `groupedCrediVirtualValues`
+ *   The keys inside those grouped objects should match the `transactionType`
+ *   values passed via `transactionTypes`.
+ * - Color assignment: `themeConfig[label]` takes precedence, otherwise a
+ *   random color is generated via `makeRandomColor()`.
+ * - The component is intentionally small and focused: it only builds an
+ *   `option` object for ECharts and delegates rendering to `ReactEChartsCore`.
+ *
+ * Debugging tips
+ * --------------
+ * - Use `showRaw={true}` to print the fetched rows (JSON) so you can verify
+ *   the exact keys that `_fetchGetBalances` returned. This makes mapping
+ *   `transactionType` values to grouped keys straightforward.
+ * - If the chart shows zeros, confirm whether your `amountType` should be
+ *   `virtual` vs `amount` and whether the backend returns the expected keys.
  */
 const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
@@ -286,7 +351,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
     props.chartType,
     props.themeConfig,
     props.transactionTypes,
-    props.group,
+    group,
     props.amountType,
   ]);
   const groupHandler = (group: Group) => {
@@ -308,7 +373,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px" }}>
+        <div>
           {!loading && chartOption && (
             <>
               <PeriodToogle group={group} groupHandler={groupHandler} />

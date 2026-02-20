@@ -1,3 +1,18 @@
+/**
+ * TransactionsCount
+ *
+ * Purpose:
+ * Card component showing transaction counts (total, per-type or grouped by
+ * period). Uses `_fetchReportTransactionsCount` as its data source.
+ *
+ * Props:
+ * - `credentials`, `startDate`, `endDate`, `group`, `transactionCountType`
+ * - `showRaw`, `transactionType`, and display flags like `totalCount`.
+ *
+ * Integration:
+ * Keep wrapper components in `fe-wallet-and-bonus` in sync if you rename
+ * props or change the response mapping logic.
+ */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { _fetchReportTransactionsCount } from "../services/balances";
@@ -37,9 +52,7 @@ const TransactionsCount = (props: ITransactionsCount) => {
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState<any>();
   const [percentChange, setPercentChange] = useState(0);
-  const [group, setGroup] = useState<Group>(
-    (props.group as Group) || "monthly",
-  );
+  const group = (props.group as Group) || "monthly";
   const transactionCountType = getTypeValue(
     props.transactionCountType ?? type.groupedPeriod,
   );
@@ -137,13 +150,10 @@ const TransactionsCount = (props: ITransactionsCount) => {
     );
   }
 
-  const handleGroupChange = (group: Group) => {
-    setGroup(group);
-  };
+
 
   return (
     <Wrapper>
-      <PeriodToogle group={group} groupHandler={handleGroupChange} />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label ?? "Transactions"}</div>

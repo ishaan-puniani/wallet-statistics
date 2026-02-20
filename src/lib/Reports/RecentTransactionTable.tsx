@@ -1,3 +1,20 @@
+/**
+ * RecentTransactionTable
+ *
+ * Purpose:
+ * Renders a simple table listing recent transactions for a partner or
+ * filtered scope. Data comes from `_fetchReportTransactions` and the
+ * component supports a `limit` and optional click handlers to navigate to
+ * transaction details.
+ *
+ * Props:
+ * - `credentials`, `userId`, `currency`, `startDate`, `endDate`, `limit`
+ * - `filterMap` to pass custom filters to the report service
+ *
+ * Integration:
+ * Use this table in widgets to show recent activity. To debug backend
+ * responses, inspect `rows` returned by the service or use storybook/demo.
+ */
 import React, { useEffect, useState } from "react";
 import { _fetchReportTransactions } from "../services/balances";
 import styled from "styled-components";

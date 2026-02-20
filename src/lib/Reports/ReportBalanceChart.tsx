@@ -5,6 +5,26 @@
  */
 
 /**
+/**
+ * ReportBalanceChart
+ *
+ * Purpose:
+ * A small wrapper that renders a pie chart for balance distribution. It
+ * expects the same grouped response shape as `ReportChart` and is a focused
+ * component used for categorical distribution of balance types.
+ *
+ * Props (typical):
+ * - `credentials`, `userId`, `currency`, `startDate`, `endDate`, `group`
+ * - `transactionType` (string) or `transactionTypes` (array) to indicate which
+ *   grouped key(s) to read from the backend response.
+ * - `themeConfig` to override colors by label.
+ *
+ * Integration note:
+ * The `fe-wallet-and-bonus` repo uses a wrapper pattern where it constructs
+ * an options object and calls `WalletStatistics.renderReportChart(div, options)`
+ * for charts that need direct DOM rendering. If you change prop names here,
+ * update the corresponding wrapper in `fe-wallet-and-bonus/src/view/widgets`.
+ 
  * api-reponse ---
  * type Transaction_Type: string 
 
@@ -313,7 +333,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           ))}
         </>
       ) : (
-        <div style={{ marginTop: "20px", height: "100%" }}>
+        <div style={{ height: "100%" }}>
           {!loading && chartOption && (
             <>
               <PeriodToogle group={group} groupHandler={handleGroupChange} />
