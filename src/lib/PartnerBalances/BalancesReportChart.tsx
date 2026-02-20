@@ -107,6 +107,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
             virtualValues: unknown;
             amounts: unknown;
             date: string;
+            [key: string]: any;
           }) => {
             allDate.push(item.date);
             const amounts = item[props.reportKey];

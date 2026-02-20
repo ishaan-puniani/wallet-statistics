@@ -5,6 +5,8 @@ import moment from "moment";
 import Loader from "./Loader";
 import { questionMark, upTrend, downTrend } from "../../svgs";
 import clsx from "clsx";
+import { Group } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 export interface IPartnersCount {
   userId: string;
@@ -36,11 +38,11 @@ const PartnersCount = (props: IPartnersCount) => {
   const [count, setCount] = useState<any>();
   const [percentChange, setPercentChange] = useState(0);
   const transactionCountType = getTypeValue(
-    props.transactionCountType ?? type.groupedPeriod
+    props.transactionCountType ?? type.groupedPeriod,
   );
+  const [group, setGroup] = useState((props.group as Group) || "monthly");
 
   const {
-    group = "monthly",
     totalCount,
     label,
     showPrevious,
@@ -53,7 +55,7 @@ const PartnersCount = (props: IPartnersCount) => {
     const fetchData = async () => {
       const transactionsCount = await _fetchReportPartnersCount(
         props.credentials,
-        group
+        group,
       );
       setCount(transactionsCount);
       setLoading(false);
@@ -122,9 +124,13 @@ const PartnersCount = (props: IPartnersCount) => {
     setPercentChange(percent);
   }, [count, startDate, group]);
 
+  const handleGroupChange = (group: Group) => {
+    setGroup(group);
+  };
   if (totalCount) {
     return (
       <Wrapper>
+        <PeriodToogle group={group} groupHandler={handleGroupChange} />
         <div className="total-count">
           <div>{label ?? "Total Partners"}</div>
           <div>{loading ? <Loader /> : count?.totalCount}</div>
@@ -135,6 +141,7 @@ const PartnersCount = (props: IPartnersCount) => {
 
   return (
     <Wrapper>
+      <PeriodToogle group={group} groupHandler={handleGroupChange} />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label ?? "Partners"}</div>

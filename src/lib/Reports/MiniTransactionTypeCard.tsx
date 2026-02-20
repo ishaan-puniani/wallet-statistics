@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { _fetchGetBalances } from "../services/balances";
 import moment from "moment";
 import Loader from "./Loader";
+import { Group } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 export interface IMiniTransactionTypeCard {
   userId: string;
@@ -23,8 +25,8 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
   const [amount, setAmount] = useState(0);
   const [preAmount, setPreAmount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [group, setGroup] = useState<Group>(props.group as Group || "monthly");
   const transactionType = props.transactionType || "AMOUNT";
-  const group = props.group || "monthly";
   const includeToday = props.includeToday || false;
   const cardConfig = Object.keys(props.cardConfig).length
     ? props.cardConfig
@@ -161,16 +163,20 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
     props.currency,
     props.startDate,
     props.endDate,
-    props.group,
+    group,
     props.cardConfig,
     props.includePrevious,
     props.amountType,
   ]);
 
   const amountPercentChange =
-    ((amount - preAmount) / (preAmount === 0 ? 1 : preAmount)) * 100 ?? 0;
+    ((amount - preAmount) / (preAmount === 0 ? 1 : preAmount)) * 100;
+    const handleGroupChange = (group: Group) => {
+      setGroup(group);
+    };
   return (
     <Wrapper>
+      <PeriodToogle group={group} groupHandler={handleGroupChange} />
       <div className="transaction-type-card">
         <h2>{cardConfig.label}</h2>
         <div className="card-amount-container">

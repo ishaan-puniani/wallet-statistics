@@ -16,10 +16,11 @@ import { _fetchReportUserAchievementsLogsCount } from "../services/balances";
 import moment from "moment";
 import styled from "styled-components";
 import Loader from "./Loader";
-import { makeXAxisData } from "./utils/utils";
+import { Group, makeXAxisData } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -60,21 +61,21 @@ const option: any = {
 };
 
 const UserAchievementsLogsCountLineChart = (
-  props: IUserAchievementsLogsCountLineChart
+  props: IUserAchievementsLogsCountLineChart,
 ) => {
   const [chartOption, setChartOption] = useState();
   const [loading, setLoading] = useState(true);
   const [rawData, setRawData] = useState<any>();
   const startDate = moment(props.startDate).format("YYYY-MM-DD");
   const endDate = moment(props.endDate).format("YYYY-MM-DD");
-  const [group, setGroup] = useState(props?.group ?? "weekly");
+  const [group, setGroup] = useState<Group>(props?.group as Group ?? "weekly");
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const transactionsCount = await _fetchReportUserAchievementsLogsCount(
         props.credentials,
-        group
+        group,
       );
       setRawData(transactionsCount);
       const countGroupedPeriodAndType =
@@ -84,7 +85,7 @@ const UserAchievementsLogsCountLineChart = (
         countGroupedPeriodAndType,
         group,
         startDate,
-        endDate
+        endDate,
       );
       if (
         transactionsCount &&
@@ -104,7 +105,7 @@ const UserAchievementsLogsCountLineChart = (
               (date) =>
                 transactionsCount?.countGroupedPeriodAndType?.[date]?.[
                   transactionType
-                ] ?? 0
+                ] ?? 0,
             ),
           };
         });
@@ -138,7 +139,7 @@ const UserAchievementsLogsCountLineChart = (
     );
   }
 
-  const groupHandler = (group: string) => {
+  const groupHandler = (group: Group) => {
     setGroup(group);
   };
 
@@ -160,47 +161,7 @@ const UserAchievementsLogsCountLineChart = (
         <div>
           {!loading && chartOption && (
             <Wrapper>
-              <div className="grouping-btn">
-                <div
-                  className={`group group-daily ${
-                    group === "daily" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("daily")}>Daily</button>
-                </div>
-                <div
-                  className={`group group-weekly ${
-                    group === "weekly" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("weekly")}>Weekly</button>
-                </div>
-                <div
-                  className={`group group-monthly ${
-                    group === "monthly" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("monthly")}>
-                    Monthly
-                  </button>
-                </div>
-                <div
-                  className={`group group-quarterly ${
-                    group === "quarterly" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("quarterly")}>
-                    Quarterly
-                  </button>
-                </div>
-                <div
-                  className={`group group-yearly ${
-                    group === "yearly" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("yearly")}>Yearly</button>
-                </div>
-              </div>
+              <PeriodToogle group={group} groupHandler={groupHandler} />
               <ReactEChartsCore
                 echarts={echarts}
                 option={chartOption}

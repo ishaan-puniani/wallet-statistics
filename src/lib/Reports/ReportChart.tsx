@@ -23,9 +23,11 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchGetBalances } from "../services/balances";
 import { makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
+import PeriodToogle from "./utils/PeriodToogle";
+import { Group } from "./utils/utils";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -93,11 +95,56 @@ const option: any = {
   series: [],
 };
 
+/**
+ * ReportChart
+ *
+ * A reusable ECharts-based chart component that fetches grouped balance data
+ * and renders it as a time-series chart. The component fetches data via
+ * `_fetchGetBalances` using `props.credentials`, `props.userId`, `props.currency`,
+ * and the selected `group`/date range, then maps the returned `balances` into
+ * ECharts `xAxis` and `series` values.
+ *
+ * Props (shape defined by `IPartnerBalancesPieChartProps`):
+ * - userId: string (required) - user identifier used when fetching balances.
+ * - currency: string (required) - currency code used when fetching balances.
+ * - credentials: any (required) - service credentials passed to `_fetchGetBalances`.
+ * - startDate: Date (required) - start of the date range for the fetch.
+ * - endDate: Date (required) - end of the date range for the fetch.
+ * - group: string ('daily'|'weekly'|'monthly') - initial grouping granularity.
+ * - transactionTypes: Array<{ type, label, transactionType }> - list of series
+ *   descriptors. Each object should include `type` ('debit'|'credit'|'balance'),
+ *   `label` (display name used in legend/series.name) and `transactionType`
+ *   (key used to read grouped values from the fetched rows).
+ * - chartType: string - ECharts series type (e.g. 'bar' or 'line').
+ * - chartOptions: any - base ECharts option object to merge/override defaults.
+ * - themeConfig: Record<string, string> - optional mapping of series labels to
+ *   colors; if absent a random color is used per series.
+ * - showRaw: boolean - when true the component renders the raw `balances`
+ *   JSON rather than the chart (useful for debugging).
+ * - includePrevious / includeToday: boolean - flags forwarded to the fetch to
+ *   include previous-period or today data.
+ * - amountType: 'amount'|'virtual' - selects which grouped fields to use from
+ *   the fetched rows (e.g. `groupedDebitAmounts` vs `groupedDebitVirtualValues`).
+ * - absolute: boolean - when true the numeric values are converted to
+ *   `Math.abs(...)` before rendering (useful for plotting magnitudes).
+ * - setChartLoading: (loading: boolean) => void - optional callback invoked
+ *   with loading state changes so a parent can control global loading UX.
+ *
+ * Behavior summary:
+ * - Fetches balances on mount and whenever relevant props change.
+ * - Builds `xAxis` from fetched rows (formatted as 'YYYY-MM-DD').
+ * - Builds `series` using `transactionTypes`, applying `themeConfig` colors or
+ *   a random color per series; supports `absolute` and `amountType` options.
+ * - Shows a local loading indicator while fetching and calls `setChartLoading`
+ *   if provided.
+ */
 const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [group, setGroup] = useState<Group>(
+    (props.group as Group) || "monthly",
+  );
   const transactionTypes =
     props.transactionTypes.length > 0
       ? props.transactionTypes
@@ -107,8 +154,6 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
     Object.keys(props.themeConfig).length > 0 ? props.themeConfig : null;
 
   const chartType = props.chartType || "bar";
-
-  const group = props.group || "monthly";
 
   const includePrevious = props.includePrevious || false;
   const includeToday = props.includeToday || false;
@@ -132,14 +177,16 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         moment(props.endDate).format("YYYY-MM-DD"),
         group,
         includePrevious,
-        includeToday
+        includeToday,
       );
 
       setRawData(balances);
 
       const localChartOptions: any = {
         ...chartOptions,
-        xAxis: Array.isArray(chartOptions.xAxis) ? [...chartOptions.xAxis] : [{ ...option.xAxis[0] }],
+        xAxis: Array.isArray(chartOptions.xAxis)
+          ? [...chartOptions.xAxis]
+          : [{ ...option.xAxis[0] }],
       };
 
       const xAxisData = balances.map((row: any) => {
@@ -163,7 +210,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
                     ? Math.abs(
                         row?.groupedDebitVirtualValues[
                           dataType?.transactionType
-                        ]
+                        ],
                       ) || 0
                     : row?.groupedDebitVirtualValues[
                         dataType?.transactionType
@@ -171,7 +218,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
                 } else {
                   return props?.absolute
                     ? Math.abs(
-                        row?.groupedDebitAmounts[dataType?.transactionType]
+                        row?.groupedDebitAmounts[dataType?.transactionType],
                       ) || 0
                     : row?.groupedDebitAmounts[dataType?.transactionType] || 0;
                 }
@@ -181,7 +228,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
                     ? Math.abs(
                         row?.groupedCrediVirtualValues[
                           dataType?.transactionType
-                        ]
+                        ],
                       ) || 0
                     : row?.groupedCrediVirtualValues[
                         dataType?.transactionType
@@ -189,7 +236,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
                 } else {
                   return props?.absolute
                     ? Math.abs(
-                        row?.groupedCreditAmounts[dataType?.transactionType]
+                        row?.groupedCreditAmounts[dataType?.transactionType],
                       ) || 0
                     : row?.groupedCreditAmounts[dataType?.transactionType] || 0;
                 }
@@ -197,13 +244,13 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
                 if (props.amountType === "virtual") {
                   return props?.absolute
                     ? Math.abs(
-                        row?.groupedVirtualValues[dataType?.transactionType]
+                        row?.groupedVirtualValues[dataType?.transactionType],
                       ) || 0
                     : row?.groupedVirtualValues[dataType?.transactionType] || 0;
                 } else {
                   return props?.absolute
                     ? Math.abs(
-                        row?.groupedAmounts[dataType?.transactionType]
+                        row?.groupedAmounts[dataType?.transactionType],
                       ) || 0
                     : row?.groupedAmounts[dataType?.transactionType] || 0;
                 }
@@ -242,6 +289,9 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
     props.group,
     props.amountType,
   ]);
+  const groupHandler = (group: Group) => {
+    setGroup(group);
+  };
 
   return (
     <>
@@ -260,12 +310,15 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
       ) : (
         <div style={{ marginTop: "20px" }}>
           {!loading && chartOption && (
-            <ReactEChartsCore
-              echarts={echarts}
-              option={chartOption}
-              notMerge={true}
-              lazyUpdate={true}
-            />
+            <>
+              <PeriodToogle group={group} groupHandler={groupHandler} />
+              <ReactEChartsCore
+                echarts={echarts}
+                option={chartOption}
+                notMerge={true}
+                lazyUpdate={true}
+              />
+            </>
           )}
         </div>
       )}

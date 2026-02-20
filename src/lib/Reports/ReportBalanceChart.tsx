@@ -63,10 +63,11 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchGetBalances } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
-import { balanceKeyMap } from "./utils/utils";
+import { balanceKeyMap, Group } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -146,7 +147,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
-  const group = props.group || "monthly";
+  const [group, setGroup] = useState<Group>((props.group as Group) ?? "weekly");
   const includePrevious = props.includePrevious || false;
   const includeToday = props.includeToday || false;
   const type = props.type || "debit";
@@ -175,7 +176,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
           moment(props.endDate).format("YYYY-MM-DD"),
           group,
           includePrevious,
-          includeToday
+          includeToday,
         );
       } else {
         balances = [];
@@ -199,7 +200,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       ) {
         console.log(
           "parentTransactionTypeIdentifier",
-          props.parentTransactionTypeIdentifier
+          props.parentTransactionTypeIdentifier,
         );
         const total = props.transactionTypes?.reduce((acc, curr) => {
           return (acc = acc + (balance[curr] ?? 0));
@@ -207,13 +208,13 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         console.log("total", total);
         chartData.push({
           value: Math.abs(
-            balance[props.parentTransactionTypeIdentifier] - total
+            balance[props.parentTransactionTypeIdentifier] - total,
           ),
           name: props.identifierMapper[props.parentTransactionTypeIdentifier],
         });
         console.log(
           "balance[props.parentTransactionTypeIdentifier]",
-          balance[props.parentTransactionTypeIdentifier]
+          balance[props.parentTransactionTypeIdentifier],
         );
         chartColors.push(props?.parentChartColor ?? makeRandomColor());
         console.log("chartData", chartData);
@@ -281,6 +282,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     props.transactionTypes,
     props?.parentTransactionTypeIdentifier,
     props?.volume,
+    group,
   ]);
 
   const onChartClick = (params: any) => {
@@ -293,6 +295,9 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
     click: props.pieSliceClickable ? onChartClick : null,
   };
 
+  const handleGroupChange = (group: Group) => {
+    setGroup(group);
+  };
   return (
     <>
       {props?.showRaw ? (
@@ -310,13 +315,16 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
       ) : (
         <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
-            <ReactEChartsCore
-              echarts={echarts}
-              option={chartOption}
-              notMerge={true}
-              lazyUpdate={true}
-              onEvents={onEvents}
-            />
+            <>
+              <PeriodToogle group={group} groupHandler={handleGroupChange} />
+              <ReactEChartsCore
+                echarts={echarts}
+                option={chartOption}
+                notMerge={true}
+                lazyUpdate={true}
+                onEvents={onEvents}
+              />
+            </>
           )}
         </div>
       )}

@@ -96,3 +96,9 @@ export const balanceKeyMap: Record<
     },
   },
 };
+export type Group =
+  | "daily"
+  | "weekly"
+  | "monthly"
+  | "quarterly"
+  | "yearly";

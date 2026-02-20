@@ -25,6 +25,7 @@ import { makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
 import styled from "styled-components";
 import Loader from "./Loader";
+import { Group } from "./utils/utils";
 
 // Register the required components only in browser environment
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
@@ -98,7 +99,7 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [group, setGroup] = useState("daily");
+  const [group, setGroup] = useState<Group>("daily");
 
   const transactionTypes =
     props.transactionTypes.length > 0
@@ -132,7 +133,7 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
     }
   };
 
-  const groupHandler = (group: string) => {
+  const groupHandler = (group: Group) => {
     setGroup(group);
   };
 

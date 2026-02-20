@@ -15,9 +15,11 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchReportPartnersCount } from "../services/balances";
 import styled from "styled-components";
 import Loader from "./Loader";
+import { Group } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -76,13 +78,13 @@ const CountPerPartnerTypePieChart = (props: ICountPerPartnerTypePieChart) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
-
+  const [group, setGroup] = useState<Group>("weekly");
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const transactionsCount = await _fetchReportPartnersCount(
         props.credentials,
-        "weekly"
+        group,
       );
       setRawData(transactionsCount);
 
@@ -104,7 +106,7 @@ const CountPerPartnerTypePieChart = (props: ICountPerPartnerTypePieChart) => {
     };
 
     fetchData();
-  }, [props.credentials]);
+  }, [props.credentials,group]);
 
   if (loading) {
     return (
@@ -115,6 +117,9 @@ const CountPerPartnerTypePieChart = (props: ICountPerPartnerTypePieChart) => {
       </Wrapper>
     );
   }
+  const handleGroupChange = (group: Group) => {
+    setGroup(group);
+  };
 
   return (
     <>
@@ -133,12 +138,15 @@ const CountPerPartnerTypePieChart = (props: ICountPerPartnerTypePieChart) => {
       ) : (
         <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
-            <ReactEChartsCore
-              echarts={echarts}
-              option={chartOption}
-              notMerge={true}
-              lazyUpdate={true}
-            />
+            <>
+              <PeriodToogle group={group} groupHandler={handleGroupChange} />
+              <ReactEChartsCore
+                echarts={echarts}
+                option={chartOption}
+                notMerge={true}
+                lazyUpdate={true}
+              />
+            </>
           )}
         </div>
       )}

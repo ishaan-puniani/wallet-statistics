@@ -15,9 +15,11 @@ import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchReportTransactionsCount } from "../services/balances";
 import styled from "styled-components";
 import Loader from "./Loader";
+import { Group } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -73,18 +75,18 @@ const option: any = {
 };
 
 const CountPerTransactionTypePieChart = (
-  props: ICountPerTransactionTypePieChart
+  props: ICountPerTransactionTypePieChart,
 ) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
-
+  const [group, setGroup] = useState<Group>("weekly");
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       const transactionsCount = await _fetchReportTransactionsCount(
         props.credentials,
-        "weekly"
+        group,
       );
       setRawData(transactionsCount);
 
@@ -106,7 +108,7 @@ const CountPerTransactionTypePieChart = (
     };
 
     fetchData();
-  }, [props.credentials]);
+  }, [props.credentials, group]);
 
   if (loading) {
     return (
@@ -117,6 +119,9 @@ const CountPerTransactionTypePieChart = (
       </Wrapper>
     );
   }
+  const handleGroupChange = (group: Group) => {
+    setGroup(group);
+  };
 
   return (
     <>
@@ -135,12 +140,15 @@ const CountPerTransactionTypePieChart = (
       ) : (
         <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
-            <ReactEChartsCore
-              echarts={echarts}
-              option={chartOption}
-              notMerge={true}
-              lazyUpdate={true}
-            />
+            <>
+              <PeriodToogle group={group} groupHandler={handleGroupChange} />
+              <ReactEChartsCore
+                echarts={echarts}
+                option={chartOption}
+                notMerge={true}
+                lazyUpdate={true}
+              />
+            </>
           )}
         </div>
       )}

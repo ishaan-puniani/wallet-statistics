@@ -4,6 +4,8 @@ import { _fetchGetBalances } from "../services/balances";
 import moment from "moment";
 import Loader from "./Loader";
 import { questionMark, upTrend, downTrend } from "../../svgs";
+import { Group } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 export interface IMiniTransactionTypeCard {
   userId: string;
@@ -32,8 +34,10 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
   const [transaction, setTransaction] = useState(0);
   const [previousTransaction, setPreviousTransaction] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [group, setGroup] = useState<Group>(
+    (props.group as Group) || "monthly",
+  );
   const transactionType = props.transactionType || "AMOUNT";
-  const group = props.group || "monthly";
   const volume = props.volume || "group";
   const includeToday = props.includeToday || false;
   const type = props.type ?? "amount";
@@ -50,7 +54,7 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
         moment(props.endDate).format("YYYY-MM-DD"),
         group,
         props.includePrevious,
-        includeToday
+        includeToday,
       );
       if (balances.length === 2) {
         balances.forEach((balance: any) => {
@@ -58,7 +62,7 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
             setTransaction(
               balance[
                 volume === "group" ? "groupedTransactions" : "totalTransactions"
-              ]?.[transactionType] ?? 0
+              ]?.[transactionType] ?? 0,
             );
             if (type === "amount") {
               props.amountType === "virtual"
@@ -68,15 +72,15 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedVirtualValues"
                           : "totalVirtualValues"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   )
                 : setAmount(
                     Math.abs(
                       balance[
                         volume === "group" ? "groupedAmounts" : "totalAmounts"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   );
             } else if (type === "credit") {
               props.amountType === "virtual"
@@ -86,8 +90,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedCrediVirtualValues"
                           : "totalCrediVirtualValues"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   )
                 : setAmount(
                     Math.abs(
@@ -95,8 +99,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedCreditAmounts"
                           : "totalCreditAmounts"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   );
             } else if (type === "debit") {
               props.amountType === "virtual"
@@ -106,8 +110,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedDebitVirtualValues"
                           : "totalDebitVirtualValues"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   )
                 : setAmount(
                     Math.abs(
@@ -115,15 +119,15 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedDebitAmounts"
                           : "totalDebitAmounts"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   );
             }
           } else {
             setPreviousTransaction(
               balance[
                 volume === "group" ? "groupedTransactions" : "totalTransactions"
-              ]?.[transactionType] ?? 0
+              ]?.[transactionType] ?? 0,
             );
             if (type === "amount") {
               props.amountType === "virtual"
@@ -133,15 +137,15 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedVirtualValues"
                           : "totalVirtualValues"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   )
                 : setPreAmount(
                     Math.abs(
                       balance[
                         volume === "group" ? "groupedAmounts" : "totalAmounts"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   );
             } else if (type === "credit") {
               props.amountType === "virtual"
@@ -151,8 +155,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedCrediVirtualValues"
                           : "totalCrediVirtualValues"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   )
                 : setPreAmount(
                     Math.abs(
@@ -160,8 +164,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedCreditAmounts"
                           : "totalCreditAmounts"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   );
             } else if (type === "debit") {
               props.amountType === "virtual"
@@ -171,8 +175,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedDebitVirtualValues"
                           : "totalDebitVirtualValues"
-                      ]?.[transactionType]
-                    ) || 0
+                      ]?.[transactionType],
+                    ) || 0,
                   )
                 : setPreAmount(
                     Math.abs(
@@ -180,8 +184,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                         volume === "group"
                           ? "groupedDebitAmounts"
                           : "totalDebitAmounts"
-                      ][transactionType]
-                    ) || 0
+                      ][transactionType],
+                    ) || 0,
                   );
             }
           }
@@ -191,7 +195,7 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
         setPreviousTransaction(
           balances[0][
             volume === "group" ? "groupedTransactions" : "totalTransactions"
-          ]?.[transactionType] ?? 0
+          ]?.[transactionType] ?? 0,
         );
         setAmount(0);
         if (type === "amount") {
@@ -202,15 +206,15 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                     volume === "group"
                       ? "groupedVirtualValues"
                       : "totalVirtualValues"
-                  ]?.[transactionType]
-                ) || 0
+                  ]?.[transactionType],
+                ) || 0,
               )
             : setPreAmount(
                 Math.abs(
                   balances[0][
                     volume === "group" ? "groupedAmounts" : "totalAmounts"
-                  ]?.[transactionType]
-                ) || 0
+                  ]?.[transactionType],
+                ) || 0,
               );
         } else if (type === "credit") {
           props.amountType === "virtual"
@@ -220,8 +224,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                     volume === "group"
                       ? "groupedCrediVirtualValues"
                       : "totalCrediVirtualValues"
-                  ]?.[transactionType]
-                ) || 0
+                  ]?.[transactionType],
+                ) || 0,
               )
             : setPreAmount(
                 Math.abs(
@@ -229,8 +233,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                     volume === "group"
                       ? "groupedCreditAmounts"
                       : "totalCreditAmounts"
-                  ]?.[transactionType]
-                ) || 0
+                  ]?.[transactionType],
+                ) || 0,
               );
         } else if (type === "debit") {
           props.amountType === "virtual"
@@ -240,8 +244,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                     volume === "group"
                       ? "groupedDebitVirtualValues"
                       : "totalDebitVirtualValues"
-                  ]?.[transactionType]
-                ) || 0
+                  ]?.[transactionType],
+                ) || 0,
               )
             : setPreAmount(
                 Math.abs(
@@ -249,8 +253,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                     volume === "group"
                       ? "groupedDebitAmounts"
                       : "totalDebitAmounts"
-                  ]?.[transactionType]
-                ) || 0
+                  ]?.[transactionType],
+                ) || 0,
               );
         }
       } else {
@@ -268,22 +272,26 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
     props.currency,
     props.startDate,
     props.endDate,
-    props.group,
+    group,
     props.type,
     props.includePrevious,
     props.amountType,
   ]);
 
   const amountPercentChange =
-    ((amount - preAmount) / (preAmount === 0 ? 1 : preAmount)) * 100 ?? 0;
+    ((amount - preAmount) / (preAmount === 0 ? 1 : preAmount)) * 100;
 
   const transactionPercentChange =
     ((transaction - previousTransaction) /
       (previousTransaction === 0 ? 1 : previousTransaction)) *
-      100 ?? 0;
+    100;
 
+  const handleGroupChange = (group: Group) => {
+    setGroup(group);
+  };
   return (
     <Wrapper>
+      <PeriodToogle group={group} groupHandler={handleGroupChange} />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label}</div>
