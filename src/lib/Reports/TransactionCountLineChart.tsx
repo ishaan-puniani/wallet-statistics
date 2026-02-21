@@ -82,9 +82,7 @@ const TransactionCountLineChart = (props: ITransactionCountLineChart) => {
   const [rawData, setRawData] = useState<any>();
   const startDate = moment(props.startDate).format("YYYY-MM-DD");
   const endDate = moment(props.endDate).format("YYYY-MM-DD");
-  const [group, setGroup] = useState<Group>(
-    (props?.group as Group) ?? "weekly",
-  );
+  const [group, setGroup] = useState<Group>((props?.group as Group) ?? "weekly");
 
   useEffect(() => {
     const fetchData = async () => {

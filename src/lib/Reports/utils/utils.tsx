@@ -47,6 +47,14 @@ export const checkRange = (
       .endOf("month")
       .format("YYYY-MM-DD");
     return moment(date) >= moment(sDate) && moment(date) <= moment(eDate);
+  } else if (group === "monthly") {
+    const sDate = moment(startDate)
+      .startOf("month")
+      .format("YYYY-MM-DD");
+    const eDate = moment(endDate)
+      .endOf("month")
+      .format("YYYY-MM-DD");
+    return moment(date) >= moment(sDate) && moment(date) <= moment(eDate);
   }
   return moment(date) >= moment(startDate) && moment(date) <= moment(endDate);
 };

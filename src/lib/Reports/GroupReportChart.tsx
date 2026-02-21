@@ -28,7 +28,7 @@ import Loader from "./Loader";
 import { Group } from "./utils/utils";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -117,21 +117,21 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
     ? props.chartOptions
     : option;
 
-  const getDateRange = (group: any) => {
-    if (group === "monthly") {
-      const start = moment(props.startDate).startOf("year").startOf("month");
-      const end = moment(props.startDate).endOf("year").endOf("month");
-      return {
-        startDate: start.format("YYYY-MM-DD"),
-        endDate: end.format("YYYY-MM-DD"),
-      };
-    } else if (group === "daily" || group === "weekly") {
-      return {
-        startDate: moment(props.startDate).format("YYYY-MM-DD"),
-        endDate: moment(props.endDate).format("YYYY-MM-DD"),
-      };
-    }
-  };
+  // const getDateRange = (group: any) => {
+  //   if (group === "monthly") {
+  //     const start = moment(props.startDate).startOf("year").startOf("month");
+  //     const end = moment(props.startDate).endOf("year").endOf("month");
+  //     return {
+  //       startDate: start.format("YYYY-MM-DD"),
+  //       endDate: end.format("YYYY-MM-DD"),
+  //     };
+  //   } else if (group === "daily" || group === "weekly") {
+  //     return {
+  //       startDate: moment(props.startDate).format("YYYY-MM-DD"),
+  //       endDate: moment(props.endDate).format("YYYY-MM-DD"),
+  //     };
+  //   }
+  // };
 
   const groupHandler = (group: Group) => {
     setGroup(group);
@@ -145,11 +145,11 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
         props.credentials,
         props.userId,
         props.currency,
-        getDateRange(group).startDate,
-        getDateRange(group).endDate,
+        moment(props.startDate).format("YYYY-MM-DD"),
+        moment(props.endDate).format("YYYY-MM-DD"),
         group,
         includePrevious,
-        includeToday
+        includeToday,
       );
       setRawData(balances);
 
@@ -205,7 +205,7 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
         });
         if (group === "weekly" || group === "daily") {
           const dateList = balances.map(({ date }: { date: any }) =>
-            moment(date).format("MMM DD")
+            moment(date).format("MMM DD"),
           );
           chartOptions.xAxis[0].data = dateList;
         } else {
