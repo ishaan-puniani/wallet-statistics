@@ -109,7 +109,8 @@ export interface IPartnerBalancesPieChartProps {
   themeConfig: any;
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping: Group[];
   type: string;
   includePrevious: boolean;
   includeToday: boolean;
@@ -168,6 +169,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const [group, setGroup] = useState<Group>((props.group as Group) ?? "weekly");
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
   const includePrevious = props.includePrevious || false;
   const includeToday = props.includeToday || false;
   const type = props.type || "debit";
@@ -336,7 +338,7 @@ const ReportBalanceChart = (props: IPartnerBalancesPieChartProps) => {
         <div style={{ height: "100%" }}>
           {!loading && chartOption && (
             <>
-              <PeriodToogle group={group} groupHandler={handleGroupChange} />
+              <PeriodToogle group={group} groupHandler={handleGroupChange} supportedGrouping={supportedGrouping}/>
               <ReactEChartsCore
                 echarts={echarts}
                 option={chartOption}

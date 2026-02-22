@@ -56,7 +56,8 @@ export interface ITransactionCountLineChart {
   transactionTypes?: string[];
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping: Group[];
 }
 
 const option: any = {
@@ -82,8 +83,10 @@ const TransactionCountLineChart = (props: ITransactionCountLineChart) => {
   const [rawData, setRawData] = useState<any>();
   const startDate = moment(props.startDate).format("YYYY-MM-DD");
   const endDate = moment(props.endDate).format("YYYY-MM-DD");
-  const [group, setGroup] = useState<Group>((props?.group as Group) ?? "weekly");
-
+  const [group, setGroup] = useState<Group>(
+    (props?.group as Group) ?? "weekly",
+  );
+const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -175,7 +178,11 @@ const TransactionCountLineChart = (props: ITransactionCountLineChart) => {
         <div>
           {!loading && chartOption && (
             <Wrapper>
-              <PeriodToogle group={group} groupHandler={groupHandler} />
+              <PeriodToogle
+                group={group}
+                groupHandler={groupHandler}
+                supportedGrouping={supportedGrouping}
+              />
               <ReactEChartsCore
                 echarts={echarts}
                 option={chartOption}

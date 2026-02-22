@@ -40,7 +40,8 @@ export interface IUserAchievementsLogsCountLineChart {
   transactionTypes?: string[];
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping?: Group[];
 }
 
 const option: any = {
@@ -71,6 +72,7 @@ const UserAchievementsLogsCountLineChart = (
   const [group, setGroup] = useState<Group>(
     (props?.group as Group) ?? "weekly",
   );
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,7 +165,11 @@ const UserAchievementsLogsCountLineChart = (
         <div>
           {!loading && chartOption && (
             <Wrapper>
-              <PeriodToogle group={group} groupHandler={groupHandler} />
+              <PeriodToogle
+                group={group}
+                groupHandler={groupHandler}
+                supportedGrouping={supportedGrouping}
+              />
               <ReactEChartsCore
                 echarts={echarts}
                 option={chartOption}

@@ -32,7 +32,8 @@ export interface IMiniTransactionTypeCard {
   label?: string;
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping: Group[];
   includePrevious: boolean;
   includeToday: boolean;
   transactionType?: string;
@@ -50,8 +51,10 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
   const [transaction, setTransaction] = useState(0);
   const [previousTransaction, setPreviousTransaction] = useState(0);
   const [loading, setLoading] = useState(false);
-  const group =(props.group as Group) || "monthly";
-
+  const [group, setGroup] = useState<Group>(
+    (props.group as Group) || "monthly",
+  );
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
   const transactionType = props.transactionType || "AMOUNT";
   const volume = props.volume || "group";
   const includeToday = props.includeToday || false;
@@ -301,8 +304,16 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
       (previousTransaction === 0 ? 1 : previousTransaction)) *
     100;
 
+  const handleGroupChange = (group: Group) => {
+    setGroup(group);
+  };
   return (
     <Wrapper>
+      <PeriodToogle
+        group={group}
+        groupHandler={handleGroupChange}
+        supportedGrouping={supportedGrouping}
+      />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label}</div>

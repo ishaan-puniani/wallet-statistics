@@ -31,7 +31,8 @@ export interface IPartnersCount {
   label?: string;
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping: Group[];
   transactionCountType: any;
   totalCount?: boolean;
   transactionType?: string;
@@ -57,7 +58,7 @@ const PartnersCount = (props: IPartnersCount) => {
     props.transactionCountType ?? type.groupedPeriod,
   );
   const [group, setGroup] = useState((props.group as Group) || "monthly");
-
+  const supportedGrouping = props.supportedGrouping ?? ["monthly"];
   const {
     totalCount,
     label,
@@ -151,9 +152,17 @@ const PartnersCount = (props: IPartnersCount) => {
       </Wrapper>
     );
   }
+  const handleGroupChange = (g: Group) => {
+    setGroup(g);
+  };
 
   return (
     <Wrapper>
+      <PeriodToogle
+        group={group}
+        groupHandler={handleGroupChange}
+        supportedGrouping={supportedGrouping}
+      />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label ?? "Partners"}</div>

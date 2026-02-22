@@ -48,6 +48,8 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 export interface ICountPerAchievementsLogsTypePieChart {
   credentials: any;
   showRaw?: boolean;
+  group: Group;
+  supportedGrouping: Group[];
 }
 
 const option: any = {
@@ -94,7 +96,8 @@ const CountPerAchievementsLogsTypePieChart = (
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
-  const [group, setGroup] = useState<Group>("weekly");
+  const [group, setGroup] = useState<Group>(props?.group ?? "weekly");
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -154,7 +157,7 @@ const CountPerAchievementsLogsTypePieChart = (
         <div style={{ height: "100%" }}>
           {!loading && chartOption && (
             <>
-              <PeriodToogle group={group} groupHandler={handleGroupChange} />
+              <PeriodToogle group={group} groupHandler={handleGroupChange} supportedGrouping={supportedGrouping} />
               <ReactEChartsCore
                 echarts={echarts}
                 option={chartOption}

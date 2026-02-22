@@ -29,7 +29,8 @@ export interface IMiniTransactionTypeCard {
   cardConfig?: any;
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping: Group[];
   includePrevious: boolean;
   includeToday: boolean;
   transactionType?: string;
@@ -40,7 +41,10 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
   const [amount, setAmount] = useState(0);
   const [preAmount, setPreAmount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const group = (props.group as Group) || "monthly";
+  const [group, setGroup] = useState<Group>(
+    (props.group as Group) || "monthly",
+  );
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
   const transactionType = props.transactionType || "AMOUNT";
   const includeToday = props.includeToday || false;
   const cardConfig = Object.keys(props.cardConfig).length
@@ -57,7 +61,7 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
         moment(props.endDate).format("YYYY-MM-DD"),
         group,
         props.includePrevious,
-        includeToday
+        includeToday,
       );
       if (balances.length === 2) {
         balances.forEach((balance: any) => {
@@ -66,32 +70,32 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
               props.amountType === "virtual"
                 ? setAmount(
                     Math.abs(balance.groupedVirtualValues?.[transactionType]) ||
-                      0
+                      0,
                   )
                 : setAmount(
-                    Math.abs(balance.groupedAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedAmounts?.[transactionType]) || 0,
                   );
             } else if (cardConfig.type === "credit") {
               props.amountType === "virtual"
                 ? setAmount(
                     Math.abs(
-                      balance.groupedCrediVirtualValues?.[transactionType]
-                    ) || 0
+                      balance.groupedCrediVirtualValues?.[transactionType],
+                    ) || 0,
                   )
                 : setAmount(
                     Math.abs(balance.groupedCreditAmounts?.[transactionType]) ||
-                      0
+                      0,
                   );
             } else if (cardConfig.type === "debit") {
               props.amountType === "virtual"
                 ? setAmount(
                     Math.abs(
-                      balance.groupedDebitVirtualValues?.[transactionType]
-                    ) || 0
+                      balance.groupedDebitVirtualValues?.[transactionType],
+                    ) || 0,
                   )
                 : setAmount(
                     Math.abs(balance.groupedDebitAmounts?.[transactionType]) ||
-                      0
+                      0,
                   );
             }
           } else {
@@ -99,32 +103,32 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
               props.amountType === "virtual"
                 ? setPreAmount(
                     Math.abs(balance.groupedVirtualValues?.[transactionType]) ||
-                      0
+                      0,
                   )
                 : setPreAmount(
-                    Math.abs(balance.groupedAmounts?.[transactionType]) || 0
+                    Math.abs(balance.groupedAmounts?.[transactionType]) || 0,
                   );
             } else if (cardConfig.type === "credit") {
               props.amountType === "virtual"
                 ? setPreAmount(
                     Math.abs(
-                      balance.groupedCrediVirtualValues?.[transactionType]
-                    ) || 0
+                      balance.groupedCrediVirtualValues?.[transactionType],
+                    ) || 0,
                   )
                 : setPreAmount(
                     Math.abs(balance.groupedCreditAmounts?.[transactionType]) ||
-                      0
+                      0,
                   );
             } else if (cardConfig.type === "debit") {
               props.amountType === "virtual"
                 ? setPreAmount(
                     Math.abs(
-                      balance.groupedDebitVirtualValues?.[transactionType]
-                    ) || 0
+                      balance.groupedDebitVirtualValues?.[transactionType],
+                    ) || 0,
                   )
                 : setPreAmount(
                     Math.abs(balance.groupedDebitAmounts?.[transactionType]) ||
-                      0
+                      0,
                   );
             }
           }
@@ -135,34 +139,34 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
           props.amountType === "virtual"
             ? setPreAmount(
                 Math.abs(
-                  balances[0]?.groupedVirtualValues?.[transactionType]
-                ) || 0
+                  balances[0]?.groupedVirtualValues?.[transactionType],
+                ) || 0,
               )
             : setPreAmount(
-                Math.abs(balances[0]?.groupedAmounts?.[transactionType]) || 0
+                Math.abs(balances[0]?.groupedAmounts?.[transactionType]) || 0,
               );
         } else if (cardConfig.type === "credit") {
           props.amountType === "virtual"
             ? setPreAmount(
                 Math.abs(
-                  balances[0]?.groupedCrediVirtualValues?.[transactionType]
-                ) || 0
+                  balances[0]?.groupedCrediVirtualValues?.[transactionType],
+                ) || 0,
               )
             : setPreAmount(
                 Math.abs(
-                  balances[0]?.groupedCreditAmounts?.[transactionType]
-                ) || 0
+                  balances[0]?.groupedCreditAmounts?.[transactionType],
+                ) || 0,
               );
         } else if (cardConfig.type === "debit") {
           props.amountType === "virtual"
             ? setPreAmount(
                 Math.abs(
-                  balances[0]?.groupedDebitVirtualValues?.[transactionType]
-                ) || 0
+                  balances[0]?.groupedDebitVirtualValues?.[transactionType],
+                ) || 0,
               )
             : setPreAmount(
                 Math.abs(balances[0]?.groupedDebitAmounts?.[transactionType]) ||
-                  0
+                  0,
               );
         }
       } else {
@@ -186,9 +190,17 @@ const MiniTransactionTypeCard = (props: IMiniTransactionTypeCard) => {
 
   const amountPercentChange =
     ((amount - preAmount) / (preAmount === 0 ? 1 : preAmount)) * 100;
- 
+
+  const handleGroupChange = (group: Group) => {
+    setGroup(group);
+  };
   return (
     <Wrapper>
+      <PeriodToogle
+        group={group}
+        groupHandler={handleGroupChange}
+        supportedGrouping={supportedGrouping}
+      />
       <div className="transaction-type-card">
         <h2>{cardConfig.label}</h2>
         <div className="card-amount-container">

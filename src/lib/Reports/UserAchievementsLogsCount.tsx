@@ -15,7 +15,8 @@ export interface IUserAchievementsLogsCount {
   label?: string;
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping?: Group[];
   transactionCountType: any;
   totalCount?: boolean;
   transactionType?: string;
@@ -37,7 +38,10 @@ const UserAchievementsLogsCount = (props: IUserAchievementsLogsCount) => {
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState<any>();
   const [percentChange, setPercentChange] = useState(0);
-  const group = (props.group as Group) || "monthly";
+  const [group, setGroup] = useState<Group>(
+    (props.group as Group) || "monthly",
+  );
+  const supportedGrouping = props.supportedGrouping ?? ["monthly"];
   const transactionCountType = getTypeValue(
     props.transactionCountType ?? type.groupedPeriod,
   );
@@ -134,9 +138,16 @@ const UserAchievementsLogsCount = (props: IUserAchievementsLogsCount) => {
       </Wrapper>
     );
   }
-
+  const handleGroupChange = (g: Group) => {
+    setGroup(g);
+  };
   return (
     <Wrapper>
+      <PeriodToogle
+        group={group}
+        groupHandler={handleGroupChange}
+        supportedGrouping={supportedGrouping}
+      />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label ?? "Achievements Logs"}</div>

@@ -30,7 +30,8 @@ export interface ITransactionsCount {
   label?: string;
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping: Group[];
   transactionCountType: any;
   totalCount?: boolean;
   transactionType?: string;
@@ -52,7 +53,9 @@ const TransactionsCount = (props: ITransactionsCount) => {
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState<any>();
   const [percentChange, setPercentChange] = useState(0);
-  const group = (props.group as Group) || "monthly";
+  const [group, setGroup] = useState<Group>(
+    (props.group as Group) ?? "monthly",
+  );
   const transactionCountType = getTypeValue(
     props.transactionCountType ?? type.groupedPeriod,
   );
@@ -65,6 +68,8 @@ const TransactionsCount = (props: ITransactionsCount) => {
     questionMessage,
     startDate,
   } = props;
+
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -150,10 +155,17 @@ const TransactionsCount = (props: ITransactionsCount) => {
     );
   }
 
-
+  const handleGroupChange = (g: Group) => {
+    setGroup(g);
+  };
 
   return (
     <Wrapper>
+      <PeriodToogle
+        group={group}
+        groupHandler={handleGroupChange}
+        supportedGrouping={supportedGrouping}
+      />
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label ?? "Transactions"}</div>

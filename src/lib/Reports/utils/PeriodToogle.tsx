@@ -5,45 +5,29 @@ import { Group } from "./utils";
 type PeriodToogleProps = {
   group: Group;
   groupHandler: (group: Group) => void;
+  supportedGrouping: Group[];
 };
 
-const PeriodToogle: React.FC<PeriodToogleProps> = ({ group, groupHandler }) => {
+const PeriodToogle: React.FC<PeriodToogleProps> = ({
+  group,
+  groupHandler,
+  supportedGrouping,
+}) => {
   return (
     <Wrapper>
       <div className="grouping-btn">
-        <div
-          className={`group group-daily ${group === "daily" ? "selected" : ""}`}
-        >
-          <button onClick={() => groupHandler("daily")}>Daily</button>
-        </div>
-        <div
-          className={`group group-weekly ${
-            group === "weekly" ? "selected" : ""
-          }`}
-        >
-          <button onClick={() => groupHandler("weekly")}>Weekly</button>
-        </div>
-        <div
-          className={`group group-monthly ${
-            group === "monthly" ? "selected" : ""
-          }`}
-        >
-          <button onClick={() => groupHandler("monthly")}>Monthly</button>
-        </div>
-        <div
-          className={`group group-quarterly ${
-            group === "quarterly" ? "selected" : ""
-          }`}
-        >
-          <button onClick={() => groupHandler("quarterly")}>Quarterly</button>
-        </div>
-        <div
-          className={`group group-yearly ${
-            group === "yearly" ? "selected" : ""
-          }`}
-        >
-          <button onClick={() => groupHandler("yearly")}>Yearly</button>
-        </div>
+        {supportedGrouping?.map((i) => {
+          return (
+            <div
+              key={String(i)}
+              className={`group group-daily ${group === i ? "selected" : ""}`}
+            >
+              <button onClick={() => groupHandler(i)}>
+                {String(i).charAt(0).toUpperCase() + String(i).slice(1)}
+              </button>
+            </div>
+          );
+        })}
       </div>
     </Wrapper>
   );

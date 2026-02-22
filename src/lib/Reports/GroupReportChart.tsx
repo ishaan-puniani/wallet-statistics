@@ -26,6 +26,7 @@ import moment from "moment";
 import styled from "styled-components";
 import Loader from "./Loader";
 import { Group } from "./utils/utils";
+import PeriodToogle from "./utils/PeriodToogle";
 
 // Register the required components only in browser environment
 if (typeof window !== "undefined" && typeof document !== "undefined") {
@@ -63,7 +64,8 @@ export interface IPartnerBalancesPieChartProps {
   themeConfig: any;
   endDate: Date;
   startDate: Date;
-  group: string;
+  group: Group;
+  supportedGrouping: Group[];
   includePrevious: boolean;
   includeToday: boolean;
   amountType?: "amount" | "virtual";
@@ -99,7 +101,8 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [group, setGroup] = useState<Group>("daily");
+  const [group, setGroup] = useState<Group>(props?.group ?? "daily");
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
 
   const transactionTypes =
     props.transactionTypes.length > 0
@@ -257,39 +260,19 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
       ) : (
         <div>
           {!loading && chartOption && (
-            <Wrapper>
-              <div className="grouping-btn">
-                <div
-                  className={`group group-daily ${
-                    group === "daily" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("daily")}>Daily</button>
-                </div>
-                <div
-                  className={`group group-weekly ${
-                    group === "weekly" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("weekly")}>Weekly</button>
-                </div>
-                <div
-                  className={`group group-monthly ${
-                    group === "monthly" ? "selected" : ""
-                  }`}
-                >
-                  <button onClick={() => groupHandler("monthly")}>
-                    Monthly
-                  </button>
-                </div>
-              </div>
+            <>
+              <PeriodToogle
+                group={group}
+                groupHandler={groupHandler}
+                supportedGrouping={supportedGrouping}
+              />
               <ReactEChartsCore
                 echarts={echarts}
                 option={chartOption}
                 notMerge={true}
                 lazyUpdate={true}
               />
-            </Wrapper>
+            </>
           )}
         </div>
       )}
