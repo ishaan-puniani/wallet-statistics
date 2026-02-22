@@ -27,6 +27,15 @@ export default {
   parameters: {
     layout: "fullscreen",
   },
+  args: {
+    supportedGrouping: ["monthly"],
+  },
+  argTypes: {
+    supportedGrouping: {
+      control: { type: "inline-check" },
+      options: ["daily", "weekly", "monthly", "quarterly", "yearly"],
+    },
+  },
 } as ComponentMeta<typeof ReportChart>;
 
 const TemplateDemo: ComponentStory<typeof ReportChart> = (args) => (
@@ -131,6 +140,7 @@ PartnerGroupReportChart.args = {
   chartType: "",
   startDate: moment(),
   endDate: moment(),
+  supportedGrouping: ["monthly"], // Ensure this prop is always present
 };
 
 export const RecentTransactionTableView = TemplateFive.bind({});

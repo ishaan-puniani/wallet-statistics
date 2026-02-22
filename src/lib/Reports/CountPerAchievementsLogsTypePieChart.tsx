@@ -49,7 +49,7 @@ export interface ICountPerAchievementsLogsTypePieChart {
   credentials: any;
   showRaw?: boolean;
   group: Group;
-  supportedGrouping: Group[];
+  supportedGrouping?: Group[];
 }
 
 const option: any = {

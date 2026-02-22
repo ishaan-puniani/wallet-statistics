@@ -33,7 +33,7 @@ export interface IMiniTransactionTypeCard {
   endDate: Date;
   startDate: Date;
   group: Group;
-  supportedGrouping: Group[];
+  supportedGrouping?: Group[];
   includePrevious: boolean;
   includeToday: boolean;
   transactionType?: string;

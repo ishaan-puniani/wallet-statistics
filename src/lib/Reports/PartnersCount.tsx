@@ -32,7 +32,7 @@ export interface IPartnersCount {
   endDate: Date;
   startDate: Date;
   group: Group;
-  supportedGrouping: Group[];
+  supportedGrouping?: Group[];
   transactionCountType: any;
   totalCount?: boolean;
   transactionType?: string;

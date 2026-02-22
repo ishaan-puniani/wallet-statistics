@@ -110,7 +110,7 @@ export interface IPartnerBalancesPieChartProps {
   endDate: Date;
   startDate: Date;
   group: Group;
-  supportedGrouping: Group[];
+  supportedGrouping?: Group[];
   type: string;
   includePrevious: boolean;
   includeToday: boolean;

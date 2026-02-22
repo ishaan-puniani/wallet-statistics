@@ -57,7 +57,7 @@ export interface ITransactionCountLineChart {
   endDate: Date;
   startDate: Date;
   group: Group;
-  supportedGrouping: Group[];
+  supportedGrouping?: Group[];
 }
 
 const option: any = {
