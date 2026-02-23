@@ -133,6 +133,7 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
     props.currency,
     props.startDate,
     props.endDate,
+    props.group,
     group,
     props.type,
     props.includePrevious,

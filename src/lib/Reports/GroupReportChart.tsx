@@ -158,15 +158,31 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
       );
       setRawData(balances);
 
+      const localChartOptions: any = {
+        ...chartOptions,
+        xAxis: Array.isArray(chartOptions.xAxis)
+          ? [...chartOptions.xAxis]
+          : [{ ...option.xAxis[0] }],
+      };
+
+      const xAxisData = balances.map((row: any) => {
+        return row && row.date ? moment(row.date).format("YYYY-MM-DD") : "";
+      });
+
+      localChartOptions.xAxis[0] = {
+        ...(localChartOptions.xAxis[0] || {}),
+        data: xAxisData,
+      };
       if (transactionTypes.length) {
         const getRowValue = (row: any, transactionKey: string) => {
           const prefix = volume === "group" ? "grouped" : "total";
-          const suffix = props.amountType === "virtual" ? "VirtualValues" : "Amounts";
+          const suffix =
+            props.amountType === "virtual" ? "VirtualValues" : "Amounts";
           const container = row?.[`${prefix}${suffix}`];
           return container?.[transactionKey] || 0;
         };
 
-        chartOptions.series = transactionTypes?.map((dataType: any) => {
+        localChartOptions.series = transactionTypes?.map((dataType: any) => {
           return {
             name: dataType.label,
             type: chartType,
@@ -186,17 +202,9 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
           };
         });
 
-        if (group === "weekly" || group === "daily") {
-          const dateList = balances.map(({ date }: { date: any }) =>
-            moment(date).format("MMM DD"),
-          );
-          chartOptions.xAxis[0].data = dateList;
-        } else {
-          chartOptions.xAxis[0].data = monthlyXAxisData;
-        }
       }
 
-      setChartOption(chartOptions);
+      setChartOption(localChartOptions);
       setLoading(false);
     };
 
