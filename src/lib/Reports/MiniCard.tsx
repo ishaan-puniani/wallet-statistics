@@ -21,7 +21,6 @@ import moment from "moment";
 import Loader from "./Loader";
 import { questionMark, upTrend, downTrend } from "../../svgs";
 import { Group } from "./utils/utils";
-import PeriodToogle from "./utils/PeriodToogle";
 
 export interface IMiniTransactionTypeCard {
   userId: string;
@@ -33,7 +32,6 @@ export interface IMiniTransactionTypeCard {
   endDate: Date;
   startDate: Date;
   group: Group;
-  supportedGrouping?: Group[];
   includePrevious: boolean;
   includeToday: boolean;
   transactionType?: string;
@@ -54,12 +52,60 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
   const [group, setGroup] = useState<Group>(
     (props.group as Group) || "monthly",
   );
-  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
   const transactionType = props.transactionType || "AMOUNT";
   const volume = props.volume || "group";
   const includeToday = props.includeToday || false;
-  const type = props.type ?? "amount";
   const label = props.label ?? "amount";
+
+  const getAmountKey = (
+    vol: "group" | "total" = volume,
+    amountType: "amount" | "virtual" = props.amountType ?? "amount",
+  ) => {
+    const prefix = vol === "group" ? "grouped" : "total";
+    const suffix = amountType === "virtual" ? "VirtualValues" : "Amounts";
+    return `${prefix}${suffix}`;
+  };
+
+  const initialPeriod = props.startDate && props.endDate ? "custom" : "today";
+  const [period, setPeriod] = useState<
+    "today" | "yesterday" | "last_week" | "last_month" | "custom"
+  >(initialPeriod as any);
+
+  const [startDateLocal, setStartDateLocal] = useState<Date>(
+    props.startDate ?? new Date(),
+  );
+  const [endDateLocal, setEndDateLocal] = useState<Date>(
+    props.endDate ?? new Date(),
+  );
+
+  const applyPeriod = (p: string) => {
+    let s = moment();
+    let e = moment();
+    switch (p) {
+      case "today":
+        s = moment();
+        e = moment();
+        break;
+      case "yesterday":
+        s = moment().subtract(1, "day");
+        e = moment().subtract(1, "day");
+        break;
+      case "last_week":
+        // previous calendar week (Monday - Sunday)
+        s = moment().subtract(1, "week").startOf("isoWeek");
+        e = moment().subtract(1, "week").endOf("isoWeek");
+        break;
+      case "last_month":
+        // previous calendar month
+        s = moment().subtract(1, "month").startOf("month");
+        e = moment().subtract(1, "month").endOf("month");
+        break;
+    }
+
+    setStartDateLocal(s.toDate());
+    setEndDateLocal(e.toDate());
+    setPeriod(p as any);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,144 +114,32 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
         props.credentials,
         props.userId,
         props.currency,
-        moment(props.startDate).format("YYYY-MM-DD"),
-        moment(props.endDate).format("YYYY-MM-DD"),
+        moment(startDateLocal).format("YYYY-MM-DD"),
+        moment(endDateLocal).format("YYYY-MM-DD"),
         group,
         props.includePrevious,
         includeToday,
       );
       if (balances.length === 2) {
         balances.forEach((balance: any) => {
-          if (balance.date === moment(props.endDate).format("YYYY-MM-DD")) {
+          if (balance.date === moment(endDateLocal).format("YYYY-MM-DD")) {
             setTransaction(
               balance[
                 volume === "group" ? "groupedTransactions" : "totalTransactions"
               ]?.[transactionType] ?? 0,
             );
-            if (type === "amount") {
-              props.amountType === "virtual"
-                ? setAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedVirtualValues"
-                          : "totalVirtualValues"
-                      ]?.[transactionType],
-                    ) || 0,
-                  )
-                : setAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group" ? "groupedAmounts" : "totalAmounts"
-                      ]?.[transactionType],
-                    ) || 0,
-                  );
-            } else if (type === "credit") {
-              props.amountType === "virtual"
-                ? setAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedCrediVirtualValues"
-                          : "totalCrediVirtualValues"
-                      ]?.[transactionType],
-                    ) || 0,
-                  )
-                : setAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedCreditAmounts"
-                          : "totalCreditAmounts"
-                      ]?.[transactionType],
-                    ) || 0,
-                  );
-            } else if (type === "debit") {
-              props.amountType === "virtual"
-                ? setAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedDebitVirtualValues"
-                          : "totalDebitVirtualValues"
-                      ]?.[transactionType],
-                    ) || 0,
-                  )
-                : setAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedDebitAmounts"
-                          : "totalDebitAmounts"
-                      ]?.[transactionType],
-                    ) || 0,
-                  );
-            }
+            const key = getAmountKey(volume, props.amountType);
+            const value = Math.abs(balance?.[key]?.[transactionType] ?? 0);
+            setAmount(value);
           } else {
             setPreviousTransaction(
               balance[
                 volume === "group" ? "groupedTransactions" : "totalTransactions"
               ]?.[transactionType] ?? 0,
             );
-            if (type === "amount") {
-              props.amountType === "virtual"
-                ? setPreAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedVirtualValues"
-                          : "totalVirtualValues"
-                      ]?.[transactionType],
-                    ) || 0,
-                  )
-                : setPreAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group" ? "groupedAmounts" : "totalAmounts"
-                      ]?.[transactionType],
-                    ) || 0,
-                  );
-            } else if (type === "credit") {
-              props.amountType === "virtual"
-                ? setPreAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedCrediVirtualValues"
-                          : "totalCrediVirtualValues"
-                      ]?.[transactionType],
-                    ) || 0,
-                  )
-                : setPreAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedCreditAmounts"
-                          : "totalCreditAmounts"
-                      ]?.[transactionType],
-                    ) || 0,
-                  );
-            } else if (type === "debit") {
-              props.amountType === "virtual"
-                ? setPreAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedDebitVirtualValues"
-                          : "totalDebitVirtualValues"
-                      ]?.[transactionType],
-                    ) || 0,
-                  )
-                : setPreAmount(
-                    Math.abs(
-                      balance[
-                        volume === "group"
-                          ? "groupedDebitAmounts"
-                          : "totalDebitAmounts"
-                      ][transactionType],
-                    ) || 0,
-                  );
-            }
+            const key = getAmountKey(volume, props.amountType);
+            const preVal = Math.abs(balance?.[key]?.[transactionType] ?? 0);
+            setPreAmount(preVal);
           }
         });
       } else if (balances.length === 1) {
@@ -216,65 +150,9 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
           ]?.[transactionType] ?? 0,
         );
         setAmount(0);
-        if (type === "amount") {
-          props.amountType === "virtual"
-            ? setPreAmount(
-                Math.abs(
-                  balances[0][
-                    volume === "group"
-                      ? "groupedVirtualValues"
-                      : "totalVirtualValues"
-                  ]?.[transactionType],
-                ) || 0,
-              )
-            : setPreAmount(
-                Math.abs(
-                  balances[0][
-                    volume === "group" ? "groupedAmounts" : "totalAmounts"
-                  ]?.[transactionType],
-                ) || 0,
-              );
-        } else if (type === "credit") {
-          props.amountType === "virtual"
-            ? setPreAmount(
-                Math.abs(
-                  balances[0][
-                    volume === "group"
-                      ? "groupedCrediVirtualValues"
-                      : "totalCrediVirtualValues"
-                  ]?.[transactionType],
-                ) || 0,
-              )
-            : setPreAmount(
-                Math.abs(
-                  balances[0][
-                    volume === "group"
-                      ? "groupedCreditAmounts"
-                      : "totalCreditAmounts"
-                  ]?.[transactionType],
-                ) || 0,
-              );
-        } else if (type === "debit") {
-          props.amountType === "virtual"
-            ? setPreAmount(
-                Math.abs(
-                  balances[0][
-                    volume === "group"
-                      ? "groupedDebitVirtualValues"
-                      : "totalDebitVirtualValues"
-                  ]?.[transactionType],
-                ) || 0,
-              )
-            : setPreAmount(
-                Math.abs(
-                  balances[0][
-                    volume === "group"
-                      ? "groupedDebitAmounts"
-                      : "totalDebitAmounts"
-                  ]?.[transactionType],
-                ) || 0,
-              );
-        }
+        const key = getAmountKey(volume, props.amountType);
+        const preVal = Math.abs(balances[0]?.[key]?.[transactionType] ?? 0);
+        setPreAmount(preVal);
       } else {
         setTransaction(0);
         setPreviousTransaction(0);
@@ -288,8 +166,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
   }, [
     props.userId,
     props.currency,
-    props.startDate,
-    props.endDate,
+    startDateLocal,
+    endDateLocal,
     group,
     props.type,
     props.includePrevious,
@@ -304,16 +182,21 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
       (previousTransaction === 0 ? 1 : previousTransaction)) *
     100;
 
-  const handleGroupChange = (group: Group) => {
-    setGroup(group);
-  };
   return (
     <Wrapper>
-      <PeriodToogle
-        group={group}
-        groupHandler={handleGroupChange}
-        supportedGrouping={supportedGrouping}
-      />
+      <div style={{ marginBottom: 8 }}>
+        <select
+          placeholder="Select Time Range "
+          value={period}
+          style={{float:'right',marginBottom:'8px'}}
+          onChange={(e) => applyPeriod(e.target.value)}
+        >
+          <option value="today">Today</option>
+          <option value="yesterday">Yesterday</option>
+          <option value="last_week">Last Week</option>
+          <option value="last_month">Last Month</option>
+        </select>
+      </div>
       <div className="transaction-type-card">
         <div className="heading">
           <div>{label}</div>

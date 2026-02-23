@@ -25,6 +25,8 @@ import { makeRandomColor } from "../../utilities/theme";
 import moment from "moment";
 import PeriodToogle from "./utils/PeriodToogle";
 import { Group } from "./utils/utils";
+import Loader from "./Loader";
+import styled from "styled-components";
 
 // Register the required components only in browser environment
 if (typeof window !== "undefined" && typeof document !== "undefined") {
@@ -271,56 +273,17 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
             name: dataType.label,
             type: chartType,
             data: balances.map((row: any) => {
-              if (dataType.type === "debit") {
-                if (props.amountType === "virtual") {
-                  return props?.absolute
-                    ? Math.abs(
-                        row?.groupedDebitVirtualValues[
-                          dataType?.transactionType
-                        ],
-                      ) || 0
-                    : row?.groupedDebitVirtualValues[
-                        dataType?.transactionType
-                      ] || 0;
-                } else {
-                  return props?.absolute
-                    ? Math.abs(
-                        row?.groupedDebitAmounts[dataType?.transactionType],
-                      ) || 0
-                    : row?.groupedDebitAmounts[dataType?.transactionType] || 0;
-                }
-              } else if (dataType.type === "credit") {
-                if (props.amountType === "virtual") {
-                  return props?.absolute
-                    ? Math.abs(
-                        row?.groupedCrediVirtualValues[
-                          dataType?.transactionType
-                        ],
-                      ) || 0
-                    : row?.groupedCrediVirtualValues[
-                        dataType?.transactionType
-                      ] || 0;
-                } else {
-                  return props?.absolute
-                    ? Math.abs(
-                        row?.groupedCreditAmounts[dataType?.transactionType],
-                      ) || 0
-                    : row?.groupedCreditAmounts[dataType?.transactionType] || 0;
-                }
-              } else if (dataType.type === "balance") {
-                if (props.amountType === "virtual") {
-                  return props?.absolute
-                    ? Math.abs(
-                        row?.groupedVirtualValues[dataType?.transactionType],
-                      ) || 0
-                    : row?.groupedVirtualValues[dataType?.transactionType] || 0;
-                } else {
-                  return props?.absolute
-                    ? Math.abs(
-                        row?.groupedAmounts[dataType?.transactionType],
-                      ) || 0
-                    : row?.groupedAmounts[dataType?.transactionType] || 0;
-                }
+              if (props.amountType === "virtual") {
+                return props?.absolute
+                  ? Math.abs(
+                      row?.groupedVirtualValues[dataType?.transactionType],
+                    ) || 0
+                  : row?.groupedVirtualValues[dataType?.transactionType] || 0;
+              } else {
+                return props?.absolute
+                  ? Math.abs(row?.groupedAmounts[dataType?.transactionType]) ||
+                      0
+                  : row?.groupedAmounts[dataType?.transactionType] || 0;
               }
             }),
             itemStyle: {
@@ -356,11 +319,20 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
     group,
     props.amountType,
   ]);
-  
+
   const groupHandler = (group: Group) => {
     setGroup(group);
   };
 
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <Loader />
+        </div>
+      </Wrapper>
+    );
+  }
   return (
     <>
       {props?.showRaw ? (
@@ -379,7 +351,11 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         <div>
           {!loading && chartOption && (
             <>
-              <PeriodToogle group={group} groupHandler={groupHandler} supportedGrouping={supportedGrouping} />
+              <PeriodToogle
+                group={group}
+                groupHandler={groupHandler}
+                supportedGrouping={supportedGrouping}
+              />
               <ReactEChartsCore
                 echarts={echarts}
                 option={chartOption}
@@ -394,3 +370,12 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   );
 };
 export default ReportChart;
+
+const Wrapper = styled.div`
+  .loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
