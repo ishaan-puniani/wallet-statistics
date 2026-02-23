@@ -69,6 +69,7 @@ export interface IPartnerBalancesPieChartProps {
   includePrevious: boolean;
   includeToday: boolean;
   amountType?: "amount" | "virtual";
+  volume?: "group" | "total";
 }
 // prettier-ignore
 const monthlyXAxisData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -103,6 +104,7 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState<Group>(props?.group ?? "daily");
   const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
+  const volume = props.volume || "group";
 
   const transactionTypes =
     props.transactionTypes.length > 0
@@ -157,43 +159,20 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
       setRawData(balances);
 
       if (transactionTypes.length) {
+        const getRowValue = (row: any, transactionKey: string) => {
+          const prefix = volume === "group" ? "grouped" : "total";
+          const suffix = props.amountType === "virtual" ? "VirtualValues" : "Amounts";
+          const container = row?.[`${prefix}${suffix}`];
+          return container?.[transactionKey] || 0;
+        };
+
         chartOptions.series = transactionTypes?.map((dataType: any) => {
           return {
             name: dataType.label,
             type: chartType,
-            data: balances.map((row: any) => {
-              if (dataType.type === "debit") {
-                if (props.amountType === "virtual") {
-                  return (
-                    row?.groupedDebitVirtualValues[dataType?.transactionType] ||
-                    0
-                  );
-                } else {
-                  return (
-                    row?.groupedDebitAmounts[dataType?.transactionType] || 0
-                  );
-                }
-              } else if (dataType.type === "credit") {
-                if (props.amountType === "virtual") {
-                  return (
-                    row?.groupedCrediVirtualValues[dataType?.transactionType] ||
-                    0
-                  );
-                } else {
-                  return (
-                    row?.groupedCreditAmounts[dataType?.transactionType] || 0
-                  );
-                }
-              } else if (dataType.type === "balance") {
-                if (props.amountType === "virtual") {
-                  return (
-                    row?.groupedVirtualValues[dataType?.transactionType] || 0
-                  );
-                } else {
-                  return row?.groupedAmounts[dataType?.transactionType] || 0;
-                }
-              }
-            }),
+            data: balances.map((row: any) =>
+              getRowValue(row, dataType?.transactionType),
+            ),
             itemStyle: {
               color:
                 (themeConfig && themeConfig[dataType?.label]) ||
@@ -206,6 +185,7 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
             },
           };
         });
+
         if (group === "weekly" || group === "daily") {
           const dateList = balances.map(({ date }: { date: any }) =>
             moment(date).format("MMM DD"),
