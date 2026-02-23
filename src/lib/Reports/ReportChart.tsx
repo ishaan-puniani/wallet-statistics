@@ -71,6 +71,7 @@ export interface IPartnerBalancesPieChartProps {
   amountType?: "amount" | "virtual";
   setChartLoading?: any;
   absolute?: boolean;
+  volume?: "group" | "total";
 }
 
 const option: any = {
@@ -213,6 +214,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [group, setGroup] = useState<Group>(
     (props.group as Group) || "monthly",
   );
+  const volume = props.volume || "group";
   const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
   const transactionTypes =
     props.transactionTypes.length > 0
@@ -267,25 +269,20 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         data: xAxisData,
       };
 
+      const getRowValue = (row: any, transactionKey: string) => {
+        const prefix = volume === "group" ? "grouped" : "total";
+        const suffix = props.amountType === "virtual" ? "VirtualValues" : "Amounts";
+        const container = row?.[`${prefix}${suffix}`];
+        const val = container?.[transactionKey] ?? 0;
+        return props?.absolute ? Math.abs(val) : val;
+      };
+
       if (transactionTypes.length) {
         localChartOptions.series = transactionTypes?.map((dataType: any) => {
           return {
             name: dataType.label,
             type: chartType,
-            data: balances.map((row: any) => {
-              if (props.amountType === "virtual") {
-                return props?.absolute
-                  ? Math.abs(
-                      row?.groupedVirtualValues[dataType?.transactionType],
-                    ) || 0
-                  : row?.groupedVirtualValues[dataType?.transactionType] || 0;
-              } else {
-                return props?.absolute
-                  ? Math.abs(row?.groupedAmounts[dataType?.transactionType]) ||
-                      0
-                  : row?.groupedAmounts[dataType?.transactionType] || 0;
-              }
-            }),
+            data: balances.map((row: any) => getRowValue(row, dataType?.transactionType)),
             itemStyle: {
               color:
                 (themeConfig && themeConfig[dataType?.label]) ||
