@@ -47,9 +47,9 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 
 const transactionType = [
   {
-    type: "debit",
     label: "Amount",
     transactionType: "AMOUNT",
+    valueSign:'negative'
   },
 ];
 
@@ -269,11 +269,14 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         data: xAxisData,
       };
 
-      const getRowValue = (row: any, transactionKey: string) => {
+      const getRowValue = (row: any, transactionKey: string, valueSign?: string) => {
         const prefix = volume === "group" ? "grouped" : "total";
         const suffix = props.amountType === "virtual" ? "VirtualValues" : "Amounts";
         const container = row?.[`${prefix}${suffix}`];
-        const val = container?.[transactionKey] ?? 0;
+        let val = container?.[transactionKey] ?? 0;
+        if (valueSign === "negative") {
+          val = val * -1;
+        }
         return props?.absolute ? Math.abs(val) : val;
       };
 
@@ -282,7 +285,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
           return {
             name: dataType.label,
             type: chartType,
-            data: balances.map((row: any) => getRowValue(row, dataType?.transactionType)),
+            data: balances.map((row: any) => getRowValue(row, dataType?.transactionType,dataType?.valueSign )),
             itemStyle: {
               color:
                 (themeConfig && themeConfig[dataType?.label]) ||
