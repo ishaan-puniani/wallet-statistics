@@ -20,12 +20,13 @@ import axios from "axios";
 import { API_HOST } from "../../constants";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { _fetchBalanceHistory } from "../services/balances";
+import { _fetchGetBalances } from "../services/balances";
 import moment from "moment";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
+import { Group } from "../Reports/utils/utils";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -45,6 +46,7 @@ export interface BalanceReportChartFilterProps {
   reportKey: string;
   showRaw: boolean;
   transactionTypes?: string[];
+  group: Group;
 }
 
 const option: any = {
@@ -81,18 +83,21 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
   const [chartOption, setChartOption] = useState();
 
   const [rawData, setRawData] = useState([]);
-
+const group  = props.group as Group || "daily";
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const balanceReport: any = await _fetchBalanceHistory(
+      const balanceReport: any = await _fetchGetBalances(
         props.credentials,
         props.userId,
         props.currency,
         props.startDate
           ? moment(props.startDate).format("YYYY-MM-DD")
           : moment().add(-7, "days").format("YYYY-MM-DD"),
-        moment(props.endDate).format("YYYY-MM-DD")
+        moment(props.endDate).format("YYYY-MM-DD"),
+        "daily",
+        true,
+        true,
       );
       if (balanceReport) {
         const items = balanceReport.rows;
@@ -130,7 +135,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                   continue;
                 }
                 let seriesOfTransactionType = series.find(
-                  (s: any) => s.id === transactionType
+                  (s: any) => s.id === transactionType,
                 );
                 if (!seriesOfTransactionType) {
                   const transactionTypeTheme =
@@ -157,11 +162,11 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
                 }
 
                 seriesOfTransactionType.data.push(
-                  Math.abs(parseFloat(amounts[transactionType] || 0))
+                  Math.abs(parseFloat(amounts[transactionType] || 0)),
                 );
               }
             }
-          }
+          },
         );
 
         option.legend.data = legends;
@@ -179,6 +184,7 @@ const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
     props.currency,
     props.startDate,
     props.endDate,
+    props.group,
   ]);
 
   //   const uniqueArray = names?.filter((value, index) => {
