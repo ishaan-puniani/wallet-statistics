@@ -70,6 +70,7 @@ export interface IPartnerBalancesPieChartProps {
   includeToday: boolean;
   amountType?: "amount" | "virtual";
   volume?: "group" | "total";
+  absolute?: boolean;
 }
 // prettier-ignore
 const monthlyXAxisData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -179,7 +180,8 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
           const suffix =
             props.amountType === "virtual" ? "VirtualValues" : "Amounts";
           const container = row?.[`${prefix}${suffix}`];
-          return container?.[transactionKey] || 0;
+          const val = container?.[transactionKey] ?? 0;
+          return props?.absolute ? Math.abs(val) : val;
         };
 
         localChartOptions.series = transactionTypes?.map((dataType: any) => {
@@ -201,7 +203,6 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
             },
           };
         });
-
       }
 
       setChartOption(localChartOptions);
