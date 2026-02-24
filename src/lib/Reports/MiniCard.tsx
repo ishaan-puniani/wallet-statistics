@@ -49,9 +49,8 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
   const [transaction, setTransaction] = useState(0);
   const [previousTransaction, setPreviousTransaction] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [group, setGroup] = useState<Group>(
-    (props.group as Group) || "monthly",
-  );
+  const group = (props.group as Group) || "monthly";
+
   const transactionType = props.transactionType || "AMOUNT";
   const volume = props.volume || "group";
   const includeToday = props.includeToday || false;
@@ -70,7 +69,6 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
   const [period, setPeriod] = useState<
     "today" | "yesterday" | "last_week" | "last_month" | "custom"
   >(initialPeriod as any);
-
 
   useEffect(() => {
     const fetchData = async () => {
