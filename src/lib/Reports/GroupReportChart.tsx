@@ -184,12 +184,12 @@ const GroupReportChart = (props: IPartnerBalancesPieChartProps) => {
           const suffix =
             props.amountType === "virtual" ? "VirtualValues" : "Amounts";
           const container = row?.[`${prefix}${suffix}`];
-          let val = container?.[transactionKey] ?? 0;
+          let val = Math.abs(container?.[transactionKey] ?? 0);
           if (valueSign === "negative") {
             val = val * -1;
           }
 
-          return props?.absolute ? Math.abs(val) : val;
+          return val;
         };
 
         localChartOptions.series = transactionTypes?.map((dataType: any) => {
