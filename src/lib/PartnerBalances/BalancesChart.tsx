@@ -4,24 +4,23 @@ import ReactEChartsCore from "echarts-for-react/lib/core";
 // Import the echarts core module, which provides the necessary interfaces for using echarts.
 import * as echarts from "echarts/core";
 // Import charts, all with Chart suffix
-import { LineChart } from "echarts/charts";
+import { BarChart, PieChart } from "echarts/charts";
 // import components, all suffixed with Component
 import {
   GridComponent,
   TooltipComponent,
   TitleComponent,
+  LegendComponent,
 } from "echarts/components";
 // Import renderer, note that introducing the CanvasRenderer or SVGRenderer is a required step
 import {
   CanvasRenderer,
   // SVGRenderer,
 } from "echarts/renderers";
-import axios from "axios";
-import { API_HOST } from "../../constants";
+
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { _fetchBalanceHistory } from "../services/balances";
-import moment from "moment";
+import { _fetchBalance } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 
 // Register the required components only in browser environment
@@ -30,206 +29,183 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     TitleComponent,
     TooltipComponent,
     GridComponent,
-    LineChart,
+    BarChart,
     CanvasRenderer,
+    PieChart,
+    LegendComponent,
   ]);
 }
 
-export interface BalanceReportChartFilterProps {
-  endDate: Date;
-  startDate: Date;
+export interface IPartnerBalancesPieChartProps {
   userId: string;
   currency: string;
   credentials: any;
-  label: string;
-  reportKey: string;
-  showRaw: boolean;
+  amountType: "amount" | "virtual";
+  showRaw?: boolean;
   transactionTypes?: string[];
+  /*
+  {
+"FOOD": {
+        "chart": {
+            "color": "green"
+        }
+    },
+    },
+    
+  */
+  chartOptions?: any;
+  themeConfig: any;
 }
 
 const option: any = {
   tooltip: {
-    trigger: "axis",
+    trigger: "item",
   },
   legend: {
-    data: [],
+    top: "0%",
+    left: "center",
   },
+
   grid: {
     left: "3%",
     right: "4%",
     bottom: "0%",
     containLabel: true,
   },
-  toolbox: {
-    feature: {
-      saveAsImage: {},
+  series: [
+    {
+      name: "",
+      type: "pie",
+      radius: ["40%", "70%"],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: "#fff",
+        borderWidth: 2,
+      },
+      label: {
+        show: false,
+        position: "center",
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: "bold",
+        },
+      },
+      labelLine: {
+        show: false,
+      },
+      data: [],
+      // color: ["red", "blue"],
     },
-  },
-  xAxis: {
-    type: "category",
-    boundaryGap: false,
-    data: [],
-  },
-  yAxis: {
-    type: "value",
-  },
-  series: [],
+  ],
 };
 
-const BalancesReportChart = (props: BalanceReportChartFilterProps) => {
+const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
-
   const [rawData, setRawData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const balanceReport: any = await _fetchBalanceHistory(
+      const balances = await _fetchBalance(
         props.credentials,
         props.userId,
-        props.currency,
-        props.startDate
-          ? moment(props.startDate).format("YYYY-MM-DD")
-          : moment().add(-7, "days").format("YYYY-MM-DD"),
-        moment(props.endDate).format("YYYY-MM-DD")
+        props.currency
       );
-      if (balanceReport) {
-        const items = balanceReport.rows;
-        setRawData(items);
-        const theme = getTheme();
 
-        const allDate: Array<string> = [];
-        const legends: Array<string> = [];
-        const series: any = [];
-        items.forEach(
-          (item: {
-            virtualValues: unknown;
-            amounts: unknown;
-            date: string;
-            [key: string]: any;
-          }) => {
-            allDate.push(item.date);
-            const amounts = item[props.reportKey];
-            // if (props.amountType === "amount") {
-            //   amounts = item.amounts;
-            // }
-            // if (props.amountType === "virtual") {
-            //   amounts = item.virtualValues;
-            // }
+      if (balances) {
+        setRawData(balances);
+        const chartData = [],
+          chartColors = [];
 
-            if (amounts) {
-              const xData = Object.keys(amounts);
-
-              for (let idx = 0; idx < xData.length; idx++) {
-                const transactionType = xData[idx];
-                if (
-                  props.transactionTypes &&
-                  !props.transactionTypes.includes(transactionType)
-                ) {
-                  continue;
-                }
-                let seriesOfTransactionType = series.find(
-                  (s: any) => s.id === transactionType
-                );
-                if (!seriesOfTransactionType) {
-                  const transactionTypeTheme =
-                    theme.transactionTypes[transactionType];
-                  let colorForTransactionType;
-
-                  if (transactionTypeTheme) {
-                    colorForTransactionType = transactionTypeTheme.chart.color;
-                  }
-
-                  if (!colorForTransactionType) {
-                    colorForTransactionType = makeRandomColor();
-                  }
-
-                  legends.push(transactionType);
-                  seriesOfTransactionType = {
-                    id: transactionType,
-                    name: transactionType,
-                    type: "line",
-                    data: allDate.length > 1 ? Array(allDate.length) : [], // >1 because first dats is just added in the same loop
-                    color: colorForTransactionType,
-                  };
-                  series.push(seriesOfTransactionType);
-                }
-
-                seriesOfTransactionType.data.push(
-                  Math.abs(parseFloat(amounts[transactionType] || 0))
-                );
-              }
-            }
+        const theme = getTheme() || {};
+        theme.transactionTypes = props.themeConfig || theme.transactionTypes;
+        let chartOptions;
+        chartOptions = Object.keys(props.chartOptions).length
+          ? props.chartOptions
+          : option;
+        console.log(theme, balances);
+        for (let idx = 0; idx < balances.length; idx++) {
+          const balnce = balances[idx];
+          if (
+            props.transactionTypes &&
+            !props.transactionTypes.includes(balnce.transactionType)
+          ) {
+            continue;
           }
-        );
+          const transactionTypeTheme =
+            theme.transactionTypes[balnce.transactionType];
+          let colorForTransactionType;
 
-        option.legend.data = legends;
-        option.xAxis.data = allDate;
-        option.series = series;
+          if (transactionTypeTheme) {
+            colorForTransactionType = transactionTypeTheme.chart.color;
+          }
 
-        setChartOption(option);
-        setLoading(false);
+          if (!colorForTransactionType) {
+            colorForTransactionType = makeRandomColor();
+          }
+
+          chartColors.push(colorForTransactionType);
+
+          if (props.amountType === "amount") {
+            chartData.push({
+              value: Math.abs(balnce.amount),
+              name: balnce.transactionType,
+            });
+          }
+          if (props.amountType === "virtual") {
+            chartData.push({
+              value: Math.abs(balnce.virtualValue),
+              name: balnce.transactionType,
+            });
+          }
+        }
+
+        chartOptions.series[0].data = chartData;
+        chartOptions.series[0].color = chartColors;
+
+        setChartOption(chartOptions);
       }
+      setLoading(false);
     };
-    fetchData();
-  }, [
-    props.userId,
-    props.reportKey,
-    props.currency,
-    props.startDate,
-    props.endDate,
-  ]);
+    if ((props.userId, props.currency, props.amountType)) {
+      fetchData();
+    }
+  }, [props.userId, props.currency, props.amountType, props.themeConfig]);
 
-  //   const uniqueArray = names?.filter((value, index) => {
-  //     return names?.indexOf(value) === index;
-  //   });
-  //   const newObjects = uniqueArray.map((item) => {
-  //     const aArrays = [
-  //       `${balance.map((ea) => {
-  //         if (ea[item]) {
-  //           return Math.abs(parseFloat(ea[item]));
-  //         } else if (ea[item] === undefined) {
-  //           return 0;
-  //         }
-  //       })}`,
-  //     ];
-  //     const strArray = aArrays[0].split(",");
-  //     const numArray = strArray
-  //       .filter((str) => str !== "")
-  //       .map((str) => Number(str));
-  //     const singleObject = {
-  //       name: item,
-  //       type: "line",
-  //       data: numArray,
-  //     };
-  //     return singleObject;
-  //   });
-
+  // console.log(balance)
   return (
     <>
       {/* {loading && <h1>Loading</h1>} */}
-      {props.showRaw ? (
+      {props?.showRaw ? (
         <>
-          <div className="card">
-            <SyntaxHighlighter language="javascript" style={docco}>
-              {JSON.stringify(rawData, null, 2)}
-            </SyntaxHighlighter>
-          </div>
+          {rawData?.map((item) => (
+            <>
+              <div className="card">
+                <SyntaxHighlighter language="javascript" style={docco}>
+                  {JSON.stringify(item, null, 2)}
+                </SyntaxHighlighter>
+              </div>
+            </>
+          ))}
         </>
       ) : (
-        <>
+        <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
             <ReactEChartsCore
               echarts={echarts}
-              option={option}
+              option={chartOption}
               notMerge={true}
               lazyUpdate={true}
             />
           )}
-        </>
+        </div>
       )}
     </>
   );
 };
-export default BalancesReportChart;
+export default BalancesChart;
