@@ -100,7 +100,7 @@ const group  = props.group as Group || "daily";
         true,
       );
       if (balanceReport) {
-        const items = balanceReport.rows;
+        const items = balanceReport;
         setRawData(items);
         const theme = getTheme();
 
