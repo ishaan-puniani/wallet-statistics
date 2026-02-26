@@ -5,43 +5,62 @@ import { API_HOST } from "../../constants";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import ThemedSpan from "../components/ThemedSpan";
+import { _fetchGetBalances } from "../services/balances";
+import moment from "moment";
+import { Group } from "../Reports/utils/utils";
 
 export interface Payers {
   userId: string;
   currency: string;
   credentials: any;
   showRaw: boolean;
+  startDate: Date;
+  endDate: Date;
+  group: string;
 }
 
 function roundToTwo(num: number) {
-  return Math.abs(num||0).toFixed(2);
+  return Math.abs(num || 0).toFixed(2);
 }
 
 console.log(roundToTwo(3.394792));
 const PayerTransaction = (props: Payers) => {
   const [loading, setLoading] = useState(false);
   const [payerData, setPayerData] = useState<any>();
+  const group = (props.group as Group) || "monthly";
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const fetchBalance = await axios.post(
-        `${props.credentials.API_HOST || API_HOST}/tenant/${props.credentials.application_id}/get-transaction-profile-by-identifier-for-currency/${props.userId}/${props.currency}`,
-        {
-          ...props.credentials,
-        }
+
+      const balances = await _fetchGetBalances(
+        props.credentials,
+        props.userId,
+        props.currency,
+        moment(props.startDate).format("YYYY-MM-DD"),
+        moment(props.endDate).format("YYYY-MM-DD"),
+        group,
+        false,
+        true,
       );
-      if (fetchBalance.data) {
-        const items = fetchBalance.data;
-        setPayerData(items);
+
+      if (balances) {
+        const balance = balances[0];
+        setPayerData(balance);
       }
       setLoading(false);
     };
     fetchData();
-  }, [props.userId, props.currency]);
+  }, [
+    props.userId,
+    props.currency,
+    props.group,
+    props.startDate,
+    props.endDate,
+  ]);
   // TransactionTypesAmount
-  const transactionAmounts = payerData?.transactionTypesAmount;
+  const transactionAmounts = payerData?.totalAmounts;
   // TransactionTypesVirtualValues
-  const transactionVirtualValues = payerData?.transactionTypesVirtualValue;
+  const transactionVirtualValues = payerData?.totalVirtualValues;
   // console.log(payerData)
   return (
     <>
@@ -84,7 +103,8 @@ const PayerTransaction = (props: Payers) => {
               </p> */}
               <p>
                 <strong>Transaction Types Amount</strong>
-                {transactionAmounts !== null && typeof transactionAmounts === "object"
+                {transactionAmounts !== null &&
+                typeof transactionAmounts === "object"
                   ? Object.keys(transactionAmounts).map((amountKey) => (
                       <div className="transaction-container">
                         <img
@@ -93,8 +113,14 @@ const PayerTransaction = (props: Payers) => {
                           alt=""
                         />{" "}
                         <p>
-                          <strong className="transaction-title">{amountKey}</strong>:{" "}
-                          <ThemedSpan type={"transactionTypes"} value={roundToTwo(transactionAmounts[amountKey])} />
+                          <strong className="transaction-title">
+                            {amountKey}
+                          </strong>
+                          :{" "}
+                          <ThemedSpan
+                            type={"transactionTypes"}
+                            value={roundToTwo(transactionAmounts[amountKey])}
+                          />
                         </p>
                       </div>
                     ))
@@ -105,19 +131,29 @@ const PayerTransaction = (props: Payers) => {
                 <strong>Transaction Virtual Values</strong>
                 {transactionVirtualValues !== null &&
                 typeof transactionVirtualValues === "object"
-                  ? Object.keys(transactionVirtualValues).map((virtualValueKey) => (
-                      <div className="transaction-container">
-                        <img
-                          className="transaction-image"
-                          src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
-                          alt=""
-                        />
-                        <p>
-                          <strong className="transaction-title">{virtualValueKey}</strong>:{" "}
-                          <ThemedSpan type={"transactionTypes"} value={roundToTwo(transactionVirtualValues[virtualValueKey])} />
-                        </p>
-                      </div>
-                    ))
+                  ? Object.keys(transactionVirtualValues).map(
+                      (virtualValueKey) => (
+                        <div className="transaction-container">
+                          <img
+                            className="transaction-image"
+                            src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
+                            alt=""
+                          />
+                          <p>
+                            <strong className="transaction-title">
+                              {virtualValueKey}
+                            </strong>
+                            :{" "}
+                            <ThemedSpan
+                              type={"transactionTypes"}
+                              value={roundToTwo(
+                                transactionVirtualValues[virtualValueKey],
+                              )}
+                            />
+                          </p>
+                        </div>
+                      ),
+                    )
                   : "Not valid"}
               </p>
               {/* {
