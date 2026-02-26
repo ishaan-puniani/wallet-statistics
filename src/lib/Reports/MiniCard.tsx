@@ -148,6 +148,22 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
       (previousTransaction === 0 ? 1 : previousTransaction)) *
     100;
 
+  const formatCurrencyValue = (val: number, currency?: string) => {
+    const num = Number(val) || 0;
+    if (!currency) {
+      return num.toLocaleString("en-IN", { maximumFractionDigits: 2 });
+    }
+    try {
+      return num.toLocaleString("en-IN", {
+        maximumFractionDigits: 2,
+        style: "currency",
+        currency,
+      });
+    } catch (e) {
+      return `${currency} ${num.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+    }
+  };
+
   return (
     <Wrapper>
       <div className="transaction-type-card">
@@ -161,11 +177,7 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
             ) : props.isTransaction ? (
               transaction
             ) : (
-              Number(amount).toLocaleString("en-IN", {
-                maximumFractionDigits: 2,
-                style: "currency",
-                currency: "INR",
-              })
+              formatCurrencyValue(amount, props.currency ?? "INR")
             )}
           </div>
 
@@ -198,11 +210,7 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
                 ) : props.isTransaction ? (
                   previousTransaction
                 ) : (
-                  Number(preAmount).toLocaleString("en-IN", {
-                    maximumFractionDigits: 2,
-                    style: "currency",
-                    currency: props.currency ?? "INR",
-                  }) ?? 0
+                  formatCurrencyValue(preAmount, props.currency ?? "INR")
                 )}
               </div>
               <div className="previous__title">
