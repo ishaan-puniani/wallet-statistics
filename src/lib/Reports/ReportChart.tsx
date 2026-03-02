@@ -72,6 +72,7 @@ export interface IPartnerBalancesPieChartProps {
   setChartLoading?: any;
   absolute?: boolean;
   volume?: "group" | "total";
+  isTransaction?: boolean;
 }
 
 const option: any = {
@@ -275,8 +276,11 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         valueSign?: string,
       ) => {
         const prefix = volume === "group" ? "grouped" : "total";
-        const suffix =
-          props.amountType === "virtual" ? "VirtualValues" : "Amounts";
+        const suffix = props.isTransaction
+          ? "Transactions"
+          : props.amountType === "virtual"
+          ? "VirtualValues"
+          : "Amounts";
         const container = row?.[`${prefix}${suffix}`];
         let val = Math.abs(container?.[transactionKey] ?? 0);
         if (valueSign === "negative") {
