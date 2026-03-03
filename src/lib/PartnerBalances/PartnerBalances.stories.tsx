@@ -57,6 +57,7 @@ PartnerBalanceChart.args = {
   chartOptions: {},
   showList: false,
   amountType: "amount",
+  transactionTypes:[]
   // transactionTypes: ["MINT", "MINT_BURN"]
 };
 export const PartnerBalanceReport = TemplateTwo.bind({});

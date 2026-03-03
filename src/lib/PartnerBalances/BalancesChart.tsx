@@ -121,7 +121,14 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
       );
 
       if (balances) {
-        setRawData(balances);
+        const filteredBalances =
+          props.transactionTypes && props.transactionTypes.length
+            ? balances.filter((balance: { transactionType: string; }) =>
+                props.transactionTypes.includes(balance.transactionType),
+              )
+            : balances;
+
+        setRawData(filteredBalances);
         const chartData = [],
           chartColors = [];
 
@@ -131,15 +138,9 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         chartOptions = Object.keys(props.chartOptions).length
           ? props.chartOptions
           : option;
-        console.log(theme, balances);
-        for (let idx = 0; idx < balances.length; idx++) {
-          const balnce = balances[idx];
-          if (
-            props.transactionTypes &&
-            !props.transactionTypes.includes(balnce.transactionType)
-          ) {
-            continue;
-          }
+        console.log(theme, filteredBalances);
+        for (let idx = 0; idx < filteredBalances.length; idx++) {
+          const balnce = filteredBalances[idx];
           const transactionTypeTheme =
             theme.transactionTypes[balnce.transactionType];
           let colorForTransactionType;
@@ -178,7 +179,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
     if ((props.userId, props.currency, props.amountType)) {
       fetchData();
     }
-  }, [props.userId, props.currency, props.amountType, props.themeConfig]);
+  }, [props.userId, props.currency, props.amountType, props.themeConfig,props.transactionTypes]);
 
   // console.log(balance)
   if (loading) {
