@@ -20,10 +20,12 @@ import {
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { _fetchBalance } from "../services/balances";
+import { _fetchBalance, _fetchGetBalances } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
 import Loader from "../Reports/Loader";
 import styled from "styled-components";
+import moment from "moment";
+import { Group } from "../Reports/utils/utils";
 
 // Register the required components only in browser environment
 if (typeof window !== "undefined" && typeof document !== "undefined") {
@@ -45,7 +47,13 @@ export interface IPartnerBalancesPieChartProps {
   amountType: "amount" | "virtual";
   showRaw?: boolean;
   transactionTypes?: string[];
-  showList?: boolean;
+  showList: boolean;
+  startDate: Date;
+  endDate: Date;
+  group: Group;
+  includePrevious: boolean;
+  includeToday: boolean;
+  volume: string;
   /*
   {
 "FOOD": {
@@ -109,43 +117,62 @@ const option: any = {
 const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
-  const [rawData, setRawData] = useState([]);
+  const [rawData, setRawData] = useState<any[]>([]);
+  const group = (props.group as Group) || "monthly";
+  const includeToday = props.includeToday || true;
+  const includePrevious = props.includePrevious || true;
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const balances = await _fetchBalance(
+      const balances = await _fetchGetBalances(
         props.credentials,
         props.userId,
         props.currency,
+        moment(props.startDate).format("YYYY-MM-DD"),
+        moment(props.endDate).format("YYYY-MM-DD"),
+        group,
+        includePrevious,
+        includeToday
       );
 
-      if (balances) {
-        const filteredBalances =
-          props.transactionTypes && props.transactionTypes.length
-            ? balances.filter((balance: { transactionType: string; }) =>
-                props.transactionTypes.includes(balance.transactionType),
-              )
-            : balances;
+      if (Array.isArray(balances) && balances.length) {
+        const latestBalance = balances[balances.length - 1];
+        const amountKey =
+          props.amountType === "virtual" ? "totalVirtualValues" : "totalAmounts";
+        const totalAmounts: Record<string, number> =
+          (latestBalance && latestBalance[amountKey]) || {};
 
-        setRawData(filteredBalances);
-        const chartData = [],
-          chartColors = [];
+        const entries = Object.entries(totalAmounts);
+        const filteredEntries =
+          props.transactionTypes && props.transactionTypes.length
+            ? entries.filter(([transactionType]) =>
+                props.transactionTypes!.includes(transactionType)
+              )
+            : entries;
+
+        setRawData(filteredEntries);
+
+        const chartData: { value: number; name: string }[] = [];
+        const chartColors: string[] = [];
 
         const theme = getTheme() || {};
         theme.transactionTypes = props.themeConfig || theme.transactionTypes;
-        let chartOptions;
-        chartOptions = Object.keys(props.chartOptions).length
-          ? props.chartOptions
-          : option;
-        console.log(theme, filteredBalances);
-        for (let idx = 0; idx < filteredBalances.length; idx++) {
-          const balnce = filteredBalances[idx];
-          const transactionTypeTheme =
-            theme.transactionTypes[balnce.transactionType];
+
+        const chartOptions =
+          Object.keys(props.chartOptions).length > 0
+            ? props.chartOptions
+            : option;
+
+        for (let idx = 0; idx < filteredEntries.length; idx++) {
+          const [transactionType, value] = filteredEntries[idx];
+          const transactionTypeTheme = theme.transactionTypes
+            ? theme.transactionTypes[transactionType]
+            : undefined;
+
           let colorForTransactionType;
 
-          if (transactionTypeTheme) {
+          if (transactionTypeTheme && transactionTypeTheme.chart) {
             colorForTransactionType = transactionTypeTheme.chart.color;
           }
 
@@ -155,32 +182,38 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
 
           chartColors.push(colorForTransactionType);
 
-          if (props.amountType === "amount") {
-            chartData.push({
-              value: Math.abs(balnce.amount),
-              name: balnce.transactionType,
-            });
-          }
-          if (props.amountType === "virtual") {
-            chartData.push({
-              value: Math.abs(balnce.virtualValue),
-              name: balnce.transactionType,
-            });
-          }
+          chartData.push({
+            value: Math.abs(Number(value) || 0),
+            name: transactionType,
+          });
         }
 
         chartOptions.series[0].data = chartData;
         chartOptions.series[0].color = chartColors;
 
         setChartOption(chartOptions);
+      } else {
+        setRawData([]);
+        setChartOption(undefined);
       }
       setLoading(false);
     };
-    if ((props.userId, props.currency, props.amountType)) {
+
+    if (props.userId && props.currency && props.amountType) {
       fetchData();
     }
-  }, [props.userId, props.currency, props.amountType, props.themeConfig,props.transactionTypes]);
-
+  }, [
+    props.userId,
+    props.currency,
+    props.amountType,
+    props.themeConfig,
+    props.transactionTypes,
+    props.startDate,
+    props.endDate,
+    props.includePrevious,
+    includeToday,
+    group,
+  ]);
   // console.log(balance)
   if (loading) {
     return (
@@ -208,20 +241,16 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
       ) : props.showList ? (
         <PartnerBalancesWrapper>
           <div className="balance-Wrapper">
-            {rawData.map((record) => (
-              <div className="balance-card">
+            {rawData.map(([transactionType, value]) => (
+              <div className="balance-card" key={transactionType}>
                 <div>
                   <img
                     src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
                     alt=""
                   />
-                  <p> {record.transactionType.slice(0, 17)}</p>
+                  <p>{String(transactionType).slice(0, 17)}</p>
                 </div>
-                <p>
-                  {props.amountType === "amount"
-                    ? parseFloat(record.amount).toFixed(2)
-                    : parseFloat(record.virtualValue).toFixed(2)}
-                </p>
+                <p>{Number(value).toFixed(2)}</p>
               </div>
             ))}
           </div>
@@ -283,7 +312,7 @@ const PartnerBalancesWrapper = styled.div`
     height: 30px;
     margin-right: 10px;
   }
-  .balance-card > div > p {
+  .balance-card > p {
     margin-top: auto;
     margin-bottom: auto;
   }

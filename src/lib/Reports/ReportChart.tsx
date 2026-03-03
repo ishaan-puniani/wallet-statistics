@@ -50,6 +50,7 @@ const transactionType = [
     label: "Amount",
     transactionType: "AMOUNT",
     valueSign: "negative",
+    color:'#000000'
   },
 ];
 
@@ -213,7 +214,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
   const [rawData, setRawData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [group, setGroup] = useState<Group>(
-    (props.group as Group) || "monthly",
+    (props.group as Group) || "monthly"
   );
   const volume = props.volume || "group";
   const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
@@ -249,7 +250,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
         moment(props.endDate).format("YYYY-MM-DD"),
         group,
         includePrevious,
-        includeToday,
+        includeToday
       );
 
       setRawData(balances);
@@ -273,7 +274,7 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
       const getRowValue = (
         row: any,
         transactionKey: string,
-        valueSign?: string,
+        valueSign?: string
       ) => {
         const prefix = volume === "group" ? "grouped" : "total";
         const suffix = props.isTransaction
@@ -296,12 +297,10 @@ const ReportChart = (props: IPartnerBalancesPieChartProps) => {
             name: dataType.label,
             type: chartType,
             data: balances.map((row: any) =>
-              getRowValue(row, dataType?.transactionType, dataType?.valueSign),
+              getRowValue(row, dataType?.transactionType, dataType?.valueSign)
             ),
             itemStyle: {
-              color:
-                (themeConfig && themeConfig[dataType?.label]) ||
-                makeRandomColor(),
+              color: dataType?.color || makeRandomColor(),
             },
             smooth: true,
             symbol: "none",
