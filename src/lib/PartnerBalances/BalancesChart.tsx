@@ -53,7 +53,8 @@ export interface IPartnerBalancesPieChartProps {
   group: Group;
   includePrevious: boolean;
   includeToday: boolean;
-  volume: string;
+  volume?: "total" | "group";
+  isTransaction?: boolean;
   /*
   {
 "FOOD": {
@@ -121,7 +122,17 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   const group = (props.group as Group) || "monthly";
   const includeToday = props.includeToday || true;
   const includePrevious = props.includePrevious || true;
+  const volume: "total" | "group" = props.volume || "group";
+  const isTransaction = props.isTransaction || false;
 
+  const getAmountKey = (
+    vol: "group" | "total" = volume,
+    amountType: "amount" | "virtual" = props.amountType ?? "amount"
+  ) => {
+    const prefix = vol === "group" ? "grouped" : "total";
+    const suffix = amountType === "virtual" ? "VirtualValues" : "Amounts";
+    return `${prefix}${suffix}`;
+  };
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -138,12 +149,20 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
 
       if (Array.isArray(balances) && balances.length) {
         const latestBalance = balances[balances.length - 1];
-        const amountKey =
-          props.amountType === "virtual" ? "totalVirtualValues" : "totalAmounts";
-        const totalAmounts: Record<string, number> =
-          (latestBalance && latestBalance[amountKey]) || {};
+        let sourceRecord: Record<string, number> = {};
 
-        const entries = Object.entries(totalAmounts);
+        if (isTransaction) {
+          const transactionKey =
+            volume === "group" ? "groupedTransactions" : "totalTransactions";
+          sourceRecord =
+            (latestBalance && latestBalance[transactionKey]) || {};
+        } else {
+          const amountKey = getAmountKey(volume, props.amountType);
+          sourceRecord =
+            (latestBalance && latestBalance[amountKey]) || {};
+        }
+
+        const entries = Object.entries(sourceRecord);
         const filteredEntries =
           props.transactionTypes && props.transactionTypes.length
             ? entries.filter(([transactionType]) =>
@@ -211,6 +230,9 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
     props.startDate,
     props.endDate,
     props.includePrevious,
+    props.isTransaction,
+    isTransaction,
+    volume,
     includeToday,
     group,
   ]);
