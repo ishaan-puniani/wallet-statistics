@@ -22,9 +22,11 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { _fetchBalance } from "../services/balances";
 import { getTheme, makeRandomColor } from "../../utilities/theme";
+import Loader from "../Reports/Loader";
+import styled from "styled-components";
 
 // Register the required components only in browser environment
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+if (typeof window !== "undefined" && typeof document !== "undefined") {
   echarts.use([
     TitleComponent,
     TooltipComponent,
@@ -43,6 +45,7 @@ export interface IPartnerBalancesPieChartProps {
   amountType: "amount" | "virtual";
   showRaw?: boolean;
   transactionTypes?: string[];
+  showList?: boolean;
   /*
   {
 "FOOD": {
@@ -114,7 +117,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
       const balances = await _fetchBalance(
         props.credentials,
         props.userId,
-        props.currency
+        props.currency,
       );
 
       if (balances) {
@@ -178,9 +181,17 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   }, [props.userId, props.currency, props.amountType, props.themeConfig]);
 
   // console.log(balance)
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <Loader />
+        </div>
+      </Wrapper>
+    );
+  }
   return (
     <>
-      {/* {loading && <h1>Loading</h1>} */}
       {props?.showRaw ? (
         <>
           {rawData?.map((item) => (
@@ -193,6 +204,27 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
             </>
           ))}
         </>
+      ) : props.showList ? (
+        <PartnerBalancesWrapper>
+          <div className="balance-Wrapper">
+            {rawData.map((record) => (
+              <div className="balance-card">
+                <div>
+                  <img
+                    src="https://static.vecteezy.com/system/resources/previews/007/391/302/original/account-balance-flat-design-long-shadow-glyph-icon-payment-banking-wallet-with-credit-card-silhouette-illustration-vector.jpg"
+                    alt=""
+                  />
+                  <p> {record.transactionType.slice(0, 17)}</p>
+                </div>
+                <p>
+                  {props.amountType === "amount"
+                    ? parseFloat(record.amount).toFixed(2)
+                    : parseFloat(record.virtualValue).toFixed(2)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </PartnerBalancesWrapper>
       ) : (
         <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
@@ -208,4 +240,59 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
     </>
   );
 };
+const PartnerBalancesWrapper = styled.div`
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .card {
+    max-width: 350px;
+    padding: 15px;
+    width: 100%;
+    margin: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+  }
+
+  .card-content {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+  }
+  .balance-Wrapper {
+    max-width: 350px;
+    padding: 15px;
+    width: 100%;
+    line-height: 0;
+    border: 1px solid rgb(250, 247, 247);
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px 1px rgb(214, 213, 213);
+  }
+  .balance-card {
+    display: flex;
+    justify-content: space-between;
+  }
+  .balance-card > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+  }
+  .balance-card > div > img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  .balance-card > div > p {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+`;
+const Wrapper = styled.div`
+  .loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
 export default BalancesChart;
