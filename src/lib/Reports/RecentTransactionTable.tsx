@@ -39,11 +39,20 @@ export interface IRecentTransactionTable {
   routePage?: () => void;
   // eslint-disable-next-line no-unused-vars
   handleTransactionTypeDetails?: (id: string) => void;
+  columns?: string[];
 }
 
 const RecentTransactionTable = (props: IRecentTransactionTable) => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const shouldShowColumn = (columnKey: string) => {
+    return (
+      !props.columns ||
+      props.columns.length === 0 ||
+      props.columns.includes(columnKey)
+    );
+  };
   useEffect(() => {
     const getTransactions = async () => {
       setLoading(true);
@@ -84,13 +93,15 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
       <div style={{ overflowX: "auto" }}>
         <table className="table">
           <tr className="table-heading">
-            <th>Created At</th>
-            <th>Partner Id</th>
-            <th>TransactionType</th>
-            <th>Amount</th>
-            <th className="reference">Reference</th>
-            <th>On Behalf Of Id</th>
-            <th className="remark">Remark</th>
+            {shouldShowColumn("createdAt") && <th>Created At</th>}
+            {shouldShowColumn("partnerId") && <th>Partner Id</th>}
+            {shouldShowColumn("transactionType") && <th>TransactionType</th>}
+            {shouldShowColumn("amount") && <th>Amount</th>}
+            {shouldShowColumn("reference") && (
+              <th className="reference">Reference</th>
+            )}
+            {shouldShowColumn("onBehalfOfId") && <th>On Behalf Of Id</th>}
+            {shouldShowColumn("remark") && <th className="remark">Remark</th>}
           </tr>
 
           {loading && (
@@ -107,28 +118,46 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
           {rows.map((row) => {
             return (
               <tr className="table-data">
-                <td>{moment(row?.createdAt).format("DD-MM-YYYY HH:MM")}</td>
-                <td>{getPartnerId(row?.payerId, row?.payeeId)}</td>
-                <td
-                  className="table-data__transactionType"
-                  onClick={() =>
-                    props.handleTransactionTypeDetails
-                      ? props.handleTransactionTypeDetails(
-                          row?.transactionTypeDetail?.id
-                        )
-                      : null
-                  }
-                >
-                  {row?.transactionTypeDetail?.name}
-                </td>
-                <td
-                  className={row?.isCredit > 0 ? "amount-plus" : "amount-minus"}
-                >
-                  {row?.isCredit > 0 ? `+ ${row?.amount}` : `- ${row?.amount}`}
-                </td>
-                <td>{row?.reference}</td>
-                <td>{row?.onBehalfOfId}</td>
-                <td>{row?.remark ? "Yes" : "No"}</td>
+                {shouldShowColumn("createdAt") && (
+                  <td>
+                    {moment(row?.createdAt).format("DD-MM-YYYY HH:MM")}
+                  </td>
+                )}
+                {shouldShowColumn("partnerId") && (
+                  <td>{getPartnerId(row?.payerId, row?.payeeId)}</td>
+                )}
+                {shouldShowColumn("transactionType") && (
+                  <td
+                    className="table-data__transactionType"
+                    onClick={() =>
+                      props.handleTransactionTypeDetails
+                        ? props.handleTransactionTypeDetails(
+                            row?.transactionTypeDetail?.id
+                          )
+                        : null
+                    }
+                  >
+                    {row?.transactionTypeDetail?.name}
+                  </td>
+                )}
+                {shouldShowColumn("amount") && (
+                  <td
+                    className={
+                      row?.isCredit > 0 ? "amount-plus" : "amount-minus"
+                    }
+                  >
+                    {row?.isCredit > 0
+                      ? `+ ${row?.amount}`
+                      : `- ${row?.amount}`}
+                  </td>
+                )}
+                {shouldShowColumn("reference") && <td>{row?.reference}</td>}
+                {shouldShowColumn("onBehalfOfId") && (
+                  <td>{row?.onBehalfOfId}</td>
+                )}
+                {shouldShowColumn("remark") && (
+                  <td>{row?.remark ? "Yes" : "No"}</td>
+                )}
               </tr>
             );
           })}

@@ -152,6 +152,7 @@ RecentTransactionTableView.args = {
   userId: "",
   currency: "",
   limit: "10",
+  columns:[]
 };
 
 export const MiniTransactionCard = TemplateThree.bind({});
