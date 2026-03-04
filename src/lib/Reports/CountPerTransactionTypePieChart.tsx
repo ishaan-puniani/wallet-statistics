@@ -53,6 +53,7 @@ export interface ICountPerTransactionTypePieChart {
   showRaw?: boolean;
   group?: Group;
   supportedGrouping?: Group[];
+  transactionTypes?: string[]
 }
 
 const option: any = {
@@ -115,7 +116,14 @@ const CountPerTransactionTypePieChart = (
         transactionsCount?.countPerType &&
         Object.keys(transactionsCount?.countPerType);
       if (countPerType?.length) {
-        chartData = countPerType?.map((type: any) => {
+        const filteredTypes =
+          props.transactionTypes && props.transactionTypes.length > 0
+            ? countPerType.filter((type: any) =>
+                props.transactionTypes?.includes(type),
+              )
+            : countPerType;
+
+        chartData = filteredTypes?.map((type: any) => {
           return {
             name: type,
             value: transactionsCount?.countPerType?.[type],
@@ -128,7 +136,7 @@ const CountPerTransactionTypePieChart = (
     };
 
     fetchData();
-  }, [props.credentials, group]);
+  }, [props.credentials, group, props.transactionTypes]);
 
   if (loading) {
     return (

@@ -210,6 +210,7 @@ export const CountPerTransactionTypePie = TemplateNine.bind({});
 CountPerTransactionTypePie.args = {
   credentials: getServiceAccountCredentials() || {},
   showRaw: false,
+  transactionTypes:[]
 };
 
 export const PartnerCount = TemplateTen.bind({});
