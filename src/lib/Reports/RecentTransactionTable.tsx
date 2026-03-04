@@ -156,7 +156,7 @@ const RecentTransactionTable = (props: IRecentTransactionTable) => {
                   <td>{row?.onBehalfOfId}</td>
                 )}
                 {shouldShowColumn("remark") && (
-                  <td>{row?.remark ? "Yes" : "No"}</td>
+                  <td>{row?.remark ?? ""}</td>
                 )}
               </tr>
             );
