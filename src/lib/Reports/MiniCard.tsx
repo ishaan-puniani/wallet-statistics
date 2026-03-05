@@ -101,23 +101,23 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
               ]?.[transactionType] ?? 0,
             );
             const key = getAmountKey(volume, props.amountType);
-            // Need to confirm if we should take absolute value here as well, since for debit/credit it can be negative and affect percent change calculation
-            const preVal =balances[0]?.[key]?.[transactionType] ?? 0;
+            const preVal = balance?.[key]?.[transactionType] ?? 0;
             setPreAmount(preVal);
           }
         });
       } else if (balances.length === 1) {
-        setTransaction(0);
-        setPreviousTransaction(
-          balances[0][
+        const key = getAmountKey(volume, props.amountType);
+        const currentBalance = balances[0];
+        setTransaction(
+          currentBalance[
             volume === "group" ? "groupedTransactions" : "totalTransactions"
           ]?.[transactionType] ?? 0,
         );
-        setAmount(0);
-        const key = getAmountKey(volume, props.amountType);
-        // Need to confirm if we should take absolute value here as well, since for debit/credit it can be negative and affect percent change calculation
-        const preVal =balances[0]?.[key]?.[transactionType] ?? 0;
-        setPreAmount(preVal);
+        setPreviousTransaction(0);
+        const currentVal =
+          Math.abs(currentBalance?.[key]?.[transactionType] ?? 0);
+        setAmount(currentVal);
+        setPreAmount(0);
       } else {
         setTransaction(0);
         setPreviousTransaction(0);
