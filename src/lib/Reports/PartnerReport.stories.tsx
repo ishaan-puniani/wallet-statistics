@@ -27,9 +27,7 @@ export default {
   parameters: {
     layout: "fullscreen",
   },
-  args: {
-    supportedGrouping: ["monthly"],
-  },
+
   argTypes: {
     supportedGrouping: {
       control: { type: "inline-check" },
@@ -152,7 +150,7 @@ RecentTransactionTableView.args = {
   userId: "",
   currency: "",
   limit: "10",
-  columns:[]
+  columns: []
 };
 
 export const MiniTransactionCard = TemplateThree.bind({});
@@ -210,7 +208,7 @@ export const CountPerTransactionTypePie = TemplateNine.bind({});
 CountPerTransactionTypePie.args = {
   credentials: getServiceAccountCredentials() || {},
   showRaw: false,
-  transactionTypes:[]
+  transactionTypes: []
 };
 
 export const PartnerCount = TemplateTen.bind({});
