@@ -123,8 +123,8 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   const [rawData, setRawData] = useState<any[]>([]);
   const [group, setGroup] = useState<Group>(
     (props.group as Group) || "monthly"
-  ); const includeToday = props.includeToday || true;
-  const includePrevious = props.includePrevious || true;
+  ); const includeToday = props.includeToday ?? false;
+  const includePrevious = props.includePrevious ?? false;
   const volume: "total" | "group" = props.volume || "group";
   const isTransaction = props.isTransaction || false;
   const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
@@ -138,6 +138,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
     return `${prefix}${suffix}`;
   };
   useEffect(() => {
+    console.log("Fetching balances with props:", props);
     const fetchData = async () => {
       setLoading(true);
       const balances = await _fetchGetBalances(
