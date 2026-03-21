@@ -26,6 +26,7 @@ import Loader from "../Reports/Loader";
 import styled from "styled-components";
 import moment from "moment";
 import { Group } from "../Reports/utils/utils";
+import PeriodToogle from "../Reports/utils/PeriodToogle";
 
 // Register the required components only in browser environment
 if (typeof window !== "undefined" && typeof document !== "undefined") {
@@ -55,6 +56,7 @@ export interface IPartnerBalancesPieChartProps {
   includeToday: boolean;
   volume?: "total" | "group";
   isTransaction?: boolean;
+  supportedGrouping?: Group[];
   /*
   {
 "FOOD": {
@@ -119,11 +121,13 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState<any[]>([]);
-  const group = (props.group as Group) || "monthly";
-  const includeToday = props.includeToday || true;
+  const [group, setGroup] = useState<Group>(
+    (props.group as Group) || "monthly"
+  ); const includeToday = props.includeToday || true;
   const includePrevious = props.includePrevious || true;
   const volume: "total" | "group" = props.volume || "group";
   const isTransaction = props.isTransaction || false;
+  const supportedGrouping = props?.supportedGrouping ?? ["monthly"];
 
   const getAmountKey = (
     vol: "group" | "total" = volume,
@@ -166,8 +170,8 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         const filteredEntries =
           props.transactionTypes && props.transactionTypes.length
             ? entries.filter(([transactionType]) =>
-                props.transactionTypes!.includes(transactionType)
-              )
+              props.transactionTypes!.includes(transactionType)
+            )
             : entries;
 
         setRawData(filteredEntries);
@@ -237,6 +241,10 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
     group,
   ]);
   // console.log(balance)
+
+  const groupHandler = (group: Group) => {
+    setGroup(group);
+  };
   if (loading) {
     return (
       <Wrapper>
@@ -280,12 +288,19 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
       ) : (
         <div style={{ marginTop: "20px", height: "100%" }}>
           {!loading && chartOption && (
-            <ReactEChartsCore
-              echarts={echarts}
-              option={chartOption}
-              notMerge={true}
-              lazyUpdate={true}
-            />
+            <>
+              <PeriodToogle
+                group={group}
+                groupHandler={groupHandler}
+                supportedGrouping={supportedGrouping}
+              />
+              <ReactEChartsCore
+                echarts={echarts}
+                option={chartOption}
+                notMerge={true}
+                lazyUpdate={true}
+              />
+            </>
           )}
         </div>
       )}
