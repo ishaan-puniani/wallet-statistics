@@ -101,7 +101,7 @@ const MiniCard = (props: IMiniTransactionTypeCard) => {
               ]?.[transactionType] ?? 0,
             );
             const key = getAmountKey(volume, props.amountType);
-            const preVal = balance?.[key]?.[transactionType] ?? 0;
+            const preVal = Math.abs(balance?.[key]?.[transactionType] ?? 0);
             setPreAmount(preVal);
           }
         });
