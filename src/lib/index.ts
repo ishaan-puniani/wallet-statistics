@@ -26,17 +26,23 @@ import {
   _renderRecentTransactionTable,
   _renderMiniCard,
   _renderTransactionCount,
-  _renderTransactionCountLineChart,
-  _renderCountPerTransactionTypePieChart,
+  // NOT USED — deprecated, widget not in fe-wallet-and-bonus WidgetGallery
+  // _renderTransactionCountLineChart,
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // _renderCountPerTransactionTypePieChart,
   _renderPartnersCount,
-  _renderUserAchievementsCount,
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // _renderUserAchievementsCount,
   _renderUserAchievementsLogsCount,
-  _renderPartnersCountLineChart,
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // _renderPartnersCountLineChart,
   _renderUserAchievementsCountLineChart,
   _renderUserAchievementsLogsCountLineChart,
   _renderCountPerPartnerTypePieChart,
-  _renderCountPerAchievementsTypePieChart,
-  _renderCountPerAchievementsLogsTypePieChart,
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // _renderCountPerAchievementsTypePieChart,
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // _renderCountPerAchievementsLogsTypePieChart,
 } from "./Reports";
 import {
   _renderPartnerHeirarchyChart,
@@ -199,24 +205,28 @@ class WalletStatistics {
   renderTransactionCount = (container: any, props: any) => {
     _renderTransactionCount(container, props);
   };
-  renderTransactionCountLineChart = (container: any, props: any) => {
-    _renderTransactionCountLineChart(container, props);
-  };
-  renderCountPerTransactionTypePieChart = (container: any, props: any) => {
-    _renderCountPerTransactionTypePieChart(container, props);
-  };
+  // NOT USED — deprecated, widget not in fe-wallet-and-bonus WidgetGallery
+  // renderTransactionCountLineChart = (container: any, props: any) => {
+  //   _renderTransactionCountLineChart(container, props);
+  // };
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // renderCountPerTransactionTypePieChart = (container: any, props: any) => {
+  //   _renderCountPerTransactionTypePieChart(container, props);
+  // };
   renderPartnersCount = (container: any, props: any) => {
     _renderPartnersCount(container, props);
   };
-  renderUserAchievementsCount = (container: any, props: any) => {
-    _renderUserAchievementsCount(container, props);
-  };
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // renderUserAchievementsCount = (container: any, props: any) => {
+  //   _renderUserAchievementsCount(container, props);
+  // };
   renderUserAchievementsLogsCount = (container: any, props: any) => {
     _renderUserAchievementsLogsCount(container, props);
   };
-  renderPartnersCountLineChart = (container: any, props: any) => {
-    _renderPartnersCountLineChart(container, props);
-  };
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // renderPartnersCountLineChart = (container: any, props: any) => {
+  //   _renderPartnersCountLineChart(container, props);
+  // };
   renderUserAchievementsCountLineChart = (container: any, props: any) => {
     _renderUserAchievementsCountLineChart(container, props);
   };
@@ -226,12 +236,14 @@ class WalletStatistics {
   renderCountPerPartnerTypePieChart = (container: any, props: any) => {
     _renderCountPerPartnerTypePieChart(container, props);
   };
-  renderCountPerAchievementsTypePieChart = (container: any, props: any) => {
-    _renderCountPerAchievementsTypePieChart(container, props);
-  };
-  renderCountPerAchievementsLogsTypePieChart = (container: any, props: any) => {
-    _renderCountPerAchievementsLogsTypePieChart(container, props);
-  };
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // renderCountPerAchievementsTypePieChart = (container: any, props: any) => {
+  //   _renderCountPerAchievementsTypePieChart(container, props);
+  // };
+  // NOT USED — widget not in WidgetGallery, no CountCard consumer
+  // renderCountPerAchievementsLogsTypePieChart = (container: any, props: any) => {
+  //   _renderCountPerAchievementsLogsTypePieChart(container, props);
+  // };
   renderValidateTransactionRule = (container: any, props: any) => {
     renderTransactionRule(container, props);
   };
