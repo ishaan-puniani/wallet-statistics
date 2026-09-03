@@ -50,6 +50,10 @@ Default.args = {
   showRaw: false,
 };
 export const PartnerBalanceChart = TemplateOne.bind({});
+PartnerBalanceChart.argTypes = {
+  startDate: { control: "date" },
+  endDate: { control: "date" },
+};
 PartnerBalanceChart.args = {
   credentials: getServiceAccountCredentials() || {},
   showRaw: false,
@@ -63,6 +67,8 @@ PartnerBalanceChart.args = {
   group: "monthly",
   volume: "group",
   isTransaction: false,
+  startDate: moment().add(-30, "days").toDate(),
+  endDate: moment().toDate(),
   // transactionTypes: ["MINT", "MINT_BURN"]
 };
 export const PartnerBalanceReport = TemplateTwo.bind({});

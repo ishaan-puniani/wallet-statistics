@@ -121,6 +121,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
   const [loading, setLoading] = useState(false);
   const [chartOption, setChartOption] = useState();
   const [rawData, setRawData] = useState<any[]>([]);
+  const [listData, setListData] = useState<[string, number][]>([]);
   const [group, setGroup] = useState<Group>(
     (props.group as Group) || "monthly"
   ); const includeToday = props.includeToday ?? false;
@@ -177,6 +178,22 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
 
         setRawData(filteredEntries);
 
+        // The list always shows the cumulative running balance (totalAmounts /
+        // totalVirtualValues), regardless of the `volume` used for the chart.
+        const totalKey = isTransaction
+          ? "totalTransactions"
+          : getAmountKey("total", props.amountType);
+        const totalRecord: Record<string, number> =
+          (latestBalance && latestBalance[totalKey]) || {};
+        const totalEntries = Object.entries(totalRecord) as [string, number][];
+        const filteredTotalEntries =
+          props.transactionTypes && props.transactionTypes.length
+            ? totalEntries.filter(([transactionType]) =>
+                props.transactionTypes!.includes(transactionType)
+              )
+            : totalEntries;
+        setListData(filteredTotalEntries);
+
         const chartData: { value: number; name: string }[] = [];
         const chartColors: string[] = [];
 
@@ -218,6 +235,7 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
         setChartOption(chartOptions);
       } else {
         setRawData([]);
+        setListData([]);
         setChartOption(undefined);
       }
       setLoading(false);
@@ -272,7 +290,8 @@ const BalancesChart = (props: IPartnerBalancesPieChartProps) => {
       ) : props.showList ? (
         <PartnerBalancesWrapper>
           <div className="balance-Wrapper">
-            {rawData.map(([transactionType, value]) => (
+            {listData.length === 0 && <p>No balances found</p>}
+            {listData.map(([transactionType, value]) => (
               <div className="balance-card" key={transactionType}>
                 <div>
                   <img
